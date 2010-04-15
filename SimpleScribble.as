@@ -15,8 +15,7 @@
 		prevy =0;
       stage.frameRate = 100;
 	  stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
-	  parent.addChild(a1);
-	  parent.setChildIndex(this,0);
+	  
 	  }
 
     private function mouseDownListener (e:MouseEvent):void {
