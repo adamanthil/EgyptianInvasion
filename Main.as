@@ -3,53 +3,113 @@ package
 	import flash.display.*;
 	import flash.events.*;
 	
-	import mx.*;x
+//	import mx.*;
 	
-	public class Scene extends Sprite {
+	public class Main extends Sprite {
 		public var selectedNode:Node;
 		public var tombNode:Node; //EndNode
 		public var enterNode:Node; //startnode
 		public var allNodes:Array;
-		public var uiChild:UIClass;
+//		public var uiChild:UIClass;
 		public var enemyList:Array;
-		public var mapfile:mapSubClass;
-		public var submap:mapSubClass;
+//		public var mapfile:mapSubClass;
+	//	public var submap:mapSubClass;
 		public var building:Boolean;
 		
 		public var ToggledNode:Node;
 		
-		public function Scene () {
+		public var prevx:Number;
+		public var prevy:Number;
+		public var currx:Number;
+		public var curry:Number;
+		public var overallInt:EI;
+		
+		public function Main () {
+			overallInt = new EI(this,stage);
+			allNodes = new Array();
 			stage.frameRate = 100;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
-			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUPListener);
+			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN,aListener);
 			
-			var baseNode = new Node();
-			allNodes.add(baseNode);
+			var baseNode = new Node(70,70,stage);
+			allNodes.push(baseNode);
 			selectedNode = baseNode;
+			baseNode.setSelected(true);
 			enterNode = baseNode;
+			baseNode.setPlaced(true);
 			
-			var finalNode = new Node();
+			var finalNode = new Node(300,200,stage);
 			tombNode = finalNode;
-			
+			allNodes.push(tombNode);
+			this.addChild(baseNode);
+			this.addChild(finalNode);
+			tombNode.setPlaced(true);
 			//parent.addChild(a1);
 			//parent.setChildIndex(this,0);
 		}
-		
+		public function addNode(toggle:Node)
+		{
+			ToggledNode = toggle;
+		}
 		private function mouseDownListener (e:MouseEvent):void {
-			if(e.buttonDown && e.stageX != x && e.stageX != y)
+			if(ToggledNode == null)
 			{
-				
-				graphics.clear();
-				
-				graphics.lineStyle(3, 0xFF0000);
-				prevx = currx;
-				prevy = curry;
-				currx = e.stageX;
-				curry = e.stageY;
-				graphics.moveTo(currx,curry);
-				graphics.lineTo(prevx,prevy);
+				var count:Number;
+				count = 0;
+				while(count < allNodes.length)
+				{
+					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
+						 Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10)
+					{
+						selectedNode.setSelected(false);
+						selectedNode = allNodes[count];
+						selectedNode.setSelected(true);
+					}
+					count++;
+				}
+			}
+			else
+			{
+				var potentialNode:Node;
+				var count:Number;
+				count = 0;
+				while(count < allNodes.length)
+				{
+					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10)
+						potentialNode = allNodes[count];
+					count++;
+				}
+				if(potentialNode == null)
+				{
+					ToggledNode.setPlaced(true);
+					allNodes.push(ToggledNode);
+				}
+				else
+				{
+					potentialNode.addSibling(selectedNode);
+					selectedNode.addSibling(potentialNode);
+					this.removeChild(ToggledNode);
+					selectedNode.removeSibling(ToggledNode);
+				}
+				ToggledNode = null;
 			}
 			
+		}
+		private function aListener(e:KeyboardEvent)
+		{
+			if(e.charCode == 97)
+			{
+				ToggledNode = new Node(0,0,stage);
+				ToggledNode.addSibling(selectedNode);
+				selectedNode.addSibling(ToggledNode);
+				ToggledNode.setPlaced(false);
+				this.addChild(ToggledNode);
+			}
+		}
+		
+		private function mouseUpListener (e:MouseEvent):void {
 		}
 	}
 }

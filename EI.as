@@ -9,25 +9,26 @@
 	    var prevy:Number;
 	    var currx:Number;
 	    var curry:Number;
+		var scenery:Main;
 		public var flag:Number;
+		public var canvas:Stage;
 		public var addNodeFlag:Number;
 
-		public function EI(){
+		public function EI(theScene:Main, canv:Stage){
 			//Object.register
-			addNode.addEventListener(MouseEvent.CLICK, toggleAddNode);
-			changeNode.addEventListener(MouseEvent.CLICK, toggleDraw);
-			stage.addEventListener(MouseEvent.CLICK, mouseDownEvent);
+			scenery = theScene;
+			canvas = canv;
+	//		addNode.addEventListener(MouseEvent.CLICK, toggleAddNode);
+		//	changeNode.addEventListener(MouseEvent.CLICK, toggleDraw);
+			//stage.addEventListener(MouseEvent.CLICK, mouseDownEvent);
 			
 			enum = 1;
 			flag = 0;
 			addNodeFlag = 0;
 		}
 		public function node():void{
-		var newNode:SimpleButton = new Node_Btn();
-
-		newNode.x = 50+enum*100;
-		newNode.y = 200;
-		addChild(newNode);
+		var newNode:Node = new Node(50+enum*100,200,canvas);
+		scenery.addNode(newNode);
 		enum++;
 		}
 
@@ -43,11 +44,8 @@
 		
 		private function mouseDownEvent (e:MouseEvent):void{
 			if (addNodeFlag == 1){
-				var newNode:MovieClip = new Node_Sym();
-				
-				newNode.x = e.stageX;
-				newNode.y = e.stageY;
-				addChildAt(newNode,3);
+				var newNode:Node = new Node(e.stageX, e.stageY,canvas);
+				scenery.addNode(newNode);
 			}
 			else if (flag == 1){
 				drawLine(e);
