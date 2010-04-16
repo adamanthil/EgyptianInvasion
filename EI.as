@@ -22,7 +22,6 @@
 			flag = 0;
 			addNodeFlag = 0;
 		}
-
 		public function node():void{
 		var newNode:SimpleButton = new Node_Btn();
 
@@ -31,7 +30,7 @@
 		addChild(newNode);
 		enum++;
 		}
-		
+
 		private function toggleAddNode(e:MouseEvent):void{
 			addNodeFlag = 1-addNodeFlag;
 			flag = 0;
