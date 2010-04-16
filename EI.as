@@ -10,13 +10,16 @@
 	    var currx:Number;
 	    var curry:Number;
 		public var flag:Number;
+		public var addNodeFlag:Number;
 
 		public function EI(){
 			//Object.register
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, drawLine);
-			addNode.addEventListener(MouseEvent.CLICK, toggleDraw);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
+			addNode.addEventListener(MouseEvent.CLICK, toggleAddNode);
+			changeNode.addEventListener(MouseEvent.CLICK, toggleDraw);
 			enum = 1;
 			flag = 0;
+			addNodeFlag = 0;
 		}
 
 		public function node():void{
@@ -28,9 +31,29 @@
 		enum++;
 		}
 		
+		private function toggleAddNode(e:MouseEvent):void{
+			addNodeFlag = 1-addNodeFlag;
+			flag = 0;
+		}
+		
 		private function toggleDraw(e:MouseEvent):void{
 			flag = 1-flag;
+			addNodeFlag = 0;
 		}
+		
+		private function mouseDownEvent (e:MouseEvent):void{
+			if (addNodeFlag == 1){
+				var newNode:MovieClip = new Node_Sym();
+				
+				newNode.x = e.stageX;
+				newNode.y = e.stageY;
+				addChild(newNode);
+			}
+			else if (flag == 1){
+				drawLine(e);
+				}
+		}
+		
 	   private function drawLine (e:MouseEvent):void {
 		   if (flag == 1){
 			if(e.buttonDown && e.stageX != x && e.stageX != y)
