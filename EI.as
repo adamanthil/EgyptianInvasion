@@ -14,9 +14,10 @@
 
 		public function EI(){
 			//Object.register
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
 			addNode.addEventListener(MouseEvent.CLICK, toggleAddNode);
 			changeNode.addEventListener(MouseEvent.CLICK, toggleDraw);
+			stage.addEventListener(MouseEvent.CLICK, mouseDownEvent);
+			
 			enum = 1;
 			flag = 0;
 			addNodeFlag = 0;
@@ -47,11 +48,14 @@
 				
 				newNode.x = e.stageX;
 				newNode.y = e.stageY;
-				addChild(newNode);
+				addChildAt(newNode,3);
 			}
 			else if (flag == 1){
 				drawLine(e);
 				}
+			else{
+				trace("in mousedown");
+			}
 		}
 		
 	   private function drawLine (e:MouseEvent):void {
