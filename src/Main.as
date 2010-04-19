@@ -3,6 +3,8 @@ package
 	import flash.display.*;
 	import flash.events.*;
 	
+	import mx.core.ButtonAsset;
+	
 	//	import mx.*;
 	
 	public class Main extends Sprite {
@@ -32,7 +34,9 @@ package
 			bg.scaleY = 0.7;
 			bg.x = 200;
 			bg.y = 200;
+			var btn:ToggleBtn = new ToggleBtn(100,100, stage);
 			this.addChild(bg);
+			this.addChild(btn);
 			stage.frameRate = 100;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
@@ -118,5 +122,6 @@ package
 		
 		private function mouseUpListener (e:MouseEvent):void {
 		}
+		
 	}
 }
