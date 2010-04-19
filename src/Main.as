@@ -27,6 +27,12 @@ package
 		public function Main () {
 			overallInt = new EI(this,stage);
 			allNodes = new Array();
+			var bg:MovieClip = new BackgroundTest();
+			bg.scaleX = 0.7;
+			bg.scaleY = 0.7;
+			bg.x = 200;
+			bg.y = 200;
+			this.addChild(bg);
 			stage.frameRate = 100;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
@@ -97,6 +103,7 @@ package
 			}
 			
 		}
+		
 		private function aListener(e:KeyboardEvent)
 		{
 			if(e.charCode == 97)
