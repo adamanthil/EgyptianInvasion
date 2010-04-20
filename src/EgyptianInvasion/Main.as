@@ -1,76 +1,70 @@
-package
+package EgyptianInvasion
 {
 	import flash.display.*;
 	import flash.events.*;
-	
-	import mx.core.ButtonAsset;
-	
-	//	import mx.*;
+	import playground.EI;
 	
 	public class Main extends Sprite {
-		public var selectedNode:Node;
-		public var tombNode:Node; //EndNode
-		public var enterNode:Node; //startnode
-		public var allNodes:Array;
-		//		public var uiChild:UIClass;
-		public var enemyList:Array;
-		//		public var mapfile:mapSubClass;
-		//	public var submap:mapSubClass;
-		public var building:Boolean;
+
+		private var building:Boolean;	// indicates if game is in the building phase
 		
-		public var ToggledNode:Node;
-		public var btn:ToggleBtn;
+		private var tombNode:Node; // End Node
+		private var enterNode:Node; // Start Node
+		private var allNodes:Array;
+
+		private var selectedNode:Node;	// existing node that is "selected"
+		private var toggledNode:Node;	// new node being placed
+		private var cantSet:Boolean;
 		
-		public var prevx:Number;
-		public var prevy:Number;
-		public var currx:Number;
-		public var curry:Number;
-		public var overallInt:EI;
-		private var cantset;
+		private var placeNodeButton:ToggleBtn;
 		
 		public function Main () {
-			overallInt = new EI(this,stage);
 			allNodes = new Array();
 			var bg:MovieClip = new BackgroundTest();
 			bg.scaleX = 0.7;
 			bg.scaleY = 0.7;
 			bg.x = 200;
 			bg.y = 200;
-			btn = new ToggleBtn(100,100, stage);
+			placeNodeButton = new ToggleBtn(100,100, stage);
 			this.addChild(bg);
-			this.addChild(btn);
+			this.addChild(placeNodeButton);
 			stage.frameRate = 100;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN,aListener);
 			
-			var baseNode = new Node(70,70,stage);
+			var baseNode:Node = new Node(70,70,stage);
 			allNodes.push(baseNode);
 			selectedNode = baseNode;
 			baseNode.setSelected(true);
 			enterNode = baseNode;
 			baseNode.setPlaced(true);
 			
-			var finalNode = new Node(300,200,stage);
+			var finalNode:Node = new Node(300,200,stage);
 			tombNode = finalNode;
 			allNodes.push(tombNode);
 			this.addChild(baseNode);
 			this.addChild(finalNode);
 			tombNode.setPlaced(true);
-			//parent.addChild(a1);
-			//parent.setChildIndex(this,0);
+
 		}
-		public function addNode(toggle:Node)
+		
+		public function setToggledNode(node:Node):void {
+			this.toggledNode = node;
+		}
+		
+		public function addNode(toggle:Node):void
 		{
-			ToggledNode = toggle;
-			ToggledNode.addSibling(selectedNode);
-			selectedNode.addSibling(ToggledNode);
-			ToggledNode.setPlaced(false);
-			this.addChild(ToggledNode);
-			cantset = true;
+			toggledNode = toggle;
+			toggledNode.addSibling(selectedNode);
+			selectedNode.addSibling(toggledNode);
+			toggledNode.setPlaced(false);
+			this.addChild(toggledNode);
+			cantSet = true;
 		}
+		
 		private function mouseDownListener (e:MouseEvent):void {
-			if(ToggledNode == null || cantset)
+			if(toggledNode == null || cantSet)
 			{
 				var count:Number;
 				count = 0;
@@ -89,7 +83,6 @@ package
 			else
 			{
 				var potentialNode:Node;
-				var count:Number;
 				count = 0;
 				while(count < allNodes.length)
 				{
@@ -100,38 +93,36 @@ package
 				}
 				if(potentialNode == null)
 				{
-					ToggledNode.setPlaced(true);
-					allNodes.push(ToggledNode);
+					toggledNode.setPlaced(true);
+					allNodes.push(toggledNode);
 				}
 				else
 				{
 					potentialNode.addSibling(selectedNode);
 					selectedNode.addSibling(potentialNode);
-					this.removeChild(ToggledNode);
-					selectedNode.removeSibling(ToggledNode);
+					this.removeChild(toggledNode);
+					selectedNode.removeSibling(toggledNode);
 				}
-				ToggledNode = null;
-				//btn.down = false;
-				//btn.btn.gotoAndStop("mouseUp");
-				btn.setDown(false);
+				toggledNode = null;
+				placeNodeButton.setDown(false);
 			}
 			
 		}
 		
-		private function aListener(e:KeyboardEvent)
+		private function aListener(e:KeyboardEvent):void
 		{
 			if(e.charCode == 97)
 			{
-				ToggledNode = new Node(0,0,stage);
-				ToggledNode.addSibling(selectedNode);
-				selectedNode.addSibling(ToggledNode);
-				ToggledNode.setPlaced(false);
-				this.addChild(ToggledNode);
+				toggledNode = new Node(0,0,stage);
+				toggledNode.addSibling(selectedNode);
+				selectedNode.addSibling(toggledNode);
+				toggledNode.setPlaced(false);
+				this.addChild(toggledNode);
 			}
 		}
 		
 		private function mouseUpListener (e:MouseEvent):void {
-			cantset = false;
+			cantSet = false;
 		}
 		
 	}

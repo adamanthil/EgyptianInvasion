@@ -1,26 +1,24 @@
-package
+package playground
 {
 	import flash.display.*;
 	import flash.events.*;
+	import EgyptianInvasion.Main;
+	import EgyptianInvasion.Node;
 	
 	public class EI extends Sprite {
-		public var enum:Number;
-		var prevx:Number;
-		var prevy:Number;
-		var currx:Number;
-		var curry:Number;
-		var scenery:Main;
-		public var flag:Number;
-		public var canvas:Stage;
-		public var addNodeFlag:Number;
+		private var enum:Number;
+		private var prevx:Number;
+		private var prevy:Number;
+		private var currx:Number;
+		private var curry:Number;
+		private var scenery:Main;
+		private var flag:Number;
+		private var canvas:Stage;
+		private var addNodeFlag:Number;
 		
 		public function EI(theScene:Main, canv:Stage){
-			//Object.register
 			scenery = theScene;
 			canvas = canv;
-			//		addNode.addEventListener(MouseEvent.CLICK, toggleAddNode);
-			//	changeNode.addEventListener(MouseEvent.CLICK, toggleDraw);
-			//stage.addEventListener(MouseEvent.CLICK, mouseDownEvent);
 			
 			enum = 1;
 			flag = 0;

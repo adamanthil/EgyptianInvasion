@@ -1,15 +1,13 @@
-package
+package EgyptianInvasion
 {
 	import flash.display.*;
 	import flash.events.*;
-	import flash.utils.Timer;
 	
-	import org.osmf.events.TimeEvent;
 	public class ToggleBtn extends Sprite
 	{
-		public var canvas:Stage;
-		public var btn: MovieClip;
-		public var down:Boolean;
+		private var canvas:Stage;
+		private var btn:MovieClip;
+		private var down:Boolean;
 		
 		public function ToggleBtn(nodex:Number, nodey:Number, canvas:Stage) 
 		{
@@ -38,12 +36,13 @@ package
 				btn.gotoAndStop("mouseDown");
 			}
 		}
+		
 		private function mouseDown (e:MouseEvent):void {
 			
 			if (down){
 				btn.gotoAndStop("mouseUp");
 				down = false;
-				(parent as Main).ToggledNode = null;
+				(parent as Main).setToggledNode(null);
 			}
 			else {
 				btn.gotoAndStop("mouseDown");

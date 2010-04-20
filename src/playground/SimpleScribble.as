@@ -1,13 +1,13 @@
-package
+package playground
 {
 	import flash.display.*;
 	import flash.events.*;
 	
 	public class SimpleScribble extends Sprite {
-		var prevx:Number;
-		var prevy:Number;
-		var currx:Number;
-		var curry:Number;
+		private var prevx:Number;
+		private var prevy:Number;
+		private var currx:Number;
+		private var curry:Number;
 		public function SimpleScribble () {
 			x =0;
 			y = 0;

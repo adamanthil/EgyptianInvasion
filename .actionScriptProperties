@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties mainApplicationPath="Main.as" projectUUID="d605d15e-bdcc-4f01-8cf5-bcce6dacc439" version="6">
+<actionScriptProperties mainApplicationPath="EgyptianInvasion/Node.as" projectUUID="d605d15e-bdcc-4f01-8cf5-bcce6dacc439" version="6">
   <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
@@ -29,10 +29,11 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
-    <application path="Main.as"/>
-    <application path="EgyptianInvasion.as"/>
+    <application path="EgyptianInvasion/Node.as"/>
+    <application path="EgyptianInvasion/Main.as"/>
+    <application path="playground/SimpleScribble.as"/>
+    <application path="playground/EI.as"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
 </actionScriptProperties>
-

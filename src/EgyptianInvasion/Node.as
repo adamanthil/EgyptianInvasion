@@ -1,4 +1,4 @@
-package
+package EgyptianInvasion
 {
 	import flash.display.*;
 	import flash.events.*;
@@ -8,19 +8,17 @@ package
 	
 	//	import mx.*;
 	
-	public class Node extends Sprite
-	{
-		var nodes:Array;
-		var selected:Boolean;
-		var canv:Stage;
-		var currRad:Number;
-		var radiusInc:Boolean;
-		var time:Timer;
-		var placed:Boolean;
-		var isValid:Boolean;
+	public class Node extends Sprite {
+		private var nodes:Array;
+		private var selected:Boolean;
+		private var canv:Stage;
+		private var currRad:Number;
+		private var radiusInc:Boolean;
+		private var time:Timer;
+		private var placed:Boolean;
+		private var isValid:Boolean;
 		
-		public function Node(nodex:Number, nodey:Number, canvas:Stage)
-		{
+		public function Node(nodex:Number, nodey:Number, canvas:Stage) {
 			canv = canvas;
 			x = nodex;
 			y = nodey;
@@ -39,16 +37,16 @@ package
 			time.start();
 			nodes = new Array();
 		}
-		public function setSelected( select:Boolean)
-		{
+		
+		public function setSelected( select:Boolean):void {
 			selected = select;
 		}
-		public function setPlaced ( place:Boolean)
-		{
+		
+		public function setPlaced ( place:Boolean):void	{
 			placed = place;
 		}
-		private function displayFaded()
-		{
+		
+		private function displayFaded():void {
 			graphics.clear();
 			if(radiusInc)
 				currRad+=.1;
@@ -76,8 +74,7 @@ package
 				int++;
 			}
 		}
-		private function displaySolid()
-		{
+		private function displaySolid():void {
 			graphics.clear();
 			if(radiusInc)
 				currRad+=.1;
@@ -107,15 +104,14 @@ package
 				int++;
 			}
 		}
-		public function TimeListener(e:TimerEvent)
-		{
+		public function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
 			else
 				displayFaded();
 		}
-		public function removeSibling(nod:Node)
-		{
+		
+		public function removeSibling(nod:Node):void {
 			var int:Number;
 			int = nodes.indexOf(nod);
 			if(int != -1)
@@ -124,15 +120,13 @@ package
 				nodes.pop();
 			}
 		}
-		public function addSibling(nod:Node)
-		{
+		public function addSibling(nod:Node):void {
 			nodes.push(nod);
 			graphics.lineStyle(5,0xFF2000);
 			graphics.moveTo(0,0);
 			graphics.lineTo(nod.x,nod.y);
 		}
-		public function mouseMoveListener(e:MouseEvent)
-		{
+		public function mouseMoveListener(e:MouseEvent):void {
 			if(!placed)
 			{
 				x = e.stageX;
