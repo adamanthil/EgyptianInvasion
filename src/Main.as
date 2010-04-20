@@ -111,8 +111,9 @@ package
 					selectedNode.removeSibling(ToggledNode);
 				}
 				ToggledNode = null;
-				btn.down = false;
-				btn.btn.gotoAndStop("mouseUp");
+				//btn.down = false;
+				//btn.btn.gotoAndStop("mouseUp");
+				btn.setDown(false);
 			}
 			
 		}

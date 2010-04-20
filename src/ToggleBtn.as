@@ -56,5 +56,14 @@ package
 			return down;
 		}
 		
+		public function setDown(flag:Boolean):void{
+			down = flag;
+			if (down){
+				btn.gotoAndStop("mouseDown");
+			}
+			else{
+				btn.gotoAndStop("mouseUp");	
+		    }
+		}
 	}
 }
