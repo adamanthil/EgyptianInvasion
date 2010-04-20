@@ -43,10 +43,12 @@ package
 			if (down){
 				btn.gotoAndStop("mouseUp");
 				down = false;
+				(parent as Main).ToggledNode = null;
 			}
 			else {
 				btn.gotoAndStop("mouseDown");
 				down = true;
+				(parent as Main).addNode(new Node(e.stageX,e.stageY,canvas));
 			}
 		}
 		

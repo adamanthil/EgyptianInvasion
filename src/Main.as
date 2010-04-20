@@ -19,12 +19,14 @@ package
 		public var building:Boolean;
 		
 		public var ToggledNode:Node;
+		public var btn:ToggleBtn;
 		
 		public var prevx:Number;
 		public var prevy:Number;
 		public var currx:Number;
 		public var curry:Number;
 		public var overallInt:EI;
+		private var cantset;
 		
 		public function Main () {
 			overallInt = new EI(this,stage);
@@ -34,7 +36,7 @@ package
 			bg.scaleY = 0.7;
 			bg.x = 200;
 			bg.y = 200;
-			var btn:ToggleBtn = new ToggleBtn(100,100, stage);
+			btn = new ToggleBtn(100,100, stage);
 			this.addChild(bg);
 			this.addChild(btn);
 			stage.frameRate = 100;
@@ -61,9 +63,14 @@ package
 		public function addNode(toggle:Node)
 		{
 			ToggledNode = toggle;
+			ToggledNode.addSibling(selectedNode);
+			selectedNode.addSibling(ToggledNode);
+			ToggledNode.setPlaced(false);
+			this.addChild(ToggledNode);
+			cantset = true;
 		}
 		private function mouseDownListener (e:MouseEvent):void {
-			if(ToggledNode == null)
+			if(ToggledNode == null || cantset)
 			{
 				var count:Number;
 				count = 0;
@@ -104,6 +111,8 @@ package
 					selectedNode.removeSibling(ToggledNode);
 				}
 				ToggledNode = null;
+				btn.down = false;
+				btn.btn.gotoAndStop("mouseUp");
 			}
 			
 		}
@@ -121,6 +130,7 @@ package
 		}
 		
 		private function mouseUpListener (e:MouseEvent):void {
+			cantset = false;
 		}
 		
 	}
