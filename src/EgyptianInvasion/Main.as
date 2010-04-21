@@ -36,7 +36,7 @@ package EgyptianInvasion
 			placeNodeButton.setMouseDown(Main.addNodeHandler);
 			this.addChild(placeNodeButton);
 			
-			var pyramid:Pyramid = new Pyramid(new pyramid1(), 225,225,stage);
+			var pyramid:Pyramid = new Pyramid(new assets.pyramid2(), 225,225,stage);
 			this.addChild(pyramid);
 			
 			var changeNodeButton:Button = new Button(new assets.ToggleButton(), 50,50, "Change Node",stage);
