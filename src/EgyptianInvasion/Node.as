@@ -4,8 +4,6 @@ package EgyptianInvasion
 	import flash.events.*;
 	import flash.utils.Timer;
 	
-	import org.osmf.events.TimeEvent;
-	
 	//	import mx.*;
 	
 	public class Node extends Sprite {
@@ -129,6 +127,33 @@ package EgyptianInvasion
 			graphics.lineTo(nod.x,nod.y);
 		}
 		
+		// Determines whether a path exists between nodes
+		public function pathExists(n:Node):Boolean {
+			return pathExistsRecursive(n,new Array());
+		}
+		
+		private function pathExistsRecursive(n:Node, visited:Array):Boolean {
+			if(n == this) {
+				return true;
+			}
+			else if(visited.indexOf(n) >= 0) {
+				return false;
+			}
+			else { // Not yet visited
+				visited.push(n);
+				var pathExists:Boolean = false;
+				for(var i:int = 0; i < n.getSiblings().length; i++) {
+					var exists:Boolean = pathExistsRecursive(n.getSiblings()[i],visited);
+					if(exists) {
+						pathExists = true;
+						break;
+					}
+				}
+				return pathExists;
+			}
+			
+		}
+		
 		public function getSiblings():Array {
 			return nodes;
 		}
@@ -138,21 +163,6 @@ package EgyptianInvasion
 			{
 				x = e.stageX;
 				y = e.stageY;
-			}
-		}
-		
-		// Event handler for adding a node on a mouseDown button click
-		public static var addNodeHandler:Function = function (e:MouseEvent):void {
-			var button:Button = Button(e.currentTarget);
-			var buttonAsset:MovieClip = MovieClip(button.getButtonAsset());
-			
-			if (button.isDown()){
-				button.setDown(false);
-				Main(button.parent).setToggledNode(null);
-			}
-			else {
-				button.setDown(true);
-				Main(button.parent).addNode(new Node(e.stageX, e.stageY, Main(button.parent).stage));
 			}
 		}
 	}

@@ -7,7 +7,7 @@ package EgyptianInvasion
 	
 	public class Main extends Sprite {
 
-		private var building:Boolean;	// indicates if game is in the building phase
+		private var buildingPhase:Boolean;	// indicates if game is in the building phase
 		
 		private var tombNode:Node; // End Node
 		private var enterNode:Node; // Start Node
@@ -22,7 +22,7 @@ package EgyptianInvasion
 		
 		public function Main () {
 			// Start in building phase
-			this.building = true;
+			this.buildingPhase = true;
 			
 			allNodes = new Array();
 			var bg:MovieClip = new BackgroundTest();
@@ -33,13 +33,14 @@ package EgyptianInvasion
 			this.addChild(bg);
 			
 			placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
-			placeNodeButton.setMouseDown(Node.addNodeHandler);
+			placeNodeButton.setMouseDown(Main.addNodeHandler);
 			this.addChild(placeNodeButton);
 			
 			var changeNodeButton:Button = new Button(new assets.ToggleButton(), 50,50, "Change Node",stage);
 			this.addChild(changeNodeButton);
 			
 			beginInvasionButton = new Button(new assets.ToggleButton(), 50, 150, "Begin Invasion", stage);
+			beginInvasionButton.setMouseDown(Main.beginInvasionHandler);
 			this.addChild(beginInvasionButton);
 			
 			stage.frameRate = 100;
@@ -78,6 +79,14 @@ package EgyptianInvasion
 			toggledNode.setPlaced(false);
 			this.addChild(toggledNode);
 			cantSet = true;
+		}
+		
+		public function getStartNode():Node {
+			return this.enterNode;
+		}
+		
+		public function getEndNode():Node {
+			return this.tombNode;
 		}
 		
 		private function mouseDownListener (e:MouseEvent):void {
@@ -140,6 +149,35 @@ package EgyptianInvasion
 		
 		private function mouseUpListener (e:MouseEvent):void {
 			cantSet = false;
+		}
+		
+		// -- Button Event Handlers -------------------------
+		
+		// Event handler for adding a node on a mouseDown button click
+		public static var addNodeHandler:Function = function (e:MouseEvent):void {
+			var button:Button = Button(e.currentTarget);
+			var buttonAsset:MovieClip = MovieClip(button.getButtonAsset());
+			
+			if (button.isDown()){
+				button.setDown(false);
+				Main(button.parent).setToggledNode(null);
+			}
+			else {
+				button.setDown(true);
+				Main(button.parent).addNode(new Node(e.stageX, e.stageY, Main(button.parent).stage));
+			}
+		}
+			
+		public static var beginInvasionHandler:Function = function (e:MouseEvent):void {
+			var button:Button = Button(e.currentTarget);
+			var buttonAsset:MovieClip = MovieClip(button.getButtonAsset());
+			
+			if (!button.isDown()){
+				button.setDown(false);
+				this.buildingPhase = false;
+				
+				trace(Main(button.parent).getStartNode().pathExists(Main(button.parent).getEndNode()));
+			}
 		}
 		
 	}

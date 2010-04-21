@@ -8,7 +8,7 @@ package EgyptianInvasion
 	{
 		private var canvas:Stage;
 		
-		public function Enemy(startNode:Node, canvas:Stage)
+			public function Enemy(startNode:Node, canvas:Stage)
 		{
 			this.x = startNode.x;
 			this.y = startNode.y;
