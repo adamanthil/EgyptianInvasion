@@ -2,6 +2,7 @@ package EgyptianInvasion
 {
 	import flash.display.*;
 	import flash.events.*;
+	import flash.text.*;
 	
 	public class Button extends Sprite
 	{
@@ -11,8 +12,10 @@ package EgyptianInvasion
 		private var buttonAsset:MovieClip;
 		private var mouseDown:Function;
 		private var mouseClick:Function;
+		private var text:TextField;
+		private var format:TextFormat;
 		
-		public function Button(buttonAsset:MovieClip, nodex:Number, nodey:Number, canvas:Stage) 
+		public function Button(buttonAsset:MovieClip, nodex:Number, nodey:Number, label:String, canvas:Stage) 
 		{
 			this.buttonAsset = buttonAsset;
 			buttonAsset.stop();
@@ -21,6 +24,15 @@ package EgyptianInvasion
 			y = nodey;
 			this.canvas = canvas;
 			addChild(buttonAsset);
+			format = new TextFormat();
+			format.color = 0xFFFF32; 
+			//format.size = 48; 
+			
+			text = new TextField();
+			text.appendText(label);
+			text.setTextFormat(format);
+			text.autoSize = TextFieldAutoSize.CENTER;
+			addChild(text);
 			addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
 		}

@@ -31,11 +31,11 @@ package EgyptianInvasion
 			bg.y = 200;
 			this.addChild(bg);
 			
-			placeNodeButton = new Button(new ToggleButton(), 100,100, stage);
+			placeNodeButton = new Button(new ToggleButton(), 100,100, "Add Node",stage);
 			placeNodeButton.setMouseDown(Node.addNodeHandler);
 			this.addChild(placeNodeButton);
 			
-			beginInvasionButton = new Button(new assets.BeginInvasionButton(), 200, 400, stage);
+			beginInvasionButton = new Button(new assets.BeginInvasionButton(), 200, 400, "", stage);
 			this.addChild(beginInvasionButton);
 			
 			stage.frameRate = 100;
