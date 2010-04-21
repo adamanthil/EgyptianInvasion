@@ -2,8 +2,7 @@ package EgyptianInvasion
 {
 	import flash.display.*;
 	import flash.events.*;
-	
-	import playground.EI;
+	import assets.*;
 	
 	public class Main extends Sprite {
 
@@ -17,7 +16,8 @@ package EgyptianInvasion
 		private var toggledNode:Node;	// new node being placed
 		private var cantSet:Boolean;
 		
-		private var placeNodeButton:AddNodeButton;
+		private var placeNodeButton:Button;
+		private var beginInvasionButton:Button;
 		
 		public function Main () {
 			// Start in building phase
@@ -31,11 +31,12 @@ package EgyptianInvasion
 			bg.y = 200;
 			this.addChild(bg);
 			
-			placeNodeButton = new AddNodeButton(100,100, stage);
+			placeNodeButton = new Button(new ToggleButton(), 100,100, stage);
+			placeNodeButton.setMouseDown(Node.addNodeHandler);
 			this.addChild(placeNodeButton);
 			
-			//beginInvasionButton = new AddNodeButton(100, 300, stage);
-			//this.addChild(beginInvasionButton);
+			beginInvasionButton = new Button(new assets.BeginInvasionButton(), 200, 400, stage);
+			this.addChild(beginInvasionButton);
 			
 			stage.frameRate = 100;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);

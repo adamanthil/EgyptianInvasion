@@ -9,9 +9,10 @@ package EgyptianInvasion
 	//	import mx.*;
 	
 	public class Node extends Sprite {
+		
+		private var canvas:Stage;
 		private var nodes:Array;
 		private var selected:Boolean;
-		private var canv:Stage;
 		private var currRad:Number;
 		private var radiusInc:Boolean;
 		private var time:Timer;
@@ -19,7 +20,7 @@ package EgyptianInvasion
 		private var isValid:Boolean;
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage) {
-			canv = canvas;
+			this.canvas = canvas;
 			x = nodex;
 			y = nodey;
 			time = new Timer(10);
@@ -32,7 +33,7 @@ package EgyptianInvasion
 			graphics.drawCircle(0,0,currRad);
 			//			canv.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
 			//			canv.addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
-			canv.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveListener);
+			canvas.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveListener);
 			time.addEventListener(TimerEvent.TIMER,TimeListener);
 			time.start();
 			nodes = new Array();
@@ -137,6 +138,21 @@ package EgyptianInvasion
 			{
 				x = e.stageX;
 				y = e.stageY;
+			}
+		}
+		
+		// Event handler for adding a node on a mouseDown button click
+		public static var addNodeHandler:Function = function (e:MouseEvent):void {
+			var button:Button = Button(e.currentTarget);
+			var buttonAsset:MovieClip = MovieClip(button.getButtonAsset());
+			
+			if (button.isDown()){
+				button.setDown(false);
+				Main(button.parent).setToggledNode(null);
+			}
+			else {
+				button.setDown(true);
+				Main(button.parent).addNode(new Node(e.stageX, e.stageY, Main(button.parent).stage));
 			}
 		}
 	}
