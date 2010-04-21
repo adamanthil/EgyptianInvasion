@@ -31,7 +31,7 @@ package EgyptianInvasion
 			bg.y = 200;
 			this.addChild(bg);
 			
-			placeNodeButton = new Button(new ToggleButton(), 100,100, "Add Node",stage);
+			placeNodeButton = new Button(new ToggleButton(), 50,50, "Add Node",stage);
 			placeNodeButton.setMouseDown(Node.addNodeHandler);
 			this.addChild(placeNodeButton);
 			
