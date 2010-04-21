@@ -176,7 +176,7 @@ package EgyptianInvasion
 				button.setDown(false);
 				this.buildingPhase = false;
 				
-				trace(Main(button.parent).getStartNode().pathExists(Main(button.parent).getEndNode()));
+				//trace(Main(button.parent).getStartNode().pathExists(Main(button.parent).getEndNode()));
 			}
 		}
 		
