@@ -1,8 +1,9 @@
 package EgyptianInvasion
 {
+	import assets.*;
+	
 	import flash.display.*;
 	import flash.events.*;
-	import assets.*;
 	
 	public class Main extends Sprite {
 
@@ -31,9 +32,12 @@ package EgyptianInvasion
 			bg.y = 200;
 			this.addChild(bg);
 			
-			placeNodeButton = new Button(new ToggleButton(), 50,50, "Add Node",stage);
+			placeNodeButton = new Button(new ToggleButton(), 50,100, "Add Node",stage);
 			placeNodeButton.setMouseDown(Node.addNodeHandler);
 			this.addChild(placeNodeButton);
+			
+			var changeNodeButton:Button = new Button(new ToggleButton(), 0,50, "Change Node",stage);
+			this.addChild(changeNodeButton);
 			
 			beginInvasionButton = new Button(new assets.BeginInvasionButton(), 200, 400, "", stage);
 			this.addChild(beginInvasionButton);
