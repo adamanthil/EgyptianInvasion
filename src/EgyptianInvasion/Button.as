@@ -32,8 +32,8 @@ package EgyptianInvasion
 			text.appendText(label);
 			text.setTextFormat(format);
 			text.autoSize = TextFieldAutoSize.CENTER;
-			text.x = buttonAsset.width/2 - (text.textWidth/2)-1;
-			text.y = buttonAsset.height/2 - (text.textHeight/2)-1;
+			text.x = -(text.textWidth/2)-1;
+			text.y =  - (text.textHeight/2)-1;
 			addChild(text);
 			addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
