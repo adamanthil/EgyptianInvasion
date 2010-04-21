@@ -44,8 +44,26 @@ package EgyptianInvasion
 		public function setPlaced ( place:Boolean):void	{
 			placed = place;
 		}
-		
-		private function displayFaded():void {
+		public function setValid ( val:Boolean)
+		{
+			isValid = val;
+		}
+		public function getPossibleAngle(nodeIn:Node)
+		{
+			var relx0:Number = (nodeIn.x - x)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
+			var rely0:Number = (nodeIn.y - y)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
+			for(var i:Number = 0; i < nodes.length;i++)
+			{
+				var relx1:Number = ((nodes[i] as Node).x - x)/Math.sqrt(Math.pow((nodes[i] as Node).x - x,2) + Math.pow((nodes[i] as Node).y - y,2));
+				var rely1:Number = ((nodes[i] as Node).y - y)/Math.sqrt(Math.pow((nodes[i] as Node).x - x,2) + Math.pow((nodes[i] as Node).y - y,2));
+				if(Math.acos(relx0 * relx1 + rely0* rely1) < Math.PI/6
+					&& !(nodeIn == nodes[i] as Node))
+					return true;
+			}
+			return false;
+		}
+		private function displayFaded()
+		{
 			graphics.clear();
 			if(radiusInc)
 				currRad+=.1;
@@ -55,7 +73,10 @@ package EgyptianInvasion
 				radiusInc = true;
 			else if (currRad >10)
 				radiusInc = false;
-			graphics.beginFill(0xFF0000,.5);
+			if(!isValid)
+				graphics.beginFill(0xFF0000,.5);
+			if(isValid)
+				graphics.beginFill(0x00FFEE,.5);
 			graphics.drawCircle(0,0,5);
 			graphics.endFill();
 			graphics.lineStyle(1,0xFF2000,.5);
@@ -73,7 +94,8 @@ package EgyptianInvasion
 				int++;
 			}
 		}
-		private function displaySolid():void {
+		private function displaySolid()
+		{
 			graphics.clear();
 			if(radiusInc)
 				currRad+=.1;
