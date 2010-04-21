@@ -98,7 +98,7 @@ package EgyptianInvasion
 				while(count < allNodes.length)
 				{
 					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10)
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10 && toggledNode == null)
 					{
 						selectedNode.setSelected(false);
 						selectedNode = allNodes[count];
