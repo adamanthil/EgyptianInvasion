@@ -36,10 +36,10 @@ package EgyptianInvasion
 			placeNodeButton.setMouseDown(Node.addNodeHandler);
 			this.addChild(placeNodeButton);
 			
-			var changeNodeButton:Button = new Button(new assets.ToggleButton(), 0,50, "Change Node",stage);
+			var changeNodeButton:Button = new Button(new assets.ToggleButton(), 50,50, "Change Node",stage);
 			this.addChild(changeNodeButton);
 			
-			beginInvasionButton = new Button(new assets.BeginInvasionButton(), 200, 400, "", stage);
+			beginInvasionButton = new Button(new assets.ToggleButton(), 50, 150, "Begin Invasion", stage);
 			this.addChild(beginInvasionButton);
 			
 			stage.frameRate = 100;
