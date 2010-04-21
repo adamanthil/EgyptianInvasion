@@ -120,12 +120,18 @@ package EgyptianInvasion
 				nodes.pop();
 			}
 		}
+		
 		public function addSibling(nod:Node):void {
 			nodes.push(nod);
 			graphics.lineStyle(5,0xFF2000);
 			graphics.moveTo(0,0);
 			graphics.lineTo(nod.x,nod.y);
 		}
+		
+		public function getSiblings():Array {
+			return nodes;
+		}
+		
 		public function mouseMoveListener(e:MouseEvent):void {
 			if(!placed)
 			{

@@ -3,13 +3,13 @@ package EgyptianInvasion
 	import flash.display.*;
 	import flash.events.*;
 	
-	public class ToggleBtn extends Sprite
+	public class AddNodeButton extends Sprite
 	{
 		private var canvas:Stage;
 		private var btn:MovieClip;
 		private var down:Boolean;
 		
-		public function ToggleBtn(nodex:Number, nodey:Number, canvas:Stage) 
+		public function AddNodeButton(nodex:Number, nodey:Number, canvas:Stage) 
 		{
 			btn = new ToggleButton();
 			btn.stop();
