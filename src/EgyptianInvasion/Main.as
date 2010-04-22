@@ -20,6 +20,8 @@ package EgyptianInvasion
 		private var placeNodeButton:Button;
 		private var beginInvasionButton:Button;
 		
+		private var ui:UI; // Our compartmentalized UI
+		
 		public function Main () {
 			// Start in building phase
 			this.buildingPhase = true;
@@ -31,6 +33,9 @@ package EgyptianInvasion
 			bg.x = 200;
 			bg.y = 200;
 			this.addChild(bg);
+			
+			ui = new UI(0,0,stage);
+			this.addChild(ui);
 			
 			placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
 			placeNodeButton.setMouseDown(Main.addNodeHandler);
