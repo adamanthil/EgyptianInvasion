@@ -19,10 +19,10 @@ package EgyptianInvasion
 		private var selectedNode:Node;	// existing node that is "selected"
 		private var toggledNode:Node;	// new node being placed
 		private var cantSet:Boolean;
-		public function NodeManager(canvin:Stage, refup:Main)
+		public function NodeManager(refup:Main)
 		{
 			allNodes = new Array();
-			canvas = canvin;
+			canvas = refup.stage;
 			sup = refup;
 			canvas.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
 			canvas.addEventListener(KeyboardEvent.KEY_DOWN,keyListener);
@@ -361,12 +361,13 @@ package EgyptianInvasion
 					var subintersected:Boolean;
 					var subtooclose:Boolean;
 					
-					for(var i:Number = 0; i < allNodes.length;i++)
+					for(i = 0; i < allNodes.length;i++)
 					{
 						var intersect:Array;
-						for(var j:Number = 0; j < (allNodes[i] as Node).getSiblings().length; j++)
+						for(j = 0; j < (allNodes[i] as Node).getSiblings().length; j++)
 						{
-							 intersect = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
+							intersect = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
+
 								((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y, 
 								potentialNode.x,potentialNode.y,potentialNode.x,potentialNode.y);
 							
