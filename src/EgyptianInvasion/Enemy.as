@@ -12,6 +12,7 @@ package EgyptianInvasion
 	{
 		private var canvas:Stage;
 		private var time:Timer;
+		private var startNode:Node;	// The fist node we start at
 		private var endNode:Node;	// Our eventual goal
 		private var originNode:Node;	// The most recently visited Node
 		private var targetNode:Node;	// Node we are moving toward
@@ -32,6 +33,7 @@ package EgyptianInvasion
 			this.endNode = endNode;
 			this.targetNode = startNode;	// Make a decision at the start node first
 			this.originNode = startNode;
+			this.startNode = startNode;
 			
 			this.speed = 1;
 			this.moving = false;	// We need to make a decision first
@@ -73,7 +75,7 @@ package EgyptianInvasion
 					var index:int = Math.floor(Math.random() * siblings.length);
 					var potentialTarget:Node = Node(siblings[index]);
 					var attempts:int = 0;
-					while(potentialTarget == originNode && attempts < 5) {	// Make sure we don't go back exactly where we came from
+					while((potentialTarget == originNode || potentialTarget == startNode) && attempts < 5) {	// Make sure we don't go back exactly where we came from
 						index = Math.floor(Math.random() * siblings.length);
 						potentialTarget = siblings[index];
 						attempts++;
