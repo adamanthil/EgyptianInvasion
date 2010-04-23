@@ -122,11 +122,12 @@ package EgyptianInvasion
 		{
 			if(e.charCode == 97)
 			{
-				toggledNode = new Node(0,0,canvas);
+				/*toggledNode = new Node(0,0,canvas);
 				toggledNode.addSibling(selectedNode);
 				selectedNode.addSibling(toggledNode);
 				toggledNode.setPlaced(false);
-				this.addChild(toggledNode);
+				this.addChild(toggledNode);*/
+				addNode(new Node(0,0,canvas));
 			}
 			if(e.ctrlKey && toggledNode != null)
 			{

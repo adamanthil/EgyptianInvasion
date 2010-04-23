@@ -26,6 +26,8 @@ package EgyptianInvasion
 		// Adds a reference to a bitmap at compile-time
 		[Embed(source="../assets/img/enemy.jpg")] private var BGImage:Class;
 		
+		private var figure:EFigure;
+		
 		public function Enemy(startNode:Node, endNode:Node, canvas:Stage) {
 			this.x = startNode.x;
 			this.y = startNode.y;
@@ -39,9 +41,14 @@ package EgyptianInvasion
 			this.moving = false;	// We need to make a decision first
 			this.visitedNodes = new Array();	// Initialize visited node array
 			
+			figure = new EFigure(-3,-3,canvas);
+			figure.scaleX = 0.02;
+			figure.scaleY = 0.02;
+			figure.walk();
+			addChild(figure);
 			
 			// Load embedded background image from file and set size
-			var photo:BitmapAsset = new BGImage();
+			/*var photo:BitmapAsset = new BGImage();
 			photo.scaleX = 0.01;
 			photo.scaleY = 0.01;
 			photo.x = -3;
@@ -51,7 +58,7 @@ package EgyptianInvasion
 			// Draw yellow square0
 			graphics.beginFill(0xFFFF00);
 			graphics.drawRect(-4,-4,8,8);
-			graphics.endFill();
+			graphics.endFill();*/
 			
 			time = new Timer(10);
 			time.addEventListener(TimerEvent.TIMER,timeListener);
@@ -163,13 +170,15 @@ package EgyptianInvasion
 				var distTraveled:Number = Math.sqrt(Math.pow(this.x - originNode.x,2) + Math.pow(this.y - originNode.y,2));
 				
 				// Update distances
-				if(distTraveled >= distTotal) {
+				if(distTraveled >= distTotal) {//reach
 					this.x = targetNode.x;
 					this.y = targetNode.y;
 					this.moving = false;
 					
+					
 					// If we've reached the destination, set target to null
 					if(targetNode == endNode) {
+						figure.stand();
 						targetNode = null;
 					}
 				}
