@@ -83,11 +83,11 @@
 
 			if (!button.isDown()){
 				// If there is a path from start to end, begin the invasion!
-				if(main.getNodeManager().getStartNode().pathExists(main.getNodeManager().getEndNode())) {
+				if(button.getMain().getNodeManager().getStartNode().pathExists(button.getMain().getNodeManager().getEndNode())) {
 					button.setDown(false);
 					this.buildingPhase = false;
 					
-					main.getEnemyManager().beginInvasion();
+					button.getMain().getEnemyManager().beginInvasion();
 				}
 				
 			}
