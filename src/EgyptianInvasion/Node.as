@@ -16,17 +16,19 @@ package EgyptianInvasion
 		private var time:Timer;
 		private var placed:Boolean;
 		private var isValid:Boolean;
+		private var size:Number;
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage) {
 			this.canvas = canvas;
 			x = nodex;
 			y = nodey;
+			size = 5;
 			time = new Timer(10);
 			graphics.beginFill(0xFF0000);
 			graphics.drawCircle(0,0,5);
 			graphics.endFill();
 			graphics.lineStyle(1,0xFF2000);
-			currRad = 10;
+			currRad = size;
 			radiusInc = false;
 			graphics.drawCircle(0,0,currRad);
 			//			canv.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
@@ -44,11 +46,17 @@ package EgyptianInvasion
 		public function setPlaced ( place:Boolean):void	{
 			placed = place;
 		}
-		public function setValid ( val:Boolean)
+		
+		public function setValid ( val:Boolean):void
 		{
 			isValid = val;
 		}
-		public function getPossibleAngle(nodeIn:Node)
+		public function getSize():Number
+		{
+			return size;
+		}
+		
+		public function getPossibleAngle(nodeIn:Node):Boolean
 		{
 			var relx0:Number = (nodeIn.x - x)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
 			var rely0:Number = (nodeIn.y - y)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
@@ -62,22 +70,23 @@ package EgyptianInvasion
 			}
 			return false;
 		}
-		private function displayFaded()
+		
+		private function displayFaded():void
 		{
 			graphics.clear();
 			if(radiusInc)
 				currRad+=.1;
 			else
 				currRad-=.1;
-			if(currRad <5)
+			if(currRad <size)
 				radiusInc = true;
-			else if (currRad >10)
+			else if (currRad >size+5)
 				radiusInc = false;
 			if(!isValid)
 				graphics.beginFill(0xFF0000,.5);
 			if(isValid)
 				graphics.beginFill(0x00FFEE,.5);
-			graphics.drawCircle(0,0,5);
+			graphics.drawCircle(0,0,size);
 			graphics.endFill();
 			graphics.lineStyle(1,0xFF2000,.5);
 			if(selected)
@@ -94,19 +103,20 @@ package EgyptianInvasion
 				int++;
 			}
 		}
-		private function displaySolid()
+		
+		private function displaySolid():void
 		{
 			graphics.clear();
 			if(radiusInc)
 				currRad+=.1;
 			else
 				currRad-=.1;
-			if(currRad <5)
+			if(currRad <size)
 				radiusInc = true;
-			else if (currRad >10)
+			else if (currRad >size+5)
 				radiusInc = false;
 			graphics.beginFill(0xFF0000);
-			graphics.drawCircle(0,0,5);
+			graphics.drawCircle(0,0,size);
 			graphics.endFill();
 			graphics.lineStyle(1,0xFF2000);
 			if(selected)
@@ -125,6 +135,7 @@ package EgyptianInvasion
 				int++;
 			}
 		}
+		
 		public function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
