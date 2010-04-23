@@ -44,11 +44,13 @@ package EgyptianInvasion
 		public function setPlaced ( place:Boolean):void	{
 			placed = place;
 		}
-		public function setValid ( val:Boolean)
+		
+		public function setValid ( val:Boolean):void
 		{
 			isValid = val;
 		}
-		public function getPossibleAngle(nodeIn:Node)
+		
+		public function getPossibleAngle(nodeIn:Node):Boolean
 		{
 			var relx0:Number = (nodeIn.x - x)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
 			var rely0:Number = (nodeIn.y - y)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
@@ -62,7 +64,8 @@ package EgyptianInvasion
 			}
 			return false;
 		}
-		private function displayFaded()
+		
+		private function displayFaded():void
 		{
 			graphics.clear();
 			if(radiusInc)
@@ -94,7 +97,8 @@ package EgyptianInvasion
 				int++;
 			}
 		}
-		private function displaySolid()
+		
+		private function displaySolid():void
 		{
 			graphics.clear();
 			if(radiusInc)
@@ -125,6 +129,7 @@ package EgyptianInvasion
 				int++;
 			}
 		}
+		
 		public function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
