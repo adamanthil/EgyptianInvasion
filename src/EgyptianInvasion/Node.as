@@ -55,7 +55,10 @@ package EgyptianInvasion
 		{
 			return size;
 		}
-		
+		public function onPlaced(sup:NodeManager):void
+		{
+			
+		}
 		public function getPossibleAngle(nodeIn:Node):Boolean
 		{
 			var relx0:Number = (nodeIn.x - x)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));

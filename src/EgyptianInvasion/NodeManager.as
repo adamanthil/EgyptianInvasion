@@ -103,6 +103,8 @@ package EgyptianInvasion
 				{
 					toggledNode.setPlaced(true);
 					allNodes.push(toggledNode);
+					toggledNode.onPlaced(this);
+					
 				}
 				else
 				{
@@ -298,7 +300,7 @@ package EgyptianInvasion
 					eval3 = true;
 				}
 			}
-			if(!(eval1&&eval3) || Math.sqrt(Math.pow(ret[0] - x2,2) + Math.pow(ret[1] - y2,2)) > size+10)
+			if(!(eval1&&eval3) || Math.sqrt(Math.pow(ret[0] - x2,2) + Math.pow(ret[1] - y2,2)) > size)
 			{
 				ret[0] = null;
 				ret[1] = null;
@@ -314,9 +316,10 @@ package EgyptianInvasion
 				//				var inbounds:Boolean = inStructure(toggledNode.x,toggledNode.y);
 				for(var i:Number = 0; i < allNodes.length;i++)
 				{
+					var intersect:Array;
 					for(var j:Number = 0; j < (allNodes[i] as Node).getSiblings().length; j++)
 					{
-						var intersect:Array = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
+						intersect = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
 							((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y, 
 							selectedNode.x,selectedNode.y,toggledNode.x,toggledNode.y);
 						trace();
@@ -333,13 +336,12 @@ package EgyptianInvasion
 						{
 							tooclose = true;
 						}
-						intersect = findIntersectperp(selectedNode.x,selectedNode.y,toggledNode.x,toggledNode.y,
-							allNodes[i].x,allNodes[i].y,allNodes[i].getSize());
-						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != selectedNode &&(allNodes[i] as Node) != toggledNode
-							&&((allNodes[i] as Node).getSiblings()[j] as Node) != selectedNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != toggledNode)
-						{
-							tooclose = true;
-						}
+					}
+					intersect = findIntersectperp(selectedNode.x,selectedNode.y,toggledNode.x,toggledNode.y,
+						allNodes[i].x,allNodes[i].y,allNodes[i].getSize());
+					if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != selectedNode &&(allNodes[i] as Node) != toggledNode)
+					{
+						tooclose = true;
 					}
 				}
 				var connect:Boolean;
@@ -361,9 +363,10 @@ package EgyptianInvasion
 					
 					for(var i:Number = 0; i < allNodes.length;i++)
 					{
+						var intersect:Array;
 						for(var j:Number = 0; j < (allNodes[i] as Node).getSiblings().length; j++)
 						{
-							var intersect:Array = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
+							 intersect = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
 								((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y, 
 								potentialNode.x,potentialNode.y,potentialNode.x,potentialNode.y);
 							
@@ -380,17 +383,17 @@ package EgyptianInvasion
 							{
 								subtooclose = true;
 							}
-							intersect = findIntersectperp(selectedNode.x,selectedNode.y, 
-								potentialNode.x,potentialNode.y,
-								allNodes[i].x,allNodes[i].y, potentialNode.getSize());
-							if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != potentialNode &&(allNodes[i] as Node) != potentialNode
-								&&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode)
-							{
-								subtooclose = true;
-							}
+							
 						}
-						connect = !(subintersected || subtooclose || subangleclose || angleclose);
+						intersect = findIntersectperp(selectedNode.x,selectedNode.y, 
+							potentialNode.x,potentialNode.y,
+							allNodes[i].x,allNodes[i].y, potentialNode.getSize());
+						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != potentialNode &&(allNodes[i] as Node) != potentialNode)
+						{
+							subtooclose = true;
+						}
 					}
+					connect = !(subintersected || subtooclose || subangleclose || angleclose);
 				}
 				else
 					connect = true;
