@@ -359,11 +359,11 @@ package EgyptianInvasion
 					var subintersected:Boolean;
 					var subtooclose:Boolean;
 					
-					for(var i:Number = 0; i < allNodes.length;i++)
+					for(i = 0; i < allNodes.length;i++)
 					{
-						for(var j:Number = 0; j < (allNodes[i] as Node).getSiblings().length; j++)
+						for(j = 0; j < (allNodes[i] as Node).getSiblings().length; j++)
 						{
-							var intersect:Array = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
+							intersect = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
 								((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y, 
 								potentialNode.x,potentialNode.y,potentialNode.x,potentialNode.y);
 							
