@@ -115,7 +115,7 @@ package EgyptianInvasion
 				while(count < allNodes.length)
 				{
 					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10)
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).getSize())
 						potentialNode = allNodes[count];
 					count++;
 				}
@@ -258,7 +258,7 @@ package EgyptianInvasion
 			return ret;
 		}
 		private function findIntersectperp(x0:Number,y0:Number,x1:Number,y1:Number,
-										   x2:Number,y2:Number):Array
+										   x2:Number,y2:Number, size:Number):Array
 		{
 			var m1:Number = (y1-y0) / (x1 - x0);
 			var b1:Number = (-m1 * x0 +  y0);
@@ -298,7 +298,7 @@ package EgyptianInvasion
 					eval3 = true;
 				}
 			}
-			if(!(eval1&&eval3) || Math.sqrt(Math.pow(ret[0] - x2,2) + Math.pow(ret[1] - y2,2)) > 10)
+			if(!(eval1&&eval3) || Math.sqrt(Math.pow(ret[0] - x2,2) + Math.pow(ret[1] - y2,2)) > size+10)
 			{
 				ret[0] = null;
 				ret[1] = null;
@@ -365,7 +365,14 @@ package EgyptianInvasion
 						}
 						intersect = findIntersectperp((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
 							((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y,
-							toggledNode.x,toggledNode.y);
+							toggledNode.x,toggledNode.y, toggledNode.getSize());
+						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != selectedNode &&(allNodes[i] as Node) != toggledNode
+							&&((allNodes[i] as Node).getSiblings()[j] as Node) != selectedNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != toggledNode)
+						{
+							tooclose = true;
+						}
+						intersect = findIntersectperp(selectedNode.x,selectedNode.y,toggledNode.x,toggledNode.y,
+							allNodes[i].x,allNodes[i].y,allNodes[i].getSize());
 						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != selectedNode &&(allNodes[i] as Node) != toggledNode
 							&&((allNodes[i] as Node).getSiblings()[j] as Node) != selectedNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != toggledNode)
 						{
@@ -405,20 +412,28 @@ package EgyptianInvasion
 							}
 							intersect = findIntersectperp((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
 								((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y,
-								potentialNode.x,potentialNode.y);
+								potentialNode.x,potentialNode.y, potentialNode.getSize());
+							if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != potentialNode &&(allNodes[i] as Node) != potentialNode
+								&&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode)
+							{
+								subtooclose = true;
+							}
+							intersect = findIntersectperp(selectedNode.x,selectedNode.y, 
+								potentialNode.x,potentialNode.y,
+								allNodes[i].x,allNodes[i].y, potentialNode.getSize());
 							if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != potentialNode &&(allNodes[i] as Node) != potentialNode
 								&&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode)
 							{
 								subtooclose = true;
 							}
 						}
-						connect = !(subintersected || subtooclose || subangleclose);
+						connect = !(subintersected || subtooclose || subangleclose || angleclose);
 					}
 				}
 				else
 					connect = true;
-				toggledNode.setValid(!(tooclose||angleclose||intersected) && connect);
-				cantSet = (tooclose||angleclose||intersected) || !connect;
+				toggledNode.setValid(!(tooclose||angleclose||intersected) || connect && potentialNode != null);
+				cantSet = (tooclose||angleclose||intersected) && !(connect && potentialNode != null);
 				//conditions and crap ya know.
 			}
 		}	
