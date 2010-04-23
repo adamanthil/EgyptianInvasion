@@ -72,9 +72,11 @@ package EgyptianInvasion
 					var siblings:Array = targetNode.getSiblings();
 					var index:int = Math.floor(Math.random() * siblings.length);
 					var potentialTarget:Node = Node(siblings[index]);
-					while(potentialTarget == originNode) {	// Make sure we don't go back exactly where we came from
+					var attempts:int = 0;
+					while(potentialTarget == originNode && attempts < 5) {	// Make sure we don't go back exactly where we came from
 						index = Math.floor(Math.random() * siblings.length);
 						potentialTarget = siblings[index];
+						attempts++;
 					}
 					
 					// Set most recently visited node to the one we arrived at
