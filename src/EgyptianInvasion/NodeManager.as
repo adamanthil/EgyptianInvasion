@@ -19,10 +19,10 @@ package EgyptianInvasion
 		private var selectedNode:Node;	// existing node that is "selected"
 		private var toggledNode:Node;	// new node being placed
 		private var cantSet:Boolean;
-		public function NodeManager(canvin:Stage, refup:Main)
+		public function NodeManager(refup:Main)
 		{
 			allNodes = new Array();
-			canvas = canvin;
+			canvas = refup.stage;
 			sup = refup;
 			canvas.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
 			canvas.addEventListener(KeyboardEvent.KEY_DOWN,keyListener);
