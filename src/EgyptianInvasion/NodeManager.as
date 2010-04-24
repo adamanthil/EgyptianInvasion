@@ -114,7 +114,7 @@ package EgyptianInvasion
 					selectedNode.removeSibling(toggledNode);
 				}
 				toggledNode = null;
-				sup.getPlaceNodeButton().setDown(false);
+				//sup.getUI().getPlaceNodeButton().setDown(false);
 			}
 			
 		}
@@ -136,7 +136,7 @@ package EgyptianInvasion
 				toggledNode = null;
 				sup.getPlaceNodeButton().setDown(false);
 			}
-			if(e.charCode == 98)
+			if(e.charCode == 100)
 			{
 				removeNode();
 			}

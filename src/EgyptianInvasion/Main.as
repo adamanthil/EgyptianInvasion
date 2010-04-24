@@ -27,26 +27,27 @@ package EgyptianInvasion
 			bg.y = 200;
 			this.addChild(bg);
 			
-			ui = new UI(0,0,stage);
-			this.addChild(ui);
-			
-			placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
-			placeNodeButton.setMouseDown(addNodeHandler);
-			this.addChild(placeNodeButton);
-			
 			var pyramid:Pyramid = new Pyramid(new assets.pyramid2(), 300,250,stage);
 			pyramid.scaleX = 0.7;
 			this.addChild(pyramid);
+			
+			/*placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
+			placeNodeButton.setMouseDown(addNodeHandler);
+			this.addChild(placeNodeButton);
 			
 			var changeNodeButton:Button = new Button(new assets.ToggleButton(), 50,50, "Change Node",stage);
 			this.addChild(changeNodeButton);
 			
 			beginInvasionButton = new Button(new assets.ToggleButton(), 50, 150, "Begin Invasion", stage);
 			beginInvasionButton.setMouseDown(beginInvasionHandler);
-			this.addChild(beginInvasionButton);
+			this.addChild(beginInvasionButton);*/
 			
 			nodeMan = new NodeManager(this);
 			this.addChild(nodeMan);
+			
+			ui = new UI(50,0,stage,this);
+			this.addChild(ui);
+			
 			
 			enemyMan = new EnemyManager(this,nodeMan);
 			
@@ -56,6 +57,21 @@ package EgyptianInvasion
 		public function getPlaceNodeButton():Button
 		{
 			return placeNodeButton;
+		}
+		
+		public function getNodeManager():NodeManager
+		{
+			return nodeMan;
+		}
+		
+		public function getEnemyManager():EnemyManager
+		{
+			return enemyMan;
+		}
+		
+		public function getUI():UI
+		{
+			return ui;
 		}
 		
 		// -- Button Event Handlers -------------------------
