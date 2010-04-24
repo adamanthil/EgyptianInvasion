@@ -19,11 +19,11 @@ package EgyptianInvasion
 		}
 		
 		
-		public function walk(){
+		public function walk():void {
 			figure.gotoAndStop("walkRight");
 		}
 		
-		public function stand(){
+		public function stand():void {
 			figure.gotoAndStop("stand");
 		}
 		public function updatePosition(positionX:Number, postionY:Number):void{
