@@ -17,8 +17,11 @@ package EgyptianInvasion
 		private var placed:Boolean;
 		private var isValid:Boolean;
 		private var size:Number;
+		private var validAngles:Array;
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage) {
+			//this.cacheAsBitmap = true;
+			this.blendMode = BlendMode.LAYER;
 			this.canvas = canvas;
 			x = nodex;
 			y = nodey;
@@ -46,7 +49,10 @@ package EgyptianInvasion
 		public function setPlaced ( place:Boolean):void	{
 			placed = place;
 		}
-		
+		public function isPlaced () :Boolean
+		{
+			return placed;
+		}
 		public function setValid ( val:Boolean):void
 		{
 			isValid = val;
@@ -56,6 +62,9 @@ package EgyptianInvasion
 			return size;
 		}
 		public function onPlaced(sup:NodeManager):void
+		{
+		}
+		public function onInside(guys:EnemyManager):void
 		{
 			
 		}
@@ -85,31 +94,27 @@ package EgyptianInvasion
 				radiusInc = true;
 			else if (currRad >size+5)
 				radiusInc = false;
+			
+			
 			if(!isValid)
-				graphics.beginFill(0xFF0000,.5);
+				graphics.beginFill(0xFF0000,1);
 			if(isValid)
-				graphics.beginFill(0x00FFEE,.5);
+				graphics.beginFill(0x00FFEE,1);
 			graphics.drawCircle(0,0,size);
 			graphics.endFill();
-			graphics.lineStyle(1,0xFF2000,.5);
+			
+			graphics.lineStyle(1,0xFF2000,1);
 			if(selected)
 				graphics.lineStyle(1.5, 0x00FF00,.5);
 			graphics.drawCircle(0,0,currRad);
-			var int:Number;
-			int = 0;
-			while(int < nodes.length)
-			{
-				graphics.moveTo(0,0);
-				graphics.lineStyle(3, 0xFF0000,.5);
-				graphics.lineTo((nodes[int] as Node).x - x,(nodes[int] as Node).y - y);
-				graphics.moveTo(0,0);
-				int++;
-			}
+			
+			blendMode = BlendMode.NORMAL;
 		}
 		
 		private function displaySolid():void
 		{
 			graphics.clear();
+			
 			if(radiusInc)
 				currRad+=.1;
 			else
@@ -121,22 +126,13 @@ package EgyptianInvasion
 			graphics.beginFill(0xFF0000);
 			graphics.drawCircle(0,0,size);
 			graphics.endFill();
+			
 			graphics.lineStyle(1,0xFF2000);
 			if(selected)
 				graphics.lineStyle(1.5, 0x00FF00);
 			graphics.drawCircle(0,0,currRad);
-			var int:Number;
-			int = 0;
-			while(int < nodes.length)
-			{
-				graphics.moveTo(0,0);
-				graphics.lineStyle(3, 0xFF0000);
-				if(!(nodes[int] as Node).placed)
-					graphics.lineStyle(3, 0xFF0000,.5);
-				graphics.lineTo((nodes[int] as Node).x - x,(nodes[int] as Node).y - y);
-				graphics.moveTo(0,0);
-				int++;
-			}
+			blendMode = BlendMode.NORMAL;
+			
 		}
 		
 		public function TimeListener(e:TimerEvent):void	{

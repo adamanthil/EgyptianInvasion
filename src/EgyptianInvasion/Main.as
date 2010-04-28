@@ -19,13 +19,10 @@ package EgyptianInvasion
 		public function Main () {
 			// Start in building phase
 			this.buildingPhase = true;
+			this.blendMode = BlendMode.LAYER;
 			
-			var bg:MovieClip = new BackgroundTest();
-			bg.scaleX = 0.7;
-			bg.scaleY = 0.7;
-			bg.x = 200;
-			bg.y = 200;
-			this.addChild(bg);
+			this.addChild(new FarBackground());			
+			this.addChild(new NearBackground(stage));
 			
 			ui = new UI(0,0,stage);
 			this.addChild(ui);
@@ -34,10 +31,6 @@ package EgyptianInvasion
 			placeNodeButton.setMouseDown(addNodeHandler);
 			this.addChild(placeNodeButton);
 			
-			var pyramid:Pyramid = new Pyramid(new assets.pyramid2(), 300,250,stage);
-			pyramid.scaleX = 0.7;
-			this.addChild(pyramid);
-			
 			var changeNodeButton:Button = new Button(new assets.ToggleButton(), 50,50, "Change Node",stage);
 			this.addChild(changeNodeButton);
 			
@@ -45,9 +38,9 @@ package EgyptianInvasion
 			beginInvasionButton.setMouseDown(beginInvasionHandler);
 			this.addChild(beginInvasionButton);
 			
-			nodeMan = new NodeManager(this);
+			nodeMan = new NodeManager(this,69,365,200,300);
 			this.addChild(nodeMan);
-			
+			this.setChildIndex(nodeMan,this.numChildren - 1);
 			enemyMan = new EnemyManager(this,nodeMan);
 			
 			stage.frameRate = 100;			
