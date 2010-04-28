@@ -8,16 +8,17 @@ package EgyptianInvasion
 	
 	public class Node extends Sprite {
 		
-		private var canvas:Stage;
-		private var nodes:Array;
-		private var selected:Boolean;
-		private var currRad:Number;
-		private var radiusInc:Boolean;
-		private var time:Timer;
-		private var placed:Boolean;
-		private var isValid:Boolean;
-		private var size:Number;
-		private var validAngles:Array;
+		public var canvas:Stage;
+		public var nodes:Array;
+		public var selected:Boolean;
+		public var currRad:Number;
+		public var radiusInc:Boolean;
+		public var time:Timer;
+		public var placed:Boolean;
+		public var isValid:Boolean;
+		public var size:Number;
+		public var validAngles:Array;
+		public var isConnectable:Boolean;
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage) {
 			//this.cacheAsBitmap = true;
@@ -27,13 +28,8 @@ package EgyptianInvasion
 			y = nodey;
 			size = 5;
 			time = new Timer(10);
-			graphics.beginFill(0xFF0000);
-			graphics.drawCircle(0,0,5);
-			graphics.endFill();
-			graphics.lineStyle(1,0xFF2000);
 			currRad = size;
 			radiusInc = false;
-			graphics.drawCircle(0,0,currRad);
 			//			canv.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
 			//			canv.addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
 			canvas.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveListener);
@@ -41,7 +37,10 @@ package EgyptianInvasion
 			time.start();
 			nodes = new Array();
 		}
-		
+		public function connectable()
+		{
+			return isConnectable;
+		}
 		public function setSelected( select:Boolean):void {
 			selected = select;
 		}
@@ -78,12 +77,27 @@ package EgyptianInvasion
 				var rely1:Number = ((nodes[i] as Node).y - y)/Math.sqrt(Math.pow((nodes[i] as Node).x - x,2) + Math.pow((nodes[i] as Node).y - y,2));
 				if(Math.acos(relx0 * relx1 + rely0* rely1) < Math.PI/6
 					&& !(nodeIn == nodes[i] as Node))
+				{
 					return true;
+				}
 			}
-			return false;
+			if(validAngles != null && validAngles.length >0)
+			{
+				var isValidAngle:Boolean = false;
+				for(var j :Number = 0; j < validAngles.length; j +=2)
+				{
+					if(Math.acos(relx0) > validAngles[j] && Math.acos(relx0) < validAngles[j+1])
+						isValidAngle = true;
+				}
+				if(isValidAngle)
+					return false;
+			}
+			else
+				return false;
+			return true;
 		}
 		
-		private function displayFaded():void
+		public function displayFaded():void
 		{
 			graphics.clear();
 			if(radiusInc)
@@ -111,7 +125,7 @@ package EgyptianInvasion
 			blendMode = BlendMode.NORMAL;
 		}
 		
-		private function displaySolid():void
+		public function displaySolid():void
 		{
 			graphics.clear();
 			
@@ -164,7 +178,7 @@ package EgyptianInvasion
 			return pathExistsRecursive(n,new Array());
 		}
 		
-		private function pathExistsRecursive(n:Node, visited:Array):Boolean {
+		public function pathExistsRecursive(n:Node, visited:Array):Boolean {
 			if(n == this) {
 				return true;
 			}

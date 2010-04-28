@@ -14,8 +14,9 @@ package EgyptianInvasion
 		private var mouseClick:Function;
 		private var text:TextField;
 		private var format:TextFormat;
+		private var main:Main;
 		
-		public function Button(buttonAsset:MovieClip, nodex:Number, nodey:Number, label:String, canvas:Stage) 
+		public function Button(buttonAsset:MovieClip, nodex:Number, nodey:Number, label:String, canvas:Stage, main:Main) 
 		{
 			this.buttonAsset = buttonAsset;
 			buttonAsset.stop();
@@ -23,6 +24,7 @@ package EgyptianInvasion
 			x = nodex;
 			y = nodey;
 			this.canvas = canvas;
+			this.main = main;
 			addChild(buttonAsset);
 			format = new TextFormat();
 			format.color = 0xFFFF32; 
@@ -37,6 +39,16 @@ package EgyptianInvasion
 			addChild(text);
 			addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
 			addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
+		}
+		
+		public function getMain():Main
+		{
+			return main;
+		}
+		
+		public function getCanvas():Stage
+		{
+			return canvas;
 		}
 		
 		public function setMouseDown(mouseDown:Function):void {
@@ -79,5 +91,6 @@ package EgyptianInvasion
 				buttonAsset.gotoAndStop("mouseUp");	
 			}
 		}
+		
 	}
 }

@@ -24,10 +24,10 @@ package EgyptianInvasion
 			this.addChild(new FarBackground());			
 			this.addChild(new NearBackground(stage));
 			
-			ui = new UI(0,0,stage);
-			this.addChild(ui);
+			placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage, this);
 			
-			placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
+			
+			/*placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
 			placeNodeButton.setMouseDown(addNodeHandler);
 			this.addChild(placeNodeButton);
 			
@@ -36,11 +36,17 @@ package EgyptianInvasion
 			
 			beginInvasionButton = new Button(new assets.ToggleButton(), 50, 150, "Begin Invasion", stage);
 			beginInvasionButton.setMouseDown(beginInvasionHandler);
-			this.addChild(beginInvasionButton);
+			this.addChild(beginInvasionButton);*/
 			
 			nodeMan = new NodeManager(this,69,365,200,300);
 			this.addChild(nodeMan);
+			
 			this.setChildIndex(nodeMan,this.numChildren - 1);
+			
+			ui = new UI(50,0,stage,this);
+			this.addChild(ui);
+			
+			
 			enemyMan = new EnemyManager(this,nodeMan);
 			
 			stage.frameRate = 100;			
@@ -49,6 +55,21 @@ package EgyptianInvasion
 		public function getPlaceNodeButton():Button
 		{
 			return placeNodeButton;
+		}
+		
+		public function getNodeManager():NodeManager
+		{
+			return nodeMan;
+		}
+		
+		public function getEnemyManager():EnemyManager
+		{
+			return enemyMan;
+		}
+		
+		public function getUI():UI
+		{
+			return ui;
 		}
 		
 		// -- Button Event Handlers -------------------------

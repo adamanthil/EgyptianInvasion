@@ -140,7 +140,7 @@ package EgyptianInvasion
 					selectedNode.removeSibling(toggledNode);
 				}
 				toggledNode = null;
-				sup.getPlaceNodeButton().setDown(false);
+				//sup.getUI().getPlaceNodeButton().setDown(false);
 			}
 			
 		}
@@ -148,11 +148,12 @@ package EgyptianInvasion
 		{
 			if(e.charCode == 97)
 			{
-				toggledNode = new Node(0,0,canvas);
+				/*toggledNode = new Node(0,0,canvas);
 				toggledNode.addSibling(selectedNode);
 				selectedNode.addSibling(toggledNode);
 				toggledNode.setPlaced(false);
-				this.addChild(toggledNode);
+				this.addChild(toggledNode);*/
+				addNode(new Node(0,0,canvas));
 			}
 			if(e.ctrlKey && toggledNode != null)
 			{
@@ -161,7 +162,7 @@ package EgyptianInvasion
 				toggledNode = null;
 				sup.getPlaceNodeButton().setDown(false);
 			}
-			if(e.charCode == 98)
+			if(e.charCode == 100)
 			{
 				removeNode();
 			}
@@ -169,6 +170,11 @@ package EgyptianInvasion
 		private function mouseUpListener (e:MouseEvent):void {
 			cantSet = false;
 			mouseMovListener(e);
+		}
+		public function addNodeDirect(nod:Node)
+		{
+			this.addChild(nod);
+			this.allNodes.push(nod);
 		}
 		private function removeNode():void
 		{
