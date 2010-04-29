@@ -45,7 +45,7 @@ package EgyptianInvasion
 			nodeMan = new NodeManager(this);
 			this.addChild(nodeMan);
 			
-			ui = new UI(50,0,stage,this);
+			ui = new UI(0,0,stage,this);
 			this.addChild(ui);
 			
 			
@@ -73,6 +73,9 @@ package EgyptianInvasion
 		{
 			return ui;
 		}
+		
+		public function getBuildPhase():Boolean {return buildingPhase;}
+		public function setBuildPhase(b:Boolean):void {buildingPhase = b;}
 		
 		// -- Button Event Handlers -------------------------
 		
