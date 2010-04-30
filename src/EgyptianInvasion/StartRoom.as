@@ -28,9 +28,9 @@ package EgyptianInvasion
 			size = 10;
 			time.start();
 			nodes = new Array();
-			isConnectable = false;
+			isConnectable = true;
 		}
-		public override function processNode(guy:Enemy):Boolean
+		public override function processEnemy(guy:Enemy):Boolean
 		{
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)// && guy.getGold() > 0)
 			{

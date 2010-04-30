@@ -1,5 +1,3 @@
-package EgyptianInvasion
-{
 	package EgyptianInvasion
 	{
 		import assets.ToggleButton;
@@ -78,7 +76,7 @@ package EgyptianInvasion
 					otherSide.setPlaced(true);
 				}
 				var activeButton:Button = new Button(new assets.ToggleButton(),x,y+15,"spike button",canvas,sup.parent as Main);
-				activeButton.setMouseClick(activeTrigger);
+				activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
 				this.addChild(activeButton);
 				roomImage.x = -15;
 			}
@@ -110,9 +108,9 @@ package EgyptianInvasion
 				}
 				return x;
 			}
-			public override function processNode(guy:Enemy):Boolean
+			public override function processEnemy(guy:Enemy):Boolean
 			{
-				if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.hasBeenOutside())
+				/*if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.hasBeenOutside())
 				{
 					if(!guy.isDead())
 					{
@@ -127,27 +125,28 @@ package EgyptianInvasion
 				}
 				else
 				{
-					return false
-				}
+					return false;
+				}*/
+				return false;
 			}
-			public function TimeListener(e:TimerEvent):void	{
+			public override function TimeListener(e:TimerEvent):void	{
 				if(placed)
 					displaySolid();
 				else
 					displayFaded();
 				
 			}
-			public override trigger():void
+			public override function trigger():void
 			{
-				active = !active;
+				this.active = !this.active;
 			}
 			public override function getImpassible():Boolean
 			{
 				return false;
 			}
-			public function active():Boolean
+			public function activeNAAT():Boolean
 			{
-				return active;
+				return this.active;
 			}
 			public override function displaySolid():void
 			{
@@ -176,4 +175,3 @@ package EgyptianInvasion
 			}
 		}
 	}
-}

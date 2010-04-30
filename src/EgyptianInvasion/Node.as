@@ -27,13 +27,14 @@ package EgyptianInvasion
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
 			//this.cacheAsBitmap = true;
+			this.isConnectable = true;
 			isTrigPlace = false;
 			sup = refup;
 			this.blendMode = BlendMode.LAYER;
 			this.canvas = canvas;
 			x = nodex;
 			y = nodey;
-			size = 5;
+			size = 2;
 			time = new Timer(10);
 			currRad = size;
 			radiusInc = false;
