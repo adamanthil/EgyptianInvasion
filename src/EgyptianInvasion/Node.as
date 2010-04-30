@@ -8,29 +8,36 @@ package EgyptianInvasion
 	
 	public class Node extends Sprite {
 		
-		private var canvas:Stage;
-		private var nodes:Array;
-		private var selected:Boolean;
-		private var currRad:Number;
-		private var radiusInc:Boolean;
-		private var time:Timer;
-		private var placed:Boolean;
-		private var isValid:Boolean;
-		private var size:Number;
+		public var canvas:Stage;
+		public var nodes:Array;
+		public var selected:Boolean;
+		public var currRad:Number;
+		public var radiusInc:Boolean;
+		public var time:Timer;
+		public var placed:Boolean;
+		public var isValid:Boolean;
+		public var size:Number;
+		public var validAngles:Array;
+		public var isConnectable:Boolean;
+		public var sup:NodeManager;
+		public var triggerNode:Node; //node that this one will trigger.
+		public var isTrigPlace:Boolean;//utility variable, so we can tell when the player wants to make a trigger connection
+										//between nodes.
+		public var goldWithin:Number;
 		
-		public function Node(nodex:Number, nodey:Number, canvas:Stage) {
+		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
+			//this.cacheAsBitmap = true;
+			this.isConnectable = true;
+			isTrigPlace = false;
+			sup = refup;
+			this.blendMode = BlendMode.LAYER;
 			this.canvas = canvas;
 			x = nodex;
 			y = nodey;
-			size = 5;
+			size = 2;
 			time = new Timer(10);
-			graphics.beginFill(0xFF0000);
-			graphics.drawCircle(0,0,5);
-			graphics.endFill();
-			graphics.lineStyle(1,0xFF2000);
 			currRad = size;
 			radiusInc = false;
-			graphics.drawCircle(0,0,currRad);
 			//			canv.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);
 			//			canv.addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
 			canvas.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveListener);
@@ -38,13 +45,25 @@ package EgyptianInvasion
 			time.start();
 			nodes = new Array();
 		}
+		public function connectable()
+		{
+			return isConnectable;
+		}
+		public function drawToPointX():Number
+		{
+			return x;
+		}
+		public function drawToPointY():Number
+		{
+			return y;	
+		}
 		
 		// Determines if the enemy should be affected based on its current position (if it is within the range of the node)
 		// Called by the Enemy class
 		public function processEnemy(enemy:Enemy):Boolean {
 			return false;
 		}
-		
+
 		public function setSelected( select:Boolean):void {
 			selected = select;
 		}
@@ -52,7 +71,18 @@ package EgyptianInvasion
 		public function setPlaced ( place:Boolean):void	{
 			placed = place;
 		}
-		
+		public function isPlaced () :Boolean
+		{
+			return placed;
+		}
+		public function getImpassible(): Boolean
+		{
+			return false;
+		}
+		public function trigger():void
+		{
+			
+		}
 		public function setValid ( val:Boolean):void
 		{
 			isValid = val;
@@ -61,9 +91,25 @@ package EgyptianInvasion
 		{
 			return size;
 		}
+		public function addGold(gold:Number)
+		{
+			this.goldWithin += gold;
+		}
 		public function onPlaced(sup:NodeManager):void
 		{
-			
+		}
+		public function processNode(guy:Enemy):Boolean
+		{
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
+			{
+				if(triggerNode != null && !guy.isDead())
+					triggerNode.trigger();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		public function getPossibleAngle(nodeIn:Node):Boolean
 		{
@@ -75,12 +121,27 @@ package EgyptianInvasion
 				var rely1:Number = ((nodes[i] as Node).y - y)/Math.sqrt(Math.pow((nodes[i] as Node).x - x,2) + Math.pow((nodes[i] as Node).y - y,2));
 				if(Math.acos(relx0 * relx1 + rely0* rely1) < Math.PI/6
 					&& !(nodeIn == nodes[i] as Node))
+				{
 					return true;
+				}
 			}
+	/*		if(validAngles != null && validAngles.length >0)
+			{
+				var isValidAngle:Boolean = false;
+				for(var j :Number = 0; j < validAngles.length; j +=2)
+				{
+					if(Math.acos(relx0) > validAngles[j] && Math.acos(relx0) < validAngles[j+1])
+						isValidAngle = true;
+				}
+				if(isValidAngle)
+					return false;
+			}
+			else
+				return false;*/
 			return false;
 		}
 		
-		private function displayFaded():void
+		public function displayFaded():void
 		{
 			graphics.clear();
 			if(radiusInc)
@@ -91,31 +152,40 @@ package EgyptianInvasion
 				radiusInc = true;
 			else if (currRad >size+5)
 				radiusInc = false;
-			if(!isValid)
-				graphics.beginFill(0xFF0000,.5);
-			if(isValid)
-				graphics.beginFill(0x00FFEE,.5);
-			graphics.drawCircle(0,0,size);
-			graphics.endFill();
-			graphics.lineStyle(1,0xFF2000,.5);
+			
+			
+			if(!isValid && !this.isTrigPlace)
+				graphics.beginFill(0xFF0000,1);
+			if(isValid && !this.isTrigPlace)
+				graphics.beginFill(0x00FFEE,1);
+			if(!this.isTrigPlace)
+			{
+				graphics.drawCircle(0,0,size);
+				graphics.endFill();
+				graphics.lineStyle(1,0xFF2000,1);
+			}
+			else if(isValid)
+				graphics.lineStyle(1,0x00FF00,.8);
+			else
+				graphics.lineStyle(1, 0x0FF000,.8)
 			if(selected)
 				graphics.lineStyle(1.5, 0x00FF00,.5);
 			graphics.drawCircle(0,0,currRad);
-			var int:Number;
-			int = 0;
-			while(int < nodes.length)
+			if(this.triggerNode != null)
 			{
 				graphics.moveTo(0,0);
-				graphics.lineStyle(3, 0xFF0000,.5);
-				graphics.lineTo((nodes[int] as Node).x - x,(nodes[int] as Node).y - y);
+				graphics.lineStyle(1, 0x00FF00);
+			
+				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
 				graphics.moveTo(0,0);
-				int++;
 			}
+			blendMode = BlendMode.NORMAL;
 		}
 		
-		private function displaySolid():void
+		public function displaySolid():void
 		{
 			graphics.clear();
+			
 			if(radiusInc)
 				currRad+=.1;
 			else
@@ -127,24 +197,34 @@ package EgyptianInvasion
 			graphics.beginFill(0xFF0000);
 			graphics.drawCircle(0,0,size);
 			graphics.endFill();
+			
 			graphics.lineStyle(1,0xFF2000);
 			if(selected)
 				graphics.lineStyle(1.5, 0x00FF00);
 			graphics.drawCircle(0,0,currRad);
-			var int:Number;
-			int = 0;
-			while(int < nodes.length)
+			blendMode = BlendMode.NORMAL;
+			if(this.triggerNode != null)
 			{
 				graphics.moveTo(0,0);
-				graphics.lineStyle(3, 0xFF0000);
-				if(!(nodes[int] as Node).placed)
-					graphics.lineStyle(3, 0xFF0000,.5);
-				graphics.lineTo((nodes[int] as Node).x - x,(nodes[int] as Node).y - y);
+				graphics.lineStyle(1, 0x00FF00);
+				
+				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
 				graphics.moveTo(0,0);
-				int++;
 			}
+			
 		}
-		
+		public function setPlaceTrig(trig:Boolean):void
+		{
+			this.isTrigPlace = trig;
+		}
+		public function setTrigger(trig:Node):void
+		{
+			this.triggerNode = trig;
+		}
+		public function getTrigPlace():Boolean
+		{
+			return this.isTrigPlace;
+		}
 		public function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
@@ -164,9 +244,6 @@ package EgyptianInvasion
 		
 		public function addSibling(nod:Node):void {
 			nodes.push(nod);
-			graphics.lineStyle(5,0xFF2000);
-			graphics.moveTo(0,0);
-			graphics.lineTo(nod.x,nod.y);
 		}
 		
 		// Determines whether a path exists between nodes
@@ -174,7 +251,7 @@ package EgyptianInvasion
 			return pathExistsRecursive(n,new Array());
 		}
 		
-		private function pathExistsRecursive(n:Node, visited:Array):Boolean {
+		public function pathExistsRecursive(n:Node, visited:Array):Boolean {
 			if(n == this) {
 				return true;
 			}

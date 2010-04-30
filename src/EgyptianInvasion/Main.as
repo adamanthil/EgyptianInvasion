@@ -20,17 +20,13 @@ package EgyptianInvasion
 		public function Main () {
 			// Start in building phase
 			this.buildingPhase = true;
+			this.blendMode = BlendMode.LAYER;
 			
-			var bg:MovieClip = new BackgroundTest();
-			bg.scaleX = 0.7;
-			bg.scaleY = 0.7;
-			bg.x = 200;
-			bg.y = 200;
-			this.addChild(bg);
+			this.addChild(new FarBackground());			
+			this.addChild(new NearBackground(stage));
 			
-			var pyramid:Pyramid = new Pyramid(new assets.pyramid2(), 300,250,stage);
-			pyramid.scaleX = 0.7;
-			this.addChild(pyramid);
+			placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage, this);
+			
 			
 			/*placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
 			placeNodeButton.setMouseDown(addNodeHandler);
@@ -43,10 +39,12 @@ package EgyptianInvasion
 			beginInvasionButton.setMouseDown(beginInvasionHandler);
 			this.addChild(beginInvasionButton);*/
 			
-			nodeMan = new NodeManager(this);
+			nodeMan = new NodeManager(this,69,365,200,300);
 			this.addChild(nodeMan);
 			
-			ui = new UI(0,0,stage,this);
+			this.setChildIndex(nodeMan,this.numChildren - 1);
+			
+			ui = new UI(50,0,stage,this);
 			this.addChild(ui);
 			
 			
@@ -60,7 +58,10 @@ package EgyptianInvasion
 		{
 			return placeNodeButton;
 		}
-		
+		public function getLevelManager():LevelManager
+		{
+			return this.levelMan;
+		}
 		public function getNodeManager():NodeManager
 		{
 			return nodeMan;
@@ -92,7 +93,7 @@ package EgyptianInvasion
 			}
 			else {
 				button.setDown(true);
-				Main(button.parent).nodeMan.addNode(new Node(e.stageX, e.stageY, Main(button.parent).stage));
+				Main(button.parent).nodeMan.addNode(new Node(e.stageX, e.stageY, Main(button.parent).stage,(button.parent as Main).getNodeManager()));
 			}
 		}
 			

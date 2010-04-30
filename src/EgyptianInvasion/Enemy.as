@@ -20,7 +20,7 @@ package EgyptianInvasion
 		private var speed:Number;	// How fast we move
 		private var visitedNodes:Array; // The set of nodes already visited
 		private var distTraveled:Number;	// The distance we have traveled so far
-		
+
 		private var health:Number;
 		
 		// Adds a reference to a bitmap at compile-time
@@ -207,6 +207,10 @@ package EgyptianInvasion
 		
 		public function getHealth():Number {
 			return this.health;
+		}
+		public function isDead():Boolean
+		{
+			return this.health == 0;
 		}
 		
 		// ------ Functions that affect enemy in game - overridden by children if necessary -----

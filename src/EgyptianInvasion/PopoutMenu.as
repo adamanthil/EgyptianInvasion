@@ -130,8 +130,9 @@ package EgyptianInvasion
 			var button:Button = Button(e.currentTarget);
 			button.getDescription().visible = false;
 		}
+
 		public function addConnectNodeHandler(e:MouseEvent):void {
-			main.getNodeManager().addNode(new Node(0, 0, canvas));
+			main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
 		}
 		
 		

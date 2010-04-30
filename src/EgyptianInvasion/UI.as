@@ -77,7 +77,7 @@
 					// Otherwise, add a new node
 				else {
 					placeNodeBtn.setDown(true);
-					main.getNodeManager().addNode(new Node(0, 0, canvas));
+					main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
 				}
 			}
 		}
@@ -95,7 +95,8 @@
 			// Otherwise, add a new node
 			else {
 				button.setDown(true);
-				main.getNodeManager().addNode(new Node(0, 0, button.getCanvas()));
+				button.getMain().getNodeManager().addNode(new SnakeRoom(0, 0, button.getCanvas(), main.getNodeManager()));
+			//	main.getNodeManager().addNode(new Node(0, 0, button.getCanvas(),main.getNodeManager()));
 			}
 		}
 		
