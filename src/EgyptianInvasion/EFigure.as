@@ -5,12 +5,12 @@ package EgyptianInvasion
 
 	public class EFigure extends Sprite
 	{
-		private var figure:EnemyFigure;
+		private var figure:EnemyFigure2;
 		private var canvas:Stage;
 		
 		public function EFigure(nodex:Number, nodey:Number, cvas:Stage)
 		{
-			figure = new EnemyFigure();
+			figure = new EnemyFigure2();
 			figure.stop();
 			this.canvas = cvas;
 			x = nodex;
