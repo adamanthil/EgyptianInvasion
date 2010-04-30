@@ -228,15 +228,6 @@ package EgyptianInvasion
 		}
 		
 		public function quicksand():Boolean {
-			
-			asd
-			fa
-			sdf
-			asd
-			fa
-			sdf
-			as
-			dfd
 			this.health = 0;
 			return true;
 		}
