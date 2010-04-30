@@ -8,7 +8,7 @@
 		
 		import mx.core.BitmapAsset;
 		
-		public class SpikeRoom extends Node
+		public class PitRoom extends Node
 		{
 			[Embed(source="../assets/img/pitIconic.jpg")]
 			private var RoomImage:Class;
@@ -16,7 +16,7 @@
 			private var deadGuys:Number;
 			private var active:Boolean;
 			
-			public function SpikeRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
+			public function PitRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 			{
 				active = false;
 				super(nodex,nodey,canvas, refup);
@@ -46,7 +46,6 @@
 					inbetween.addSibling(nodes[0] as Node);
 					inbetween.addSibling(this);
 					(nodes[0] as Node).removeSibling(this);
-					this.removeSibling(nodes[0]);
 					this.addSibling(inbetween);
 					this.removeSibling(nodes[0]);
 					

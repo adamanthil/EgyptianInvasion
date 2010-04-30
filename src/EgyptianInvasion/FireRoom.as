@@ -48,7 +48,6 @@ package EgyptianInvasion
 				inbetween.addSibling(nodes[0] as Node);
 				inbetween.addSibling(this);
 				(nodes[0] as Node).removeSibling(this);
-				this.removeSibling(nodes[0]);
 				this.addSibling(inbetween);
 				this.removeSibling(nodes[0]);
 				

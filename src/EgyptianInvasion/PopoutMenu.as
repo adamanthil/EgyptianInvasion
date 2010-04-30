@@ -142,7 +142,7 @@ package EgyptianInvasion
 		}
 
 		public function addPitNodeHandler(e:MouseEvent):void {
-			main.getNodeManager().addNode(new SpikeRoom(0, 0, canvas, main.getNodeManager()));
+			main.getNodeManager().addNode(new PitRoom(0, 0, canvas, main.getNodeManager()));
 		}
 		
 		public function addSnakeNodeHandler(e:MouseEvent):void {
