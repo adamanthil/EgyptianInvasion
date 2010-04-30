@@ -39,6 +39,12 @@ package EgyptianInvasion
 			nodes = new Array();
 		}
 		
+		// Determines if the enemy should be affected based on its current position (if it is within the range of the node)
+		// Called by the Enemy class
+		public function processEnemy(enemy:Enemy):Boolean {
+			return false;
+		}
+		
 		public function setSelected( select:Boolean):void {
 			selected = select;
 		}

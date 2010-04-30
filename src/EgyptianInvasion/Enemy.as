@@ -19,9 +19,9 @@ package EgyptianInvasion
 		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
 		private var speed:Number;	// How fast we move
 		private var visitedNodes:Array; // The set of nodes already visited
-		
-		
 		private var distTraveled:Number;	// The distance we have traveled so far
+		
+		private var health:Number;
 		
 		// Adds a reference to a bitmap at compile-time
 		[Embed(source="../assets/img/enemy.jpg")] private var BGImage:Class;
@@ -37,6 +37,7 @@ package EgyptianInvasion
 			this.originNode = startNode;
 			this.startNode = startNode;
 			
+			this.health = 100;
 			this.speed = 1;
 			this.moving = false;	// We need to make a decision first
 			this.visitedNodes = new Array();	// Initialize visited node array
@@ -191,6 +192,11 @@ package EgyptianInvasion
 		
 		// At every time interval, determines whether to move or decide next movement
 		public function timeListener(e:TimerEvent):void	{
+			
+			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
+			originNode.processEnemy(this);
+			targetNode.processEnemy(this);
+			
 			if(moving) {
 				move();
 			}
@@ -198,5 +204,44 @@ package EgyptianInvasion
 				makeDecision();
 			}
 		}
+		
+		public function getHealth():Number {
+			return this.health;
+		}
+		
+		// ------ Functions that affect enemy in game - overridden by children if necessary -----
+		
+		// The enemy starts drowning
+		public function setDrowning():Boolean {
+			this.health = 0;
+			return true;
+		}
+		
+		// enemy stays at node for x milliseconds
+		public function setDelay(x:Number):Boolean {
+			return true;
+		}
+		
+		public function killSpikes():Boolean {
+			this.health = 0;
+			return true;
+		}
+		
+		public function quicksand():Boolean {
+			this.health = 0;
+			return true;
+		}
+
+		public function damageFire():Boolean {
+			this.health = 0;
+			return true;
+		}
+		
+		public function damageSnakes():Boolean {
+			this.health = 0;
+			return true;
+		}
+		
+		// ----------------
 	}
 }
