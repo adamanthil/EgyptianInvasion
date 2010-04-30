@@ -184,8 +184,12 @@ package EgyptianInvasion
 		private function timeListener(e:TimerEvent):void	{
 			
 			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
-			originNode.processEnemy(this);
-			targetNode.processEnemy(this);
+			if(originNode != null) {
+				originNode.processEnemy(this);
+			}
+			if(originNode != null) {
+				targetNode.processEnemy(this);
+			}
 			
 			if(moving) {
 				move();
