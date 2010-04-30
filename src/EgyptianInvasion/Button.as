@@ -4,6 +4,8 @@ package EgyptianInvasion
 	import flash.events.*;
 	import flash.text.*;
 	
+	import mx.core.BitmapAsset;
+	
 	public class Button extends Sprite
 	{
 		private var canvas:Stage;
@@ -15,6 +17,8 @@ package EgyptianInvasion
 		private var text:TextField;
 		private var format:TextFormat;
 		private var main:Main;
+		
+		private var descPopout:BitmapAsset;
 		
 		public function Button(buttonAsset:MovieClip, nodex:Number, nodey:Number, label:String, canvas:Stage, main:Main) 
 		{
@@ -31,6 +35,7 @@ package EgyptianInvasion
 			//format.size = 48; 
 			
 			text = new TextField();
+			text.selectable = false;
 			text.appendText(label);
 			text.setTextFormat(format);
 			text.autoSize = TextFieldAutoSize.CENTER;
@@ -41,30 +46,18 @@ package EgyptianInvasion
 			addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
 		}
 		
-		public function getMain():Main
-		{
-			return main;
-		}
+		// Accessor methods
+		public function getMain():Main					{return main;}
+		public function getCanvas():Stage				{return canvas;}
+		public function isDown ():Boolean				{return down;}
+		public function getDescription():BitmapAsset 	{return descPopout;}
+		public function getButtonAsset():MovieClip 		{return this.buttonAsset;}
 		
-		public function getCanvas():Stage
-		{
-			return canvas;
-		}
+		// Mutator methods
+		public function setDescription(b:BitmapAsset):void	{descPopout = b;}
 		
-		public function setMouseDown(mouseDown:Function):void {
-			this.mouseDown = mouseDown;
-			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDown);
-		}
 		
-		public function setMouseClick(mouseClick:Function):void {
-			this.mouseClick = mouseClick;
-			this.addEventListener(MouseEvent.CLICK, this.mouseClick);
-		}
-		
-		public function getButtonAsset():MovieClip {
-			return this.buttonAsset;
-		}
-		
+		// Event Handlers
 		private function mouseOver (e:MouseEvent):void {
 			buttonAsset.gotoAndStop("mouseOver");
 		}
@@ -76,10 +69,6 @@ package EgyptianInvasion
 			else{
 				buttonAsset.gotoAndStop("mouseDown");
 			}
-		}
-		
-		public function isDown ():Boolean{
-			return down;
 		}
 		
 		public function setDown(flag:Boolean):void{

@@ -36,7 +36,7 @@
 			// See commented out loading code to see how to load bitmaps at run time (undesired, image pops in if its large
 			var photo:BitmapAsset = new BGImage();
 			photo.scaleX = 0.6;
-			photo.scaleY = 0.6;
+			photo.scaleY = 0.5;
 			photo.x = -50;
 			photo.y = 0;
 			addChild(photo);
@@ -55,7 +55,7 @@
 			addChild(placeNodeBtn);
 			
 			var beginInvasionBtn:Button = new Button(new assets.ToggleButton(), 10, 150, "Begin Invasion!", canvas, main);
-			beginInvasionBtn.setMouseDown(beginInvasionHandler);
+			beginInvasionBtn.addEventListener(MouseEvent.MOUSE_DOWN, beginInvasionHandler);
 			addChild(beginInvasionBtn);
 			
 			popout = new PopoutMenu(10, 150, canvas, main);
