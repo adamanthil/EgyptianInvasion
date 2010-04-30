@@ -15,6 +15,7 @@ package EgyptianInvasion
 			this.canvas = main.stage;
 			this.main = main;
 			this.nodeMan = nodeMan;
+			this.enemies = new Array();
 		}
 		
 		// Removes an enemy and returns the gold it's carying to the most recently visited node

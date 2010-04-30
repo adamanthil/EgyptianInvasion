@@ -45,16 +45,16 @@ package EgyptianInvasion
 			time.start();
 			nodes = new Array();
 		}
-		public function connectable()
-		{
+		
+		public function connectable():Boolean {
 			return isConnectable;
 		}
-		public function drawToPointX():Number
-		{
+		
+		public function drawToPointX():Number {
 			return x;
 		}
-		public function drawToPointY():Number
-		{
+		
+		public function drawToPointY():Number {
 			return y;	
 		}
 		
@@ -91,15 +91,15 @@ package EgyptianInvasion
 		{
 			return size;
 		}
-		public function addGold(gold:Number)
-		{
+		public function addGold(gold:Number):void {
 			this.goldWithin += gold;
 		}
-		public function onPlaced(sup:NodeManager):void
-		{
+		
+		public function onPlaced(sup:NodeManager):void {
+		
 		}
-		public function processNode(guy:Enemy):Boolean
-		{
+		
+		public function processNode(guy:Enemy):Boolean {
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 			{
 				if(triggerNode != null && !guy.isDead())
@@ -111,8 +111,7 @@ package EgyptianInvasion
 				return false;
 			}
 		}
-		public function getPossibleAngle(nodeIn:Node):Boolean
-		{
+		public function getPossibleAngle(nodeIn:Node):Boolean {
 			var relx0:Number = (nodeIn.x - x)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
 			var rely0:Number = (nodeIn.y - y)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
 			for(var i:Number = 0; i < nodes.length;i++)
@@ -141,8 +140,7 @@ package EgyptianInvasion
 			return false;
 		}
 		
-		public function displayFaded():void
-		{
+		public function displayFaded():void {
 			graphics.clear();
 			if(radiusInc)
 				currRad+=.1;
@@ -182,8 +180,7 @@ package EgyptianInvasion
 			blendMode = BlendMode.NORMAL;
 		}
 		
-		public function displaySolid():void
-		{
+		public function displaySolid():void {
 			graphics.clear();
 			
 			if(radiusInc)
@@ -213,18 +210,19 @@ package EgyptianInvasion
 			}
 			
 		}
-		public function setPlaceTrig(trig:Boolean):void
-		{
+		
+		public function setPlaceTrig(trig:Boolean):void {
 			this.isTrigPlace = trig;
 		}
-		public function setTrigger(trig:Node):void
-		{
+		
+		public function setTrigger(trig:Node):void {
 			this.triggerNode = trig;
 		}
-		public function getTrigPlace():Boolean
-		{
+		
+		public function getTrigPlace():Boolean {
 			return this.isTrigPlace;
 		}
+		
 		public function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
