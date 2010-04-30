@@ -102,6 +102,7 @@ package EgyptianInvasion
 			//myTextField_txt.text.
 			goldTextField.x = 400;
 			goldTextField.y = 10;
+			goldTextField.selectable = false;
 			main.addChild(goldTextField);
 			
 		}
