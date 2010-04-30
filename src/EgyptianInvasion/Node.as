@@ -19,9 +19,14 @@ package EgyptianInvasion
 		public var size:Number;
 		public var validAngles:Array;
 		public var isConnectable:Boolean;
+		public var sup:NodeManager;
+		public var triggerNode:Node; //node that this one will trigger.
+		public var isTrigPlace:Boolean;//utility variable, so we can tell when the player wants to make a trigger connection
+										//between nodes.
 		
-		public function Node(nodex:Number, nodey:Number, canvas:Stage) {
+		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
 			//this.cacheAsBitmap = true;
+			sup = refup;
 			this.blendMode = BlendMode.LAYER;
 			this.canvas = canvas;
 			x = nodex;
@@ -41,6 +46,14 @@ package EgyptianInvasion
 		{
 			return isConnectable;
 		}
+		public function drawToPointX():Number
+		{
+			return x;
+		}
+		public function drawToPointY():Number
+		{
+			return y;	
+		}
 		public function setSelected( select:Boolean):void {
 			selected = select;
 		}
@@ -51,6 +64,14 @@ package EgyptianInvasion
 		public function isPlaced () :Boolean
 		{
 			return placed;
+		}
+		public function getImpassible(): Boolean
+		{
+			return false;
+		}
+		public function trigger():void
+		{
+			
 		}
 		public function setValid ( val:Boolean):void
 		{
@@ -63,9 +84,18 @@ package EgyptianInvasion
 		public function onPlaced(sup:NodeManager):void
 		{
 		}
-		public function onInside(guys:EnemyManager):void
+		public function processNode(guy:Enemy):Boolean
 		{
-			
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
+			{
+				if(triggerNode != null && !guy.isDead())
+					triggerNode.trigger();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		public function getPossibleAngle(nodeIn:Node):Boolean
 		{
@@ -81,7 +111,7 @@ package EgyptianInvasion
 					return true;
 				}
 			}
-			if(validAngles != null && validAngles.length >0)
+	/*		if(validAngles != null && validAngles.length >0)
 			{
 				var isValidAngle:Boolean = false;
 				for(var j :Number = 0; j < validAngles.length; j +=2)
@@ -93,8 +123,8 @@ package EgyptianInvasion
 					return false;
 			}
 			else
-				return false;
-			return true;
+				return false;*/
+			return false;
 		}
 		
 		public function displayFaded():void
@@ -110,18 +140,31 @@ package EgyptianInvasion
 				radiusInc = false;
 			
 			
-			if(!isValid)
+			if(!isValid && !this.isTrigPlace)
 				graphics.beginFill(0xFF0000,1);
-			if(isValid)
+			if(isValid && !this.isTrigPlace)
 				graphics.beginFill(0x00FFEE,1);
-			graphics.drawCircle(0,0,size);
-			graphics.endFill();
-			
-			graphics.lineStyle(1,0xFF2000,1);
+			if(!this.isTrigPlace)
+			{
+				graphics.drawCircle(0,0,size);
+				graphics.endFill();
+				graphics.lineStyle(1,0xFF2000,1);
+			}
+			else if(isValid)
+				graphics.lineStyle(1,0x00FF00,.8);
+			else
+				graphics.lineStyle(1, 0x0FF000,.8)
 			if(selected)
 				graphics.lineStyle(1.5, 0x00FF00,.5);
 			graphics.drawCircle(0,0,currRad);
+			if(this.triggerNode != null)
+			{
+				graphics.moveTo(0,0);
+				graphics.lineStyle(1, 0x00FF00);
 			
+				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
+				graphics.moveTo(0,0);
+			}
 			blendMode = BlendMode.NORMAL;
 		}
 		
@@ -146,9 +189,28 @@ package EgyptianInvasion
 				graphics.lineStyle(1.5, 0x00FF00);
 			graphics.drawCircle(0,0,currRad);
 			blendMode = BlendMode.NORMAL;
+			if(this.triggerNode != null)
+			{
+				graphics.moveTo(0,0);
+				graphics.lineStyle(1, 0x00FF00);
+				
+				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
+				graphics.moveTo(0,0);
+			}
 			
 		}
-		
+		public function setPlaceTrig(trig:Boolean):void
+		{
+			this.isTrigPlace = trig;
+		}
+		public function setTrigger(trig:Node):void
+		{
+			this.triggerNode = trig;
+		}
+		public function getTrigPlace():Boolean
+		{
+			return this.isTrigPlace;
+		}
 		public function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
@@ -168,9 +230,6 @@ package EgyptianInvasion
 		
 		public function addSibling(nod:Node):void {
 			nodes.push(nod);
-			graphics.lineStyle(5,0xFF2000);
-			graphics.moveTo(0,0);
-			graphics.lineTo(nod.x,nod.y);
 		}
 		
 		// Determines whether a path exists between nodes

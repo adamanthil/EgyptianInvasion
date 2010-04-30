@@ -85,7 +85,7 @@ package EgyptianInvasion
 			}
 			else {
 				button.setDown(true);
-				Main(button.parent).nodeMan.addNode(new Node(e.stageX, e.stageY, Main(button.parent).stage));
+				Main(button.parent).nodeMan.addNode(new Node(e.stageX, e.stageY, Main(button.parent).stage,(button.parent as Main).getNodeManager()));
 			}
 		}
 			

@@ -40,13 +40,13 @@ package EgyptianInvasion
 			pyramid.scaleX = 0.7;
 			this.addChildAt(pyramid,0);
 			
-			var baseNode:Node = new Node(startx,starty,canvas);
+			var baseNode:Node = new StartRoom(startx,starty,canvas, this);
 			allNodes.push(baseNode);
 			selectedNode = baseNode;
 			baseNode.setSelected(true);
 			enterNode = baseNode;
 			baseNode.setPlaced(true);
-			var finalNode:Node = new Node(endx,endy,canvas);
+			var finalNode:Node = new Node(endx,endy,canvas,this);
 			tombNode = finalNode;
 			allNodes.push(tombNode);
 			this.addChild(baseNode);
@@ -56,6 +56,16 @@ package EgyptianInvasion
 			time.start();
 
 			time.addEventListener(TimerEvent.TIMER,TimeListener);
+		}
+		public function setStartNodePosition(x:Number, y:Number):void
+		{
+			enterNode.x = x;
+			enterNode.y = y;
+		}
+		public function setEndNodePosition(x:Number, y:Number):void
+		{
+			tombNode.x = x;
+			tombNode.y = y;
 		}
 		public function getCanvas ():Stage
 		{
@@ -95,6 +105,15 @@ package EgyptianInvasion
 			this.addChild(toggledNode);
 			cantSet = true;
 		}
+		public function addTrigger(toggle:Node):void
+		{
+			toggledNode = toggle;
+			toggledNode.addSibling(selectedNode);
+			toggledNode.setPlaced(false);
+			toggledNode.setPlaceTrig(true);
+			this.addChild(toggledNode);
+			cantSet = true;
+		}
 		
 		private function mouseDownListener (e:MouseEvent):void {
 			if(toggledNode == null || cantSet)
@@ -125,6 +144,8 @@ package EgyptianInvasion
 						potentialNode = allNodes[count];
 					count++;
 				}
+				if(!toggledNode.connectable())
+					potentialNode = null;
 				if(potentialNode == null)
 				{
 					toggledNode.setPlaced(true);
@@ -132,10 +153,16 @@ package EgyptianInvasion
 					toggledNode.onPlaced(this);
 					
 				}
-				else
+				else if(!toggledNode.getTrigPlace())
 				{
 					potentialNode.addSibling(selectedNode);
 					selectedNode.addSibling(potentialNode);
+					this.removeChild(toggledNode);
+					selectedNode.removeSibling(toggledNode);
+				}
+				else
+				{
+					selectedNode.setTrigger(potentialNode);
 					this.removeChild(toggledNode);
 					selectedNode.removeSibling(toggledNode);
 				}
@@ -153,7 +180,7 @@ package EgyptianInvasion
 				selectedNode.addSibling(toggledNode);
 				toggledNode.setPlaced(false);
 				this.addChild(toggledNode);*/
-				addNode(new Node(0,0,canvas));
+				addNode(new Node(0,0,canvas,this));
 			}
 			if(e.ctrlKey && toggledNode != null)
 			{
@@ -374,6 +401,10 @@ package EgyptianInvasion
 					{
 						tooclose = true;
 					}
+					if(!toggledNode.connectable()&& (Math.sqrt(Math.pow((allNodes[i] as Node).x -toggledNode.x,2) + Math.pow((allNodes[i] as Node).y - toggledNode.y,2)))<Math.max(toggledNode.size, (allNodes[i]as Node).size))
+					{
+						tooclose = true;
+					}
 				}
 				var connect:Boolean;
 				var potentialNode:Node;
@@ -382,13 +413,13 @@ package EgyptianInvasion
 				while(count < allNodes.length)
 				{
 					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10)
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).size)
 						potentialNode = allNodes[count];
 					count++;
 				}
-				if(potentialNode != null)
+				if(potentialNode != null && selectedNode.connectable() && potentialNode.connectable())
 				{
-					var subangleclose:Boolean = potentialNode.getPossibleAngle(selectedNode);
+					var subangleclose:Boolean = potentialNode.getPossibleAngle(selectedNode) && selectedNode.getPossibleAngle(toggledNode);
 					var subintersected:Boolean;
 					var subtooclose:Boolean;
 					
@@ -427,10 +458,13 @@ package EgyptianInvasion
 					}
 					connect = !(subintersected || subtooclose || subangleclose || angleclose);
 				}
-				else
-					connect = true;
 				toggledNode.setValid(!(tooclose||angleclose||intersected) || connect && potentialNode != null);
 				cantSet = (tooclose||angleclose||intersected) && !(connect && potentialNode != null);
+				if(toggledNode.getTrigPlace())
+				{
+					toggledNode.setValid( connect && potentialNode != null);
+					cantSet = !(connect && potentialNode != null);
+				}
 				//conditions and crap ya know.
 			}
 		}	

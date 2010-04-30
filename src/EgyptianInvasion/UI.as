@@ -78,7 +78,7 @@
 			// Otherwise, add a new node
 			else {
 				button.setDown(true);
-				button.getMain().getNodeManager().addNode(new Node(0, 0, button.getCanvas()));
+				button.getMain().getNodeManager().addNode(new SnakeRoom(0, 0, button.getCanvas(), main.getNodeManager()));
 			}
 		}
 		
