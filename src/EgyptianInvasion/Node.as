@@ -23,6 +23,7 @@ package EgyptianInvasion
 		public var triggerNode:Node; //node that this one will trigger.
 		public var isTrigPlace:Boolean;//utility variable, so we can tell when the player wants to make a trigger connection
 										//between nodes.
+		public var goldWithin:Number;
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
 			//this.cacheAsBitmap = true;
@@ -80,6 +81,10 @@ package EgyptianInvasion
 		public function getSize():Number
 		{
 			return size;
+		}
+		public function addGold(gold:Number)
+		{
+			this.goldWithin += gold;
 		}
 		public function onPlaced(sup:NodeManager):void
 		{
