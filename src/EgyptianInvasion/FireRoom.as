@@ -78,7 +78,7 @@ package EgyptianInvasion
 				otherSide.setPlaced(true);
 			}
 			var fireButton:Button = new Button(new assets.ToggleButton(),x,y+15,"firebutton",canvas,sup.parent as Main);
-			fireButton.setMouseClick(fireTrigger);
+			fireButton.addEventListener(MouseEvent.CLICK, fireTrigger);
 			this.addChild(fireButton);
 			roomImage.x = -15;
 		}
@@ -112,7 +112,7 @@ package EgyptianInvasion
 		}
 		public override function processEnemy(guy:Enemy):Boolean
 		{
-			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.hasBeenOutside())
+			/*if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.hasBeenOutside())
 			{
 				if(!guy.isDead())
 				{
@@ -128,9 +128,10 @@ package EgyptianInvasion
 			else
 			{
 				return false
-			}
+			}*/
+			return false;
 		}
-		public function TimeListener(e:TimerEvent):void	{
+		public override function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
 			else
@@ -140,7 +141,7 @@ package EgyptianInvasion
 			if(fireTimeLeft <0)
 				onFire = false;
 		}
-		public override trigger():void
+		public override function trigger():void
 		{
 			onFire = true;
 			fireTimeLeft = 1000;

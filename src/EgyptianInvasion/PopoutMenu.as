@@ -99,7 +99,13 @@ package EgyptianInvasion
 			
 			pitTrapBtn.addEventListener(MouseEvent.MOUSE_OVER, popoutDescription);
 			pitTrapBtn.addEventListener(MouseEvent.MOUSE_OUT, hideDescription);
-			pitTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addConnectNodeHandler);
+			pitTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addPitNodeHandler);
+			
+			fireTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addFireNodeHandler);
+			
+			snakeTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addSnakeNodeHandler);
+			
+			quickTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addSandNodeHandler);
 			
 			connectNodeBtn.addEventListener(MouseEvent.MOUSE_OVER, popoutDescription);
 			connectNodeBtn.addEventListener(MouseEvent.MOUSE_OUT, hideDescription);
@@ -130,7 +136,23 @@ package EgyptianInvasion
 			var button:Button = Button(e.currentTarget);
 			button.getDescription().visible = false;
 		}
+		
+		public function addFireNodeHandler(e:MouseEvent):void {
+			main.getNodeManager().addNode(new FireRoom(0, 0, canvas, main.getNodeManager()));
+		}
 
+		public function addPitNodeHandler(e:MouseEvent):void {
+			main.getNodeManager().addNode(new SpikeRoom(0, 0, canvas, main.getNodeManager()));
+		}
+		
+		public function addSnakeNodeHandler(e:MouseEvent):void {
+			main.getNodeManager().addNode(new SnakeRoom(0, 0, canvas, main.getNodeManager()));
+		}
+		
+		public function addSandNodeHandler(e:MouseEvent):void {
+			main.getNodeManager().addNode(new SandRoom(0, 0, canvas, main.getNodeManager()));
+		}
+		
 		public function addConnectNodeHandler(e:MouseEvent):void {
 			main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
 		}

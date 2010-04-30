@@ -1,5 +1,3 @@
-package EgyptianInvasion
-{
 	package EgyptianInvasion
 	{
 		import assets.ToggleButton;
@@ -105,7 +103,7 @@ package EgyptianInvasion
 			}
 			public override function processEnemy(guy:Enemy):Boolean
 			{
-				if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.hasBeenOutside())
+				/*if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.hasBeenOutside())
 				{
 					addGuy(guy);
 					if(currentDrowning == null && guy.setDrowning(true) && currentInside.length < 2 )
@@ -123,7 +121,8 @@ package EgyptianInvasion
 				{
 					removeGuy(guy);
 					return false
-				}
+				}*/
+				return false;
 			}
 			private function addGuy(guy:Enemy)
 			{
@@ -139,24 +138,24 @@ package EgyptianInvasion
 					currentInside.pop();
 				}
 			}
-			public function TimeListener(e:TimerEvent):void	{
+			public override function TimeListener(e:TimerEvent):void	{
 				if(placed)
 					displaySolid();
 				else
 					displayFaded();
 				
 			}
-			public override trigger():void
+			public override function trigger():void
 			{
-				active = !active;
+				this.active = !this.active;
 			}
 			public override function getImpassible():Boolean
 			{
 				return false;
 			}
-			public function active():Boolean
+			public function activeNAAT():Boolean
 			{
-				return active;
+				return this.active;
 			}
 			public override function displaySolid():void
 			{
@@ -184,5 +183,4 @@ package EgyptianInvasion
 				} 
 			}
 		}
-	}
 	}
