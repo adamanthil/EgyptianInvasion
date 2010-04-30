@@ -19,6 +19,7 @@ package EgyptianInvasion
 			y=nodey;
 			addChild(asset);
 			inside = false;
+			
 //			this.cacheAsBitmap =true;
 			canvas.addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
 		}

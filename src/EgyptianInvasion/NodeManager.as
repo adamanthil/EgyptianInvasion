@@ -99,7 +99,7 @@ package EgyptianInvasion
 		// node that the player is in the process of placing.
 		public function addNode(toggle:Node):void
 		{
-			if(this.selectedNode.connectable())
+			if(this.selectedNode.connectable() && toggledNode ==null)
 			{
 				toggledNode = toggle;
 				toggledNode.addSibling(selectedNode);
@@ -111,12 +111,15 @@ package EgyptianInvasion
 		}
 		public function addTrigger(toggle:Node):void
 		{
-			toggledNode = toggle;
-			toggledNode.addSibling(selectedNode);
-			toggledNode.setPlaced(false);
-			toggledNode.setPlaceTrig(true);
-			this.addChild(toggledNode);
-			cantSet = true;
+			if(toggledNode == null)
+			{
+				toggledNode = toggle;
+				toggledNode.addSibling(selectedNode);
+				toggledNode.setPlaced(false);
+				toggledNode.setPlaceTrig(true);
+				this.addChild(toggledNode);
+				cantSet = true;
+			}
 		}
 		
 		private function mouseDownListener (e:MouseEvent):void {
@@ -145,7 +148,7 @@ package EgyptianInvasion
 				while(count < allNodes.length)
 				{
 					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).getSize())
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).getSize()+5)
 						potentialNode = allNodes[count];
 					count++;
 				}
@@ -418,7 +421,7 @@ package EgyptianInvasion
 				while(count < allNodes.length)
 				{
 					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).size)
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).size+5)
 						potentialNode = allNodes[count];
 					count++;
 				}
@@ -468,7 +471,9 @@ package EgyptianInvasion
 					else
 						connect = true;
 				}
-				var inside:Boolean = Pyram.hitTestPoint(toggledNode.x,toggledNode.y);
+				var inside:Boolean = Pyram.hitTestPoint(toggledNode.x,toggledNode.y,true);
+				
+				trace(inside);
 				toggledNode.setValid(inside &&(!(tooclose||angleclose||intersected) || connect && potentialNode != null));
 				cantSet = !inside||(tooclose||angleclose||intersected) && !(connect && potentialNode != null);
 				if(toggledNode.getTrigPlace())
