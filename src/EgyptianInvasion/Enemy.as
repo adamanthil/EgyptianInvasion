@@ -22,6 +22,7 @@ package EgyptianInvasion
 		private var distTraveled:Number;	// The distance we have traveled so far
 		
 		private var health:Number;
+		private var goldAmt:int;
 		
 		// Adds a reference to a bitmap at compile-time
 		[Embed(source="../assets/img/enemy.jpg")] private var BGImage:Class;
@@ -38,6 +39,8 @@ package EgyptianInvasion
 			this.startNode = startNode;
 			
 			this.health = 100;
+			this.goldAmt = 0;
+			
 			this.speed = 1;
 			this.moving = false;	// We need to make a decision first
 			this.visitedNodes = new Array();	// Initialize visited node array
@@ -47,19 +50,6 @@ package EgyptianInvasion
 			figure.scaleY = 0.02;
 			figure.walk();
 			addChild(figure);
-			
-			// Load embedded background image from file and set size
-			/*var photo:BitmapAsset = new BGImage();
-			photo.scaleX = 0.01;
-			photo.scaleY = 0.01;
-			photo.x = -3;
-			photo.y = -3;
-			addChild(photo);
-			
-			// Draw yellow square0
-			graphics.beginFill(0xFFFF00);
-			graphics.drawRect(-4,-4,8,8);
-			graphics.endFill();*/
 			
 			time = new Timer(10);
 			time.addEventListener(TimerEvent.TIMER,timeListener);
@@ -207,6 +197,14 @@ package EgyptianInvasion
 		
 		public function getHealth():Number {
 			return this.health;
+		}
+		
+		public function getGold():int {
+			return this.goldAmt;
+		}
+		
+		public function setGold(goldAmt:int):void {
+			this.goldAmt = goldAmt;
 		}
 		
 		// ------ Functions that affect enemy in game - overridden by children if necessary -----

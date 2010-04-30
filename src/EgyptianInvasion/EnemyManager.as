@@ -16,6 +16,10 @@ package EgyptianInvasion
 			this.nodeMan = nodeMan;
 		}
 		
+		public function removeEnemy():Boolean {
+			return false;
+		}
+		
 		public function beginInvasion():void {
 			main.addChild(new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas));
 		}
