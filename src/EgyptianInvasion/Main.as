@@ -15,6 +15,7 @@ package EgyptianInvasion
 		private var ui:UI; // Our compartmentalized UI
 		private var nodeMan:NodeManager;
 		private var enemyMan:EnemyManager;
+		private var levelMan:LevelManager;
 		
 		public function Main () {
 			// Start in building phase
@@ -48,6 +49,7 @@ package EgyptianInvasion
 			
 			
 			enemyMan = new EnemyManager(this,nodeMan);
+			levelMan = new LevelManager(this,enemyMan,nodeMan,stage,ui);
 			
 			stage.frameRate = 100;			
 			
@@ -71,6 +73,9 @@ package EgyptianInvasion
 		{
 			return ui;
 		}
+		
+		public function getBuildPhase():Boolean {return buildingPhase;}
+		public function setBuildPhase(b:Boolean):void {buildingPhase = b;}
 		
 		// -- Button Event Handlers -------------------------
 		

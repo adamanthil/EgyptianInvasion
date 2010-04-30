@@ -12,6 +12,7 @@
 		private var removeNodeBtn:Button;
 		private var placeNodeBtn:Button;
 		private var beginInvasionBtn:Button;
+		private var popout:PopoutMenu; // Reference our addnode submenu
 		
 		// Here only as example of how to do run-time image loading
 		// private var loader:Loader;
@@ -50,48 +51,65 @@
 			
 			placeNodeBtn = new Button(new assets.ToggleButton(), 10,100, "Add Node", canvas, main);
 			placeNodeBtn.addEventListener(MouseEvent.MOUSE_DOWN, addNodeHandler);
-			placeNodeBtn.addEventListener(MouseEvent.MOUSE_OVER, popoutChoicesHandler);
+			//addEventListener(MouseEvent.MOUSE_DOWN, addNodeAlt);
 			addChild(placeNodeBtn);
 			
 			var beginInvasionBtn:Button = new Button(new assets.ToggleButton(), 10, 150, "Begin Invasion!", canvas, main);
 			beginInvasionBtn.setMouseDown(beginInvasionHandler);
 			addChild(beginInvasionBtn);
 			
-			var popout:PopoutMenu = new PopoutMenu(10, 150, stage, main);
+			popout = new PopoutMenu(10, 150, canvas, main);
 			addChild(popout);
 		}
 		
-		public var popoutChoicesHandler:Function = function (e:MouseEvent):void {
-			return;
+		public function getPopout():PopoutMenu { return popout;}
+			
+		public function addNodeAlt(e:MouseEvent):void
+		{
+			if(e.target == placeNodeBtn)
+			{
+				// If button already down, untoggle it (?)
+				if (placeNodeBtn.isDown()){
+					placeNodeBtn.setDown(false);
+					main.getNodeManager().setToggledNode(null);
+					//Main(placeNodeBtn.parent).nodeMan.setToggledNode(null);
+				}
+					// Otherwise, add a new node
+				else {
+					placeNodeBtn.setDown(true);
+					main.getNodeManager().addNode(new Node(0, 0, canvas));
+				}
+			}
 		}
 		
 		// Event handler for adding a node on a mouseDown button click
-		public var addNodeHandler:Function = function (e:MouseEvent):void {
+		public function addNodeHandler(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
 			
 			// If button already down, untoggle it (?)
 			if (button.isDown()){
 				button.setDown(false);
-				button.getMain().getNodeManager().setToggledNode(null);
+				main.getNodeManager().setToggledNode(null);
 				//Main(button.parent).nodeMan.setToggledNode(null);
 			}
 			// Otherwise, add a new node
 			else {
 				button.setDown(true);
 				button.getMain().getNodeManager().addNode(new SnakeRoom(0, 0, button.getCanvas(), main.getNodeManager()));
+				main.getNodeManager().addNode(new Node(0, 0, button.getCanvas()));
 			}
 		}
 		
-		public var beginInvasionHandler:Function = function (e:MouseEvent):void {
+		public function beginInvasionHandler(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
 
 			if (!button.isDown()){
 				// If there is a path from start to end, begin the invasion!
-				if(button.getMain().getNodeManager().getStartNode().pathExists(button.getMain().getNodeManager().getEndNode())) {
+				if(main.getNodeManager().getStartNode().pathExists(main.getNodeManager().getEndNode())) {
 					button.setDown(false);
-					this.buildingPhase = false;
+					main.setBuildPhase(false);
 					
-					button.getMain().getEnemyManager().beginInvasion();
+					main.getEnemyManager().beginInvasion();
 				}
 				
 			}
