@@ -27,6 +27,7 @@ package EgyptianInvasion
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
 			//this.cacheAsBitmap = true;
+			isTrigPlace = false;
 			sup = refup;
 			this.blendMode = BlendMode.LAYER;
 			this.canvas = canvas;

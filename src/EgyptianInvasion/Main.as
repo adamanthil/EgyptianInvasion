@@ -58,7 +58,10 @@ package EgyptianInvasion
 		{
 			return placeNodeButton;
 		}
-		
+		public function getLevelManager():LevelManager
+		{
+			return this.levelMan;
+		}
 		public function getNodeManager():NodeManager
 		{
 			return nodeMan;

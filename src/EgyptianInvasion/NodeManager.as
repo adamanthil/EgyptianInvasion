@@ -116,6 +116,7 @@ package EgyptianInvasion
 		}
 		
 		private function mouseDownListener (e:MouseEvent):void {
+			trace(cantSet);
 			if(toggledNode == null || cantSet)
 			{
 				var count:Number;

@@ -1,20 +1,26 @@
 package EgyptianInvasion
 {
+	import assets.ToggleButton;
+	
 	import flash.display.*;
 	import flash.events.*;
 	import flash.utils.Timer;
 	
 	import mx.core.BitmapAsset;
 	
-	public class SnakeRoom extends Node
+	public class FireRoom extends Node
 	{
-		[Embed(source="../assets/img/snakeIconic.jpg")]
+		[Embed(source="../assets/img/fireIconic.jpg")]
 		private var RoomImage:Class;
 		private var roomImage:BitmapAsset;
 		private var deadGuys:Number;
+		private var onFire:Boolean;
+		private var fireTimeLeft:Number;
 		
-		public function SnakeRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
+		public function FireRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
+			onFire = false;
+			fireTimeLeft = 0;
 			super(nodex,nodey,canvas, refup);
 			roomImage  = new RoomImage();
 			roomImage.scaleX = 0.6;
@@ -71,7 +77,17 @@ package EgyptianInvasion
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
 			}
+			var fireButton:Button = new Button(new assets.ToggleButton(),x,y+15,"firebutton",canvas,sup.parent as Main);
+			fireButton.setMouseClick(fireTrigger);
+			this.addChild(fireButton);
 			roomImage.x = -15;
+		}
+		public var fireTrigger:Function = function (e:MouseEvent):void {
+			var button:Button = Button(e.currentTarget);
+			
+			if (!button.isDown() && fireTimeLeft < -1000){
+				this.trigger();				
+			}
 		}
 		public override function displayFaded():void
 		{
@@ -96,11 +112,12 @@ package EgyptianInvasion
 		}
 		public override function processNode(guy:Enemy):Boolean
 		{
-			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)))
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.hasBeenOutside())
 			{
 				if(!guy.isDead())
 				{
-					guy.damageSnakes();
+					if(onFire)
+						guy.fireAttack();
 					if(guy.isDead())
 						deadGuys++;
 				}
@@ -113,13 +130,28 @@ package EgyptianInvasion
 				return false
 			}
 		}
+		public function TimeListener(e:TimerEvent):void	{
+			if(placed)
+				displaySolid();
+			else
+				displayFaded();
+
+				fireTimeLeft--;
+			if(fireTimeLeft <0)
+				onFire = false;
+		}
+		public override trigger():void
+		{
+			onFire = true;
+			fireTimeLeft = 1000;
+		}
 		public override function getImpassible():Boolean
 		{
-			if(deadGuys > 30)
-			{
-				return true;
-			}
 			return false;
+		}
+		public function getOnFire():Boolean
+		{
+			return this.onFire;
 		}
 		public override function displaySolid():void
 		{
