@@ -49,6 +49,7 @@ package EgyptianInvasion
 			
 			
 			enemyMan = new EnemyManager(this,nodeMan);
+			addChild(enemyMan);
 			levelMan = new LevelManager(this,enemyMan,nodeMan,stage,ui);
 			
 			stage.frameRate = 100;			

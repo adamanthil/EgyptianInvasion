@@ -181,7 +181,7 @@ package EgyptianInvasion
 		}
 		
 		// At every time interval, determines whether to move or decide next movement
-		public function timeListener(e:TimerEvent):void	{
+		private function timeListener(e:TimerEvent):void	{
 			
 			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
 			originNode.processEnemy(this);
@@ -193,6 +193,10 @@ package EgyptianInvasion
 			else {
 				makeDecision();
 			}
+		}
+		
+		public function getOriginNode():Node {
+			return this.originNode;
 		}
 		
 		public function getHealth():Number {
