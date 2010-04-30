@@ -25,7 +25,7 @@ package playground
 			addNodeFlag = 0;
 		}
 		public function node():void{
-			var newNode:Node = new Node(50+enum*100,200,canvas);
+			var newNode:Node = new Node(50+enum*100,200,canvas,scenery.getNodeManager());
 			//scenery.getNodeManager().addNode(newNode);
 			enum++;
 		}
@@ -42,7 +42,7 @@ package playground
 		
 		private function mouseDownEvent (e:MouseEvent):void{
 			if (addNodeFlag == 1){
-				var newNode:Node = new Node(e.stageX, e.stageY,canvas);
+				var newNode:Node = new Node(e.stageX, e.stageY,canvas,scenery.getNodeManager());
 				//scenery.getNodeManager().addNode(newNode);
 			}
 			else if (flag == 1){

@@ -107,7 +107,7 @@ package EgyptianInvasion
 			sampleDesc.visible = false;
 		}
 		public function addNodeHandler(e:MouseEvent):void {
-			main.getNodeManager().addNode(new Node(0, 0, canvas));
+			main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
 		}
 		
 		

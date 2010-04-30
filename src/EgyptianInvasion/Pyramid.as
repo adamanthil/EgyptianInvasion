@@ -9,15 +9,17 @@ package EgyptianInvasion
 		
 		private var asset:MovieClip;
 		
-		public function Pyramid(asset:MovieClip, nodex:Number, nodey:Number, canvas:Stage)
+		public function Pyramid(asset:MovieClip, nodex:Number, nodey:Number, canvas:Stage, erase:Boolean)
 		{
+			if(erase)
+				this.blendMode = BlendMode.ERASE;
 			this.asset = asset;
 			this.canvas = canvas;
 			x=nodex;
 			y=nodey;
 			addChild(asset);
 			inside = false;
-			
+//			this.cacheAsBitmap =true;
 			canvas.addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
 		}
 		

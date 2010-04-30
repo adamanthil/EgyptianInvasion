@@ -4,23 +4,30 @@ package EgyptianInvasion
 	
 	import flash.display.*;
 	import flash.events.*;
+	import flash.utils.Timer;
 	/*
 	The NodeManager class is a manager for a set of nodes on a scene. this is primarily created
 	to free space in main to avoid the code becoming a hideous monster.
 	*/
 	public class NodeManager extends Sprite
 	{
-		private var canvas:Stage;
-		private var sup:Main;
+		private var canvas:Stage; // the stage class that is propogated throughout our code
+		private var sup:Main; //super-class Main is stored here, so it can reference other components in the game
 		private var tombNode:Node; // End Node
 		private var enterNode:Node; // Start Node
-		private var allNodes:Array;
+		private var allNodes:Array; // an array with all of the existing nodes in the web.
 		
 		private var selectedNode:Node;	// existing node that is "selected"
 		private var toggledNode:Node;	// new node being placed
-		private var cantSet:Boolean;
-		public function NodeManager(refup:Main)
+		private var cantSet:Boolean; //a boolean value, true when the player is being prevented from placing a node.
+		private var time:Timer;
+		private var nodePath:NodePaths;
+		
+		public function NodeManager(refup:Main, startx:Number, starty:Number,endx:Number,endy:Number)
 		{
+			nodePath = new NodePaths(this);
+			this.addChild(nodePath);
+			this.blendMode = BlendMode.LAYER;
 			allNodes = new Array();
 			canvas = refup.stage;
 			sup = refup;
@@ -28,20 +35,49 @@ package EgyptianInvasion
 			canvas.addEventListener(KeyboardEvent.KEY_DOWN,keyListener);
 			canvas.addEventListener(MouseEvent.MOUSE_UP, mouseUpListener);
 			canvas.addEventListener(MouseEvent.MOUSE_MOVE, mouseMovListener);
-
-			var baseNode:Node = new Node(70,70,canvas);
+			
+			var pyramid:Pyramid = new Pyramid(new assets.pyramid2(), 300,250,canvas, false);
+			pyramid.scaleX = 0.7;
+			this.addChildAt(pyramid,0);
+			
+			var baseNode:Node = new StartRoom(startx,starty,canvas, this);
 			allNodes.push(baseNode);
 			selectedNode = baseNode;
 			baseNode.setSelected(true);
 			enterNode = baseNode;
 			baseNode.setPlaced(true);
-			
-			var finalNode:Node = new Node(300,200,canvas);
+			var finalNode:Node = new Node(endx,endy,canvas,this);
 			tombNode = finalNode;
 			allNodes.push(tombNode);
 			this.addChild(baseNode);
 			this.addChild(finalNode);
 			tombNode.setPlaced(true);
+			time = new Timer(5);
+			time.start();
+
+			time.addEventListener(TimerEvent.TIMER,TimeListener);
+		}
+		public function setStartNodePosition(x:Number, y:Number):void
+		{
+			enterNode.x = x;
+			enterNode.y = y;
+		}
+		public function setEndNodePosition(x:Number, y:Number):void
+		{
+			tombNode.x = x;
+			tombNode.y = y;
+		}
+		public function getCanvas ():Stage
+		{
+			return canvas;
+		}
+		public function getNodes():Array
+		{
+			return allNodes;
+		}
+		private function TimeListener(e:TimerEvent):void
+		{
+			nodePath.update();
 		}
 		public function setToggledNode(set:Node): void
 		{
@@ -69,8 +105,18 @@ package EgyptianInvasion
 			this.addChild(toggledNode);
 			cantSet = true;
 		}
+		public function addTrigger(toggle:Node):void
+		{
+			toggledNode = toggle;
+			toggledNode.addSibling(selectedNode);
+			toggledNode.setPlaced(false);
+			toggledNode.setPlaceTrig(true);
+			this.addChild(toggledNode);
+			cantSet = true;
+		}
 		
 		private function mouseDownListener (e:MouseEvent):void {
+			trace(cantSet);
 			if(toggledNode == null || cantSet)
 			{
 				var count:Number;
@@ -99,6 +145,8 @@ package EgyptianInvasion
 						potentialNode = allNodes[count];
 					count++;
 				}
+				if(!toggledNode.connectable())
+					potentialNode = null;
 				if(potentialNode == null)
 				{
 					toggledNode.setPlaced(true);
@@ -106,10 +154,16 @@ package EgyptianInvasion
 					toggledNode.onPlaced(this);
 					
 				}
-				else
+				else if(!toggledNode.getTrigPlace())
 				{
 					potentialNode.addSibling(selectedNode);
 					selectedNode.addSibling(potentialNode);
+					this.removeChild(toggledNode);
+					selectedNode.removeSibling(toggledNode);
+				}
+				else
+				{
+					selectedNode.setTrigger(potentialNode);
 					this.removeChild(toggledNode);
 					selectedNode.removeSibling(toggledNode);
 				}
@@ -127,7 +181,7 @@ package EgyptianInvasion
 				selectedNode.addSibling(toggledNode);
 				toggledNode.setPlaced(false);
 				this.addChild(toggledNode);*/
-				addNode(new Node(0,0,canvas));
+				addNode(new Node(0,0,canvas,this));
 			}
 			if(e.ctrlKey && toggledNode != null)
 			{
@@ -144,6 +198,11 @@ package EgyptianInvasion
 		private function mouseUpListener (e:MouseEvent):void {
 			cantSet = false;
 			mouseMovListener(e);
+		}
+		public function addNodeDirect(nod:Node)
+		{
+			this.addChild(nod);
+			this.allNodes.push(nod);
 		}
 		private function removeNode():void
 		{
@@ -323,7 +382,6 @@ package EgyptianInvasion
 						intersect = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
 							((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y, 
 							selectedNode.x,selectedNode.y,toggledNode.x,toggledNode.y);
-						trace();
 						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != selectedNode &&(allNodes[i] as Node) != toggledNode
 							&&((allNodes[i] as Node).getSiblings()[j] as Node) != selectedNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != toggledNode) 
 						{
@@ -344,6 +402,10 @@ package EgyptianInvasion
 					{
 						tooclose = true;
 					}
+					if(!toggledNode.connectable()&& (Math.sqrt(Math.pow((allNodes[i] as Node).x -toggledNode.x,2) + Math.pow((allNodes[i] as Node).y - toggledNode.y,2)))<Math.max(toggledNode.size, (allNodes[i]as Node).size))
+					{
+						tooclose = true;
+					}
 				}
 				var connect:Boolean;
 				var potentialNode:Node;
@@ -352,13 +414,13 @@ package EgyptianInvasion
 				while(count < allNodes.length)
 				{
 					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10)
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).size)
 						potentialNode = allNodes[count];
 					count++;
 				}
-				if(potentialNode != null)
+				if(potentialNode != null && selectedNode.connectable() && potentialNode.connectable())
 				{
-					var subangleclose:Boolean = potentialNode.getPossibleAngle(selectedNode);
+					var subangleclose:Boolean = potentialNode.getPossibleAngle(selectedNode) && selectedNode.getPossibleAngle(toggledNode);
 					var subintersected:Boolean;
 					var subtooclose:Boolean;
 					
@@ -390,17 +452,20 @@ package EgyptianInvasion
 						intersect = findIntersectperp(selectedNode.x,selectedNode.y, 
 							potentialNode.x,potentialNode.y,
 							allNodes[i].x,allNodes[i].y, potentialNode.getSize());
-						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != potentialNode &&(allNodes[i] as Node) != potentialNode)
+						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != potentialNode &&(allNodes[i] as Node) != potentialNode )
 						{
 							subtooclose = true;
 						}
 					}
 					connect = !(subintersected || subtooclose || subangleclose || angleclose);
 				}
-				else
-					connect = true;
 				toggledNode.setValid(!(tooclose||angleclose||intersected) || connect && potentialNode != null);
 				cantSet = (tooclose||angleclose||intersected) && !(connect && potentialNode != null);
+				if(toggledNode.getTrigPlace())
+				{
+					toggledNode.setValid( connect && potentialNode != null);
+					cantSet = !(connect && potentialNode != null);
+				}
 				//conditions and crap ya know.
 			}
 		}	
