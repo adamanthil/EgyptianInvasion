@@ -118,5 +118,9 @@ package EgyptianInvasion
 		public function setInterest(amount:Number):void{
 			interest = amount;
 		}
+		
+		public function getGoldAmt():Number{
+			return currGold;
+		}
 	}
 }
