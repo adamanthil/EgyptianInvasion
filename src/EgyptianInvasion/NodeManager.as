@@ -69,6 +69,13 @@ package EgyptianInvasion
 			tombNode.x = x;
 			tombNode.y = y;
 		}
+		public function stopDraw():void
+		{
+			for(var i:Number = 0; i< allNodes.length; i++)
+			{
+				allNodes[i].stopDraw();
+			}
+		}
 		public function getCanvas ():Stage
 		{
 			return canvas;

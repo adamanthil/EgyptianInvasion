@@ -84,6 +84,8 @@ package EgyptianInvasion
 			}
 			var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"fire button",canvas,sup.parent as Main);
 			activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
+			activeButton.scaleX = .3;
+			activeButton.scaleY = .3;
 			this.addChild(activeButton);
 			button = activeButton;
 			roomImage.x = -15;
@@ -108,9 +110,16 @@ package EgyptianInvasion
 						(guy.parent as EnemyManager).removeEnemy(guy);
 						deadGuys++;	
 					}
+					else
+					{
+						if( this.goldWithin > 0 )
+							goldWithin = guy.giveGold(goldWithin);
+					}
 				}
 				if(triggerNode != null && !guy.isDead())
 					triggerNode.trigger();
+				if(!guy.isDead() &&this.goldWithin > 0 )
+					goldWithin = guy.giveGold(goldWithin);
 				return true;
 			}
 			else

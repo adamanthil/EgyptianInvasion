@@ -32,10 +32,10 @@ package EgyptianInvasion
 		}
 		public override function processEnemy(guy:Enemy):Boolean
 		{
-			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)// && guy.getGold() > 0)
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.getGold() > 0)
 			{
-//				(sup.parent as Main).getLevelManager().deductGold(guy.getGold());
-//				(guy.parent as EnemyManager).removeGuy(guy);
+				(sup.parent as Main).getLevelManager().deductGold(guy.getGold());
+				(guy.parent as EnemyManager).removeGuy(guy);
 				return true;
 			}
 			else

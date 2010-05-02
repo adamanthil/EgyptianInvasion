@@ -79,7 +79,12 @@ package EgyptianInvasion
 		}
 		
 		public function getBuildPhase():Boolean {return buildingPhase;}
-		public function setBuildPhase(b:Boolean):void {buildingPhase = b;}
+		public function setBuildPhase(b:Boolean):void {buildingPhase = b;
+		if(!b)
+		{
+			trace("drawing stopping...");
+			nodeMan.stopDraw();
+		}}
 		
 		// -- Button Event Handlers -------------------------
 		

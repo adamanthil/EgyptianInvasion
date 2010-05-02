@@ -8,6 +8,8 @@ package EgyptianInvasion
 	
 	import mx.core.BitmapAsset;
 	
+	import org.osmf.events.TimeEvent;
+	
 	public class Enemy extends Sprite
 	{
 		private var canvas:Stage;
@@ -55,7 +57,6 @@ package EgyptianInvasion
 			time = new Timer(10);
 			time.addEventListener(TimerEvent.TIMER,timeListener);
 			time.start();
-			
 		}
 		
 		// Decide what node to move to next

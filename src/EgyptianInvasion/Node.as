@@ -1,5 +1,7 @@
 package EgyptianInvasion
 {
+	import assets.flashingNode;
+	
 	import flash.display.*;
 	import flash.events.*;
 	import flash.utils.Timer;
@@ -27,8 +29,14 @@ package EgyptianInvasion
 		protected var value:Number;
 		protected var pathVal:Number;
 		
+		private var nodeImage:flashingNode; // normal, selected, placable, unplacable
+		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
 			//this.cacheAsBitmap = true;
+			nodeImage = new flashingNode();
+			nodeImage.stop();
+			addChild(nodeImage);
+			nodeImage.gotoAndStop("normal");
 			value = 0;
 			pathVal = .05;
 			this.isConnectable = true;
@@ -73,7 +81,11 @@ package EgyptianInvasion
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 			{
 				if(triggerNode != null && !guy.isDead())
+				{
 					triggerNode.trigger();
+				}
+				if(!guy.isDead() &&this.goldWithin > 0 )
+					goldWithin = guy.giveGold(goldWithin);
 				return true;
 			}
 			else
@@ -84,10 +96,30 @@ package EgyptianInvasion
 
 		public function setSelected( select:Boolean):void {
 			selected = select;
+			if(nodeImage != null)
+			{
+				if(select)
+					nodeImage.gotoAndStop("selected");
+				else
+					nodeImage.gotoAndStop("normal");
+			}
 		}
 		
 		public function setPlaced ( place:Boolean):void	{
 			placed = place;
+			if(nodeImage != null)
+			{
+				if(placed)
+					nodeImage.gotoAndStop("normal");
+				else
+				{
+					if(isValid)
+						nodeImage.gotoAndStop("placable");
+					else
+						nodeImage.gotoAndStop("unplacable");
+				}
+			}
+			
 		}
 		public function isPlaced () :Boolean
 		{
@@ -101,9 +133,21 @@ package EgyptianInvasion
 		{
 			
 		}
+		public function stopDraw():void
+		{
+			this.removeChild(nodeImage);
+			nodeImage = null;
+		}
 		public function setValid ( val:Boolean):void
 		{
 			isValid = val;
+			if(nodeImage != null)
+			{
+				if(val)
+					nodeImage.gotoAndStop("placable");
+				else
+					nodeImage.gotoAndStop("unplacable");
+			}
 		}
 		public function getSize():Number
 		{
@@ -230,10 +274,10 @@ package EgyptianInvasion
 		}
 		
 		protected function TimeListener(e:TimerEvent):void	{
-			if(placed)
-				displaySolid();
-			else
-				displayFaded();
+		//	if(placed)
+			//	displaySolid();
+	//		else
+			//	displayFaded();
 		}
 		
 		public function removeSibling(nod:Node):void {
