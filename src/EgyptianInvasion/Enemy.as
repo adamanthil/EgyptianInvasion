@@ -43,6 +43,7 @@ package EgyptianInvasion
 			
 			this.health = 100;
 			this.goldAmt = 0;
+			this.goldCapacity = 10;
 			
 			this.speed = 1;
 			this.moving = false;	// We need to make a decision first
@@ -185,7 +186,7 @@ package EgyptianInvasion
 			if(originNode != null) {
 				originNode.processEnemy(this);
 			}
-			if(originNode != null) {
+			if(targetNode != null) {
 				targetNode.processEnemy(this);
 			}
 			

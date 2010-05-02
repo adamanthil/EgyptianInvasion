@@ -75,6 +75,7 @@ package EgyptianInvasion
 			{
 				allNodes[i].stopDraw();
 			}
+			tombNode.addGold(sup.getLevelManager().getGoldAmt());
 		}
 		public function getCanvas ():Stage
 		{

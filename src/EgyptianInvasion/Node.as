@@ -30,9 +30,12 @@ package EgyptianInvasion
 		protected var pathVal:Number;
 		
 		private var nodeImage:flashingNode; // normal, selected, placable, unplacable
+		private var drawing:Boolean;
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
 			//this.cacheAsBitmap = true;
+			drawing = true;
+			goldWithin = 0;
 			nodeImage = new flashingNode();
 			nodeImage.stop();
 			addChild(nodeImage);
@@ -78,8 +81,12 @@ package EgyptianInvasion
 		// Determines if the enemy should be affected based on its current position (if it is within the range of the node)
 		// Called by the Enemy class
 		public function processEnemy(guy:Enemy):Boolean {
+			
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 			{
+				trace("guy inside");
+				trace(sup.getEndNode() == this);
+				trace(goldWithin);
 				if(triggerNode != null && !guy.isDead())
 				{
 					triggerNode.trigger();
@@ -135,8 +142,19 @@ package EgyptianInvasion
 		}
 		public function stopDraw():void
 		{
-			this.removeChild(nodeImage);
-			nodeImage = null;
+			if(drawing)
+			{
+				this.removeChild(nodeImage);
+				drawing = false;
+			}
+		}
+		public function startDraw():void
+		{
+			if(drawing)
+			{
+				this.addChild(nodeImage);
+				drawing = false;
+			}
 		}
 		public function setValid ( val:Boolean):void
 		{
