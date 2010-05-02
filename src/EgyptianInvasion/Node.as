@@ -39,7 +39,7 @@ package EgyptianInvasion
 			x = nodex;
 			y = nodey;
 			size = 2;
-			time = new Timer(10);
+			time = new Timer(100);
 			currRad = size;
 			radiusInc = false;
 			//			canv.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownListener);

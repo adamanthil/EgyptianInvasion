@@ -39,6 +39,9 @@
 				roomImage.y = -15;
 				addChild(roomImage);
 				value = 5;
+				
+				graphics.beginFill(0x00FF00,.5);
+				graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);
 				//this.cacheAsBitmap = true;
 			}
 			public function activeTrigger(e:MouseEvent):void {

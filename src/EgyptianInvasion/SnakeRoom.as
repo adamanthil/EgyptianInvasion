@@ -21,6 +21,9 @@ package EgyptianInvasion
 			roomImage.y = -15;
 			addChild(roomImage);
 			value = 5;
+			
+			graphics.beginFill(0x00FF00,.5);
+			graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);
 			//this.cacheAsBitmap = true;
 		}
 		public override function processEnemy(guy:Enemy):Boolean

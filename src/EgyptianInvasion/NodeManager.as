@@ -123,7 +123,6 @@ package EgyptianInvasion
 		}
 		
 		private function mouseDownListener (e:MouseEvent):void {
-			trace(cantSet);
 			if(toggledNode == null || cantSet)
 			{
 				var count:Number;
@@ -160,6 +159,7 @@ package EgyptianInvasion
 					allNodes.push(toggledNode);
 					toggledNode.onPlaced(this);
 					sup.getLevelManager().deductGold(toggledNode.getPathCost()*(Math.sqrt(Math.pow(toggledNode.x - selectedNode.x,2) + Math.pow(toggledNode.y - selectedNode.y,2))) + toggledNode.getNodeCost())
+					sup.getUI().setPathExists(enterNode.pathExists(tombNode));
 				}
 				else if(!toggledNode.getTrigPlace())
 				{
@@ -168,6 +168,7 @@ package EgyptianInvasion
 					this.removeChild(toggledNode);
 					selectedNode.removeSibling(toggledNode);
 					sup.getLevelManager().deductGold(toggledNode.getPathCost()*(Math.sqrt(Math.pow(potentialNode.x - selectedNode.x,2) + Math.pow(potentialNode.y - selectedNode.y,2))))
+					sup.getUI().setPathExists(enterNode.pathExists(tombNode));
 				}
 				else
 				{
@@ -233,6 +234,7 @@ package EgyptianInvasion
 				}
 				selectedNode = enterNode;
 			}
+			sup.getUI().setPathExists(enterNode.pathExists(tombNode));
 		}
 		private function findIntersect(x0:Number,y0:Number,x1:Number,y1:Number,
 									   x2:Number,y2:Number,x3:Number,y3:Number):Array
