@@ -149,7 +149,6 @@ package EgyptianInvasion
 			protected override function displaySolid():void
 			{
 				this.blendMode = BlendMode.NORMAL;
-				graphics.clear();
 				if(this.selected)
 				{
 					graphics.beginFill(0x00FF00,.5);
