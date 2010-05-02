@@ -10,7 +10,7 @@ package EgyptianInvasion
 	import mx.core.BitmapAsset;
 	public class NearBackground extends Sprite
 	{
-		[Embed(source="../assets/img/nearBack.jpg")]
+		[Embed(source="../assets/img/nearBack3.jpg")]
 		private var nearBGimage:Class;
 		private var canvas:Stage;
 		public function NearBackground(stag:Stage)

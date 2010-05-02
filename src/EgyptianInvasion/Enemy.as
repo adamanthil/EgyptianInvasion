@@ -222,8 +222,7 @@ package EgyptianInvasion
 		// ------ Functions that affect enemy in game - overridden by children if necessary -----
 		
 		// The enemy starts drowning
-		public function setDrowning():Boolean {
-			this.health = 0;
+		public function setDrowning(drown:Boolean):Boolean {
 			return true;
 		}
 		

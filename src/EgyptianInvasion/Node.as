@@ -8,25 +8,29 @@ package EgyptianInvasion
 	
 	public class Node extends Sprite {
 		
-		public var canvas:Stage;
-		public var nodes:Array;
-		public var selected:Boolean;
-		public var currRad:Number;
-		public var radiusInc:Boolean;
-		public var time:Timer;
-		public var placed:Boolean;
-		public var isValid:Boolean;
-		public var size:Number;
-		public var validAngles:Array;
-		public var isConnectable:Boolean;
-		public var sup:NodeManager;
-		public var triggerNode:Node; //node that this one will trigger.
-		public var isTrigPlace:Boolean;//utility variable, so we can tell when the player wants to make a trigger connection
+		protected var canvas:Stage;
+		protected var nodes:Array;
+		protected var selected:Boolean;
+		protected var currRad:Number;
+		protected var radiusInc:Boolean;
+		protected var time:Timer;
+		protected var placed:Boolean;
+		protected var isValid:Boolean;
+		protected var size:Number;
+		protected var validAngles:Array;
+		protected var isConnectable:Boolean;
+		protected var sup:NodeManager;
+		protected var triggerNode:Node; //node that this one will trigger.
+		protected var isTrigPlace:Boolean;//utility variable, so we can tell when the player wants to make a trigger connection
 										//between nodes.
-		public var goldWithin:Number;
+		protected var goldWithin:Number;
+		protected var value:Number;
+		protected var pathVal:Number;
 		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
 			//this.cacheAsBitmap = true;
+			value = 0;
+			pathVal = .05;
 			this.isConnectable = true;
 			isTrigPlace = false;
 			sup = refup;
@@ -45,7 +49,12 @@ package EgyptianInvasion
 			time.start();
 			nodes = new Array();
 		}
-		
+		public function getPathCost():Number{
+			return pathVal;
+		}
+		public function getNodeCost():Number{
+			return value;
+		}
 		public function connectable():Boolean {
 			return isConnectable;
 		}
@@ -60,8 +69,17 @@ package EgyptianInvasion
 		
 		// Determines if the enemy should be affected based on its current position (if it is within the range of the node)
 		// Called by the Enemy class
-		public function processEnemy(enemy:Enemy):Boolean {
-			return false;
+		public function processEnemy(guy:Enemy):Boolean {
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
+			{
+				if(triggerNode != null && !guy.isDead())
+					triggerNode.trigger();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public function setSelected( select:Boolean):void {
@@ -99,18 +117,6 @@ package EgyptianInvasion
 		
 		}
 		
-		public function processNode(guy:Enemy):Boolean {
-			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
-			{
-				if(triggerNode != null && !guy.isDead())
-					triggerNode.trigger();
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
 		public function getPossibleAngle(nodeIn:Node):Boolean {
 			var relx0:Number = (nodeIn.x - x)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
 			var rely0:Number = (nodeIn.y - y)/Math.sqrt(Math.pow(nodeIn.x - x,2) + Math.pow(nodeIn.y - y,2));
@@ -140,7 +146,7 @@ package EgyptianInvasion
 			return false;
 		}
 		
-		public function displayFaded():void {
+		protected function displayFaded():void {
 			graphics.clear();
 			if(radiusInc)
 				currRad+=.1;
@@ -180,7 +186,7 @@ package EgyptianInvasion
 			blendMode = BlendMode.NORMAL;
 		}
 		
-		public function displaySolid():void {
+		protected function displaySolid():void {
 			graphics.clear();
 			
 			if(radiusInc)
@@ -223,7 +229,7 @@ package EgyptianInvasion
 			return this.isTrigPlace;
 		}
 		
-		public function TimeListener(e:TimerEvent):void	{
+		protected function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
 			else
@@ -275,7 +281,7 @@ package EgyptianInvasion
 			return nodes;
 		}
 		
-		public function mouseMoveListener(e:MouseEvent):void {
+		protected function mouseMoveListener(e:MouseEvent):void {
 			if(!placed)
 			{
 				x = e.stageX;

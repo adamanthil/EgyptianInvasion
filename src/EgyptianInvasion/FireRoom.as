@@ -8,35 +8,38 @@ package EgyptianInvasion
 	
 	import mx.core.BitmapAsset;
 	
-	public class FireRoom extends Node
+	public class FireRoom extends Trap
 	{
 		[Embed(source="../assets/img/fireIconic.jpg")]
 		private var RoomImage:Class;
-		private var roomImage:BitmapAsset;
-		private var deadGuys:Number;
-		private var onFire:Boolean;
-		private var fireTimeLeft:Number;
+		private var fireTimeLeft:Number = 0;
+		
+		[Embed(source="../assets/img/fireIconicDeactive.jpg")]
+		private var DeactivateImage:Class;
+		private var deactivateImage:BitmapAsset;
+		private var button:Button;
 		
 		public function FireRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
-			onFire = false;
 			fireTimeLeft = 0;
 			super(nodex,nodey,canvas, refup);
+			
+			
+			deactivateImage  = new DeactivateImage();
+			deactivateImage.scaleX = 0.6;
+			deactivateImage.scaleY = 0.6;
+			deactivateImage.x = -15;
+			deactivateImage.y = -15;
+			addChild(deactivateImage);
+			
 			roomImage  = new RoomImage();
 			roomImage.scaleX = 0.6;
 			roomImage.scaleY = 0.6;
 			roomImage.x = -15;
 			roomImage.y = -15;
 			addChild(roomImage);
+			value = 5;
 			//this.cacheAsBitmap = true;
-			this.blendMode = BlendMode.LAYER;
-			canvas = canvas;
-			x = nodex;
-			y = nodey;
-			size = 20;
-			time.start();
-			nodes = new Array();
-			isConnectable = false;
 		}
 		public override function onPlaced(sup:NodeManager):void
 		{
@@ -76,49 +79,32 @@ package EgyptianInvasion
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
 			}
-			var fireButton:Button = new Button(new assets.ToggleButton(),x,y+15,"firebutton",canvas,sup.parent as Main);
-			fireButton.addEventListener(MouseEvent.CLICK, fireTrigger);
-			this.addChild(fireButton);
+			var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"fire button",canvas,sup.parent as Main);
+			activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
+			this.addChild(activeButton);
+			button = activeButton;
 			roomImage.x = -15;
 		}
-		public var fireTrigger:Function = function (e:MouseEvent):void {
+		public function activeTrigger(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
 			
-			if (!button.isDown() && fireTimeLeft < -1000){
+			if (!button.isDown() && fireTimeLeft < -250){
 				this.trigger();				
 			}
 		}
-		public override function displayFaded():void
-		{
-			graphics.clear();
-			roomImage.alpha  = .5;
-			if(isValid)
-				this.blendMode = BlendMode.SUBTRACT;
-			else
-				this.blendMode = BlendMode.SCREEN;
-		}
-		public override function drawToPointX():Number
-		{
-			if(!placed &&(nodes[0] as Node).x < x)
-			{
-				return x - 20;
-			}
-			else if (!placed)
-			{
-				return x + 20;
-			}
-			return x;
-		}
 		public override function processEnemy(guy:Enemy):Boolean
 		{
-			/*if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.hasBeenOutside())
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)))
 			{
-				if(!guy.isDead())
+				if(!guy.isDead() && this.active)
 				{
-					if(onFire)
-						guy.fireAttack();
+					guy.damageSnakes();
+					this.addGuy(guy);
 					if(guy.isDead())
-						deadGuys++;
+					{
+						(guy.parent as EnemyManager).removeEnemy(guy);
+						deadGuys++;	
+					}
 				}
 				if(triggerNode != null && !guy.isDead())
 					triggerNode.trigger();
@@ -126,24 +112,25 @@ package EgyptianInvasion
 			}
 			else
 			{
+				this.removeGuy(guy);
 				return false
-			}*/
-			return false;
+			}
 		}
-		public override function TimeListener(e:TimerEvent):void	{
+		protected override function TimeListener(e:TimerEvent):void	{
 			if(placed)
 				displaySolid();
 			else
 				displayFaded();
 
-				fireTimeLeft--;
+			fireTimeLeft--;
+			trace(fireTimeLeft);
 			if(fireTimeLeft <0)
-				onFire = false;
+				active = false;
 		}
 		public override function trigger():void
 		{
-			onFire = true;
-			fireTimeLeft = 1000;
+			active = true;
+			fireTimeLeft = 250;
 		}
 		public override function getImpassible():Boolean
 		{
@@ -151,13 +138,29 @@ package EgyptianInvasion
 		}
 		public function getOnFire():Boolean
 		{
-			return this.onFire;
+			return this.active;
 		}
-		public override function displaySolid():void
+		protected override function displaySolid():void
 		{
 			this.blendMode = BlendMode.NORMAL;
 			graphics.clear();
+			if(this.selected)
+			{
+				graphics.beginFill(0x00FF00,.5);
+				graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);
+				
+			}
 			roomImage.alpha = 1;
+			deactivateImage.alpha = 1;
+			if(this.selected)
+			{
+				deactivateImage.alpha = .5;
+				roomImage.alpha = .5;
+			}
+			if(!active)
+			{
+				roomImage.alpha = 0;
+			}
 			if(this.triggerNode != null)
 			{
 				graphics.moveTo(0,0);
@@ -166,17 +169,6 @@ package EgyptianInvasion
 				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
 				graphics.moveTo(0,0);
 			}
-		}
-		public override function mouseMoveListener(e:MouseEvent):void {
-			if(!placed)
-			{
-				x = e.stageX;
-				y = e.stageY;
-				if(e.stageX > (nodes[0] as Node).x)
-					x += 20;
-				else
-					x -= 20;
-			} 
 		}
 	}
 }

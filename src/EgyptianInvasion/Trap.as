@@ -1,5 +1,5 @@
-	package EgyptianInvasion
-	{
+package EgyptianInvasion
+{
 		import assets.ToggleButton;
 		
 		import flash.display.*;
@@ -7,46 +7,34 @@
 		import flash.utils.Timer;
 		
 		import mx.core.BitmapAsset;
-		
-		public class PitRoom extends Trap
+		//PLEASE NOTE: do not use this class as any actual instantiation. the fact that traps must define their own
+		// images forces all methods called from the generic trap to fail when this is not defined. Thus, you will
+		// have to instantiate a specific trap to use.
+		// Entertainingly, this particular incongruity of never actually instantiating the roomImage doesn't appear to bother
+		//  the actionscript compiler. I recognize that this is a bit of a perilous way to do things. However, an interface doesn't
+		//  do everything I want this generic class to do, so until we meet later, please forgive this slight offense in terms of
+		//  mildly unstable code.
+		public class Trap extends Node
 		{
-			[Embed(source="../assets/img/pitIconic.jpg")]
-			private var RoomImage:Class;
-			private var fireTimeLeft:Number;
 			
+			protected var roomImage:BitmapAsset;
+			protected var deadGuys:Number;
+			protected var active:Boolean;
+			protected var currentInside:Array;
 			
-			[Embed(source="../assets/img/pitIconicDeactivate.jpg")]
-			private var DeactivateImage:Class;
-			private var deactivateImage:BitmapAsset;
-			private var button:Button;
-			
-			public function PitRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
+			public function Trap(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 			{
-				active = false;
+				currentInside = new Array();
 				super(nodex,nodey,canvas, refup);
-				
-				deactivateImage  = new DeactivateImage();
-				deactivateImage.scaleX = 0.6;
-				deactivateImage.scaleY = 0.6;
-				deactivateImage.x = -15;
-				deactivateImage.y = -15;
-				addChild(deactivateImage);
-				
-				roomImage  = new RoomImage();
-				roomImage.scaleX = 0.6;
-				roomImage.scaleY = 0.6;
-				roomImage.x = -15;
-				roomImage.y = -15;
-				addChild(roomImage);
-				value = 5;
 				//this.cacheAsBitmap = true;
-			}
-			public function activeTrigger(e:MouseEvent):void {
-				var button:Button = Button(e.currentTarget);
-				
-				if (!button.isDown()){
-					this.trigger();				
-				}
+				this.blendMode = BlendMode.LAYER;
+				canvas = canvas;
+				x = nodex;
+				y = nodey;
+				size = 20;
+				time.start();
+				nodes = new Array();
+				isConnectable = false;
 			}
 			public override function onPlaced(sup:NodeManager):void
 			{
@@ -86,39 +74,77 @@
 					inbetween.setPlaced(true);
 					otherSide.setPlaced(true);
 				}
-				var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"pit button",canvas,sup.parent as Main);
-				activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
-				this.addChild(activeButton);
-				button = activeButton;
 				roomImage.x = -15;
+			}
+			protected override function displayFaded():void
+			{
+				graphics.clear();
+				roomImage.alpha  = .5;
+				if(isValid)
+					this.blendMode = BlendMode.SUBTRACT;
+				else
+					this.blendMode = BlendMode.SCREEN;
+			}
+			public override function drawToPointX():Number
+			{
+				if(!placed &&(nodes[0] as Node).x < x)
+				{
+					return x - 20;
+				}
+				else if (!placed)
+				{
+					return x + 20;
+				}
+				return x;
 			}
 			public override function processEnemy(guy:Enemy):Boolean
 			{
 				if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 				{
-					this.addGuy(guy);
-					if(!guy.isDead())
-					{
-						if(this.active && deadGuys < 30)
-							guy.killSpikes();
-						if(guy.isDead())
-							deadGuys++;
-					}
+					addGuy(guy);
 					if(triggerNode != null && !guy.isDead())
 						triggerNode.trigger();
 					return true;
 				}
 				else
 				{
-					this.removeGuy(guy);
+					removeGuy(guy);
 					return false;
 				}
 				return false;
 			}
-			
+			protected function addGuy(guy:Enemy)
+			{
+				currentInside.push(guy);
+			}
+			protected function removeGuy(guy:Enemy)
+			{
+				var int:Number;
+				int = currentInside.indexOf(guy);
+				if(int != -1)
+				{
+					currentInside[int] = currentInside[currentInside.length -1];
+					currentInside.pop();
+				}
+			}
+			protected override function TimeListener(e:TimerEvent):void	{
+				if(placed)
+					displaySolid();
+				else
+					displayFaded();
+				
+			}
 			public override function trigger():void
 			{
 				this.active = !this.active;
+			}
+			public override function getImpassible():Boolean
+			{
+				return false;
+			}
+			public function activeNAAT():Boolean
+			{
+				return this.active;
 			}
 			protected override function displaySolid():void
 			{
@@ -131,16 +157,8 @@
 					
 				}
 				roomImage.alpha = 1;
-				deactivateImage.alpha = 1;
 				if(this.selected)
-				{
 					roomImage.alpha = .5;
-					deactivateImage.alpha = .5;
-				}
-				if(!active)
-				{
-					roomImage.alpha = 0;
-				}
 				if(this.triggerNode != null)
 				{
 					graphics.moveTo(0,0);
@@ -150,5 +168,16 @@
 					graphics.moveTo(0,0);
 				}
 			}
+			protected override function mouseMoveListener(e:MouseEvent):void {
+				if(!placed)
+				{
+					x = e.stageX;
+					y = e.stageY;
+					if(e.stageX > (nodes[0] as Node).x)
+						x += 20;
+					else
+						x -= 20;
+				} 
+			}
 		}
-	}
+}

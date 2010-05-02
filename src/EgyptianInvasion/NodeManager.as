@@ -159,7 +159,7 @@ package EgyptianInvasion
 					toggledNode.setPlaced(true);
 					allNodes.push(toggledNode);
 					toggledNode.onPlaced(this);
-					
+					sup.getLevelManager().deductGold(toggledNode.getPathCost()*(Math.sqrt(Math.pow(toggledNode.x - selectedNode.x,2) + Math.pow(toggledNode.y - selectedNode.y,2))) + toggledNode.getNodeCost())
 				}
 				else if(!toggledNode.getTrigPlace())
 				{
@@ -167,6 +167,7 @@ package EgyptianInvasion
 					selectedNode.addSibling(potentialNode);
 					this.removeChild(toggledNode);
 					selectedNode.removeSibling(toggledNode);
+					sup.getLevelManager().deductGold(toggledNode.getPathCost()*(Math.sqrt(Math.pow(potentialNode.x - selectedNode.x,2) + Math.pow(potentialNode.y - selectedNode.y,2))))
 				}
 				else
 				{
@@ -409,7 +410,7 @@ package EgyptianInvasion
 					{
 						tooclose = true;
 					}
-					if(!toggledNode.connectable()&& (Math.sqrt(Math.pow((allNodes[i] as Node).x -toggledNode.x,2) + Math.pow((allNodes[i] as Node).y - toggledNode.y,2)))<Math.max(toggledNode.size, (allNodes[i]as Node).size))
+					if(!toggledNode.connectable()&& (Math.sqrt(Math.pow((allNodes[i] as Node).x -toggledNode.x,2) + Math.pow((allNodes[i] as Node).y - toggledNode.y,2)))<Math.max(toggledNode.getSize(), (allNodes[i]as Node).getSize()))
 					{
 						tooclose = true;
 					}
@@ -421,7 +422,7 @@ package EgyptianInvasion
 				while(count < allNodes.length)
 				{
 					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).size+5)
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).getSize()+5)
 						potentialNode = allNodes[count];
 					count++;
 				}
@@ -472,14 +473,17 @@ package EgyptianInvasion
 						connect = true;
 				}
 				var inside:Boolean = Pyram.hitTestPoint(toggledNode.x,toggledNode.y,true);
+				inside = inside && Pyram.hitTestPoint(toggledNode.x + 25,toggledNode.y,true);
+				inside = inside && Pyram.hitTestPoint(toggledNode.x - 25,toggledNode.y,true);
+				var hasTheCash:Boolean = true;
 				
-				trace(inside);
-				toggledNode.setValid(inside &&(!(tooclose||angleclose||intersected) || connect && potentialNode != null));
-				cantSet = !inside||(tooclose||angleclose||intersected) && !(connect && potentialNode != null);
+				
+				toggledNode.setValid(inside && hasTheCash &&(!(tooclose||angleclose||intersected) || connect && potentialNode != null));
+				cantSet = !inside||!hasTheCash||(tooclose||angleclose||intersected) && !(connect && potentialNode != null);
 				if(toggledNode.getTrigPlace())
 				{
-					toggledNode.setValid(inside&& connect && potentialNode != null);
-					cantSet =!inside|| !(connect && potentialNode != null);
+					toggledNode.setValid(inside && hasTheCash && connect && potentialNode != null);
+					cantSet =!inside||!hasTheCash || !(connect && potentialNode != null);
 				}
 				//conditions and crap ya know.
 			}

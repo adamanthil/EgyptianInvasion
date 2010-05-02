@@ -17,8 +17,8 @@ package EgyptianInvasion
 			roomImage  = new RoomImage();
 			roomImage.scaleX = 0.4;
 			roomImage.scaleY = 0.4;
-			roomImage.x = -15;
-			roomImage.y = -15;
+			roomImage.x = -8;
+			roomImage.y = -8;
 			addChild(roomImage);
 			//this.cacheAsBitmap = true;
 			this.blendMode = BlendMode.LAYER;
@@ -41,11 +41,19 @@ package EgyptianInvasion
 			else
 				return false;
 		}
-		public override function displaySolid():void
+		protected override function displaySolid():void
 		{
 			this.blendMode = BlendMode.NORMAL;
 			graphics.clear();
+			if(this.selected)
+			{
+				graphics.beginFill(0x00FF00,.5);
+				graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);
+
+			}
 			roomImage.alpha = 1;
+			if(this.selected)
+				roomImage.alpha = .5;
 		}
 	}
 }
