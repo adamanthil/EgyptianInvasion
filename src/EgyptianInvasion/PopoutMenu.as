@@ -70,24 +70,24 @@ package EgyptianInvasion
 			addChild(samplePitDesc);
 
 			// Add the other buttons
-			pitTrapBtn = new Button(new assets.ToggleButton(), 100,30, "Pit Room", canvas, main);
+			pitTrapBtn = new Button(new assets.ToggleButton(), 100,30, "Pit Room (Q)", canvas, main);
 			pitTrapBtn.visible = false;
 			pitTrapBtn.setDescription(samplePitDesc);
 			addChild(pitTrapBtn);
 			
-			snakeTrapBtn = new Button(new assets.ToggleButton(), 100,60, "Snake Room", canvas, main);
+			snakeTrapBtn = new Button(new assets.ToggleButton(), 100,60, "Snake Room (W)", canvas, main);
 			snakeTrapBtn.visible = false;
 			addChild(snakeTrapBtn);
 			
-			quickTrapBtn = new Button(new assets.ToggleButton(), 100,90, "Quicksand Room", canvas, main);
+			quickTrapBtn = new Button(new assets.ToggleButton(), 100,90, "Quicksand Room (E)", canvas, main);
 			quickTrapBtn.visible = false;
 			addChild(quickTrapBtn);
 			
-			fireTrapBtn = new Button(new assets.ToggleButton(), 100,120, "Fire Room", canvas, main);
+			fireTrapBtn = new Button(new assets.ToggleButton(), 100,120, "Fire Room (R)", canvas, main);
 			fireTrapBtn.visible = false;
 			addChild(fireTrapBtn);
 			
-			connectNodeBtn = new Button(new assets.ToggleButton(), 100, 150, "Connection Node", canvas, main);
+			connectNodeBtn = new Button(new assets.ToggleButton(), 100, 150, "Connection Node (A)", canvas, main);
 			connectNodeBtn.visible = false;
 			connectNodeBtn.setDescription(sampleDesc);
 			addChild(connectNodeBtn);
@@ -96,6 +96,7 @@ package EgyptianInvasion
 			
 			addEventListener(MouseEvent.MOUSE_OVER, popoutChoicesHandler);
 			addEventListener(MouseEvent.MOUSE_OUT, hideChoicesHandler);
+			canvas.addEventListener(KeyboardEvent.KEY_DOWN, keysHandler);
 			
 			pitTrapBtn.addEventListener(MouseEvent.MOUSE_OVER, popoutDescription);
 			pitTrapBtn.addEventListener(MouseEvent.MOUSE_OUT, hideDescription);
@@ -155,6 +156,29 @@ package EgyptianInvasion
 		
 		public function addConnectNodeHandler(e:MouseEvent):void {
 			main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
+		}
+		
+		public function keysHandler(e:KeyboardEvent):void {
+			if(e.charCode == 97) // A for Add Connecting Node
+			{
+				main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
+			}
+			else if(e.charCode == 101) // E is for QuickSand nodes
+			{
+				main.getNodeManager().addNode(new SandRoom(0, 0, canvas, main.getNodeManager()));
+			}
+			else if(e.charCode == 113) // Q is for Pit nodes
+			{
+				main.getNodeManager().addNode(new PitRoom(0, 0, canvas, main.getNodeManager()));
+			}
+			else if(e.charCode == 114) // R is for Fire nodes
+			{
+				main.getNodeManager().addNode(new FireRoom(0, 0, canvas, main.getNodeManager()));
+			}
+			else if(e.charCode == 119) // W is for Snake nodes
+			{
+				main.getNodeManager().addNode(new SnakeRoom(0, 0, canvas, main.getNodeManager()));
+			}
 		}
 		
 		
