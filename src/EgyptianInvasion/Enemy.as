@@ -3,8 +3,6 @@ package EgyptianInvasion
 {
 	import flash.display.Sprite;
 	import flash.display.Stage;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
 	
 	import mx.core.BitmapAsset;
 	
@@ -13,7 +11,6 @@ package EgyptianInvasion
 	public class Enemy extends Sprite
 	{
 		private var canvas:Stage;
-		private var time:Timer;
 		private var startNode:Node;	// The fist node we start at
 		private var endNode:Node;	// The end/tomb node where the gold exists
 		private var goalNode:Node;	// Our eventual goal
@@ -53,10 +50,6 @@ package EgyptianInvasion
 			figure.scaleY = 0.02;
 			figure.walk();
 			addChild(figure);
-			
-			time = new Timer(10);
-			time.addEventListener(TimerEvent.TIMER,timeListener);
-			time.start();
 		}
 		
 		// Decide what node to move to next
@@ -182,8 +175,8 @@ package EgyptianInvasion
 			}
 		}
 		
-		// At every time interval, determines whether to move or decide next movement
-		private function timeListener(e:TimerEvent):void	{
+		// At every time interval, determines whether to move or decide next movement.  Called by EnemyManager
+		public function nextTimeInterval():void	{
 			
 			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
 			if(originNode != null) {
