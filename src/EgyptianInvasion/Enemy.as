@@ -21,8 +21,11 @@ package EgyptianInvasion
 		private var visitedNodes:Array; // The set of nodes already visited
 		private var distTraveled:Number;	// The distance we have traveled so far
 
+		//private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
+		
 		private var health:Number;
-		private var goldAmt:int;
+		private var goldAmt:Number;
+		private var goldCapacity:Number;
 		
 		// Adds a reference to a bitmap at compile-time
 		[Embed(source="../assets/img/enemy.jpg")] private var BGImage:Class;
@@ -206,25 +209,31 @@ package EgyptianInvasion
 			return this.health == 0;
 		}
 		
-		public function getGold():int {
+		public function getGold():Number {
 			return this.goldAmt;
 		}
 		
-		public function setGold(goldAmt:int):void {
-			if(this.goldAmt != goldAmt) {
-				this.goldAmt = goldAmt;
-				
-				// If we have gold, move toward the exit
-				if(goldAmt > 0) {
-					this.goalNode = this.startNode;
-				}
-				else {
-					this.goalNode = this.endNode;
-				}
-				
-				// We need to make a new decision if we changed our goal
-				this.moving = false;
+		// Gives gold to the enemy.  Number returned is amt of gold left after enemy takes as much as he can carry
+		public function giveGold(goldAmt:int):Number {
+			
+			// Amount of gold that can still be carried
+			var goldAdded:Number = this.goldCapacity - this.goldAmt;
+			this.goldAmt += goldAdded;
+			
+			var goldLeft:Number = goldAmt - goldAdded;
+			
+			// If we have gold, move toward the exit
+			if(goldAmt > 0) {
+				this.goalNode = this.startNode;
 			}
+			else {
+				this.goalNode = this.endNode;
+			}
+			
+			// We need to make a new decision if we changed our goal
+			this.moving = false;
+			
+			return goldLeft;
 		}
 		
 		// ------ Functions that affect enemy in game - overridden by children if necessary -----
