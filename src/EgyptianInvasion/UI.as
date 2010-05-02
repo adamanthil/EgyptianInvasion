@@ -47,11 +47,12 @@
 			loader.contentLoaderInfo.addEventListener(Event.INIT,initListener);
 			loader.load(new URLRequest("../assets/img/uiBG.jpg"));*/
 			
-			removeNodeBtn= new Button(new assets.ToggleButton(), 10,50, "Remove Node",canvas, main);
+			removeNodeBtn = new Button(new assets.ToggleButton(), 10,50, "Delete Node (D)",canvas, main);
 			addChild(removeNodeBtn); // TODO WB For some reason addChildAt makes things crash here
 			
-			beginInvasionBtn = new Button(new assets.ToggleButton(), 10, 150, "Begin Invasion!", canvas, main);
-			beginInvasionBtn.addEventListener(MouseEvent.MOUSE_DOWN, beginInvasionHandler);
+			beginInvasionBtn = new Button(new assets.ToggleButton(), 10, 150, "Begin Invasion! (B)", canvas, main);
+			canvas.addEventListener(KeyboardEvent.KEY_DOWN, keysHandler);
+			beginInvasionBtn.addEventListener(MouseEvent.MOUSE_DOWN, beginInvasionMouseHandler);
 			addChild(beginInvasionBtn);
 			beginInvasionBtn.visible = false;
 			
@@ -61,18 +62,28 @@
 		
 		public function getPopout():PopoutMenu { return popout;}
 		
-		public function beginInvasionHandler(e:MouseEvent):void {
-			var button:Button = Button(e.currentTarget);
-
-			if (!button.isDown()){
-				// If there is a path from start to end, begin the invasion!
-				if(main.getNodeManager().getStartNode().pathExists(main.getNodeManager().getEndNode())) {
-					button.setDown(false);
-					main.setBuildPhase(false);
-					
+		public function beginInvasionMouseHandler(e:MouseEvent):void {
+			// If there is a path from start to end, begin the invasion!
+			if(main.getNodeManager().getStartNode().pathExists(main.getNodeManager().getEndNode())) {
+				main.setBuildPhase(false);
+				main.getEnemyManager().beginInvasion();
+			}	
+		}
+		
+		public function keysHandler(e:KeyboardEvent):void {
+			if(e.charCode == 98) // B for BeginInvasion
+			{
+				if(main.getNodeManager().getStartNode().pathExists(main.getNodeManager().getEndNode())) 
+				{
+					main.setBuildPhase(false);			
 					main.getEnemyManager().beginInvasion();
-				}	
+				}
 			}
+			else if(e.charCode == 100) // D for DeleteNode
+			{
+				main.getNodeManager().removeNode();
+			}
+	
 		}
 		
 		public function setPathExists(b:Boolean):void

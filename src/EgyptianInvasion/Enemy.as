@@ -3,8 +3,7 @@ package EgyptianInvasion
 {
 	import flash.display.Sprite;
 	import flash.display.Stage;
-	
-	import mx.core.BitmapAsset;
+	import flash.utils.*;
 	
 	import org.osmf.events.TimeEvent;
 	
@@ -21,7 +20,7 @@ package EgyptianInvasion
 		private var visitedNodes:Array; // The set of nodes already visited
 		private var distTraveled:Number;	// The distance we have traveled so far
 
-		//private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
+		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
 		
 		private var health:Number;
 		private var goldAmt:Number;
@@ -45,7 +44,7 @@ package EgyptianInvasion
 			this.goldAmt = 0;
 			this.goldCapacity = 10;
 			
-			this.speed = 1;
+			this.speed = 10;
 			this.moving = false;	// We need to make a decision first
 			this.visitedNodes = new Array();	// Initialize visited node array
 			
@@ -160,7 +159,7 @@ package EgyptianInvasion
 				var distTraveled:Number = Math.sqrt(Math.pow(this.x - originNode.x,2) + Math.pow(this.y - originNode.y,2));
 				
 				// Update distances
-				if(distTraveled >= distTotal) {//reach
+				if(distTraveled >= distTotal) {	// reached the destination node
 					this.x = targetNode.x;
 					this.y = targetNode.y;
 					this.moving = false;
@@ -173,8 +172,11 @@ package EgyptianInvasion
 					}
 				}
 				else {
-					this.x += speed/dist * xDist;
-					this.y += speed/dist * yDist;
+					var deltaTime:Number = getTimer() - this.lastIntervalTime;
+					var multiplier:Number = deltaTime / (1000.0/50);	// 50fps is "target"
+					
+					this.x += speed/dist * multiplier * xDist;
+					this.y += speed/dist * multiplier * yDist;
 				}
 			}
 		}
@@ -196,6 +198,9 @@ package EgyptianInvasion
 			else {
 				makeDecision();
 			}
+			
+			// Update last interval time to keep movement framerate independent
+			this.lastIntervalTime = getTimer();
 		}
 		
 		public function getOriginNode():Node {

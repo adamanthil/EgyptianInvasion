@@ -12,6 +12,7 @@ package EgyptianInvasion
 		private var nodeMan:NodeManager;		
 		private var enemies:Array;
 		private var timer:Timer;
+		private var spawnTimer:Timer;
 		
 		public function EnemyManager(main:Main, nodeMan:NodeManager)
 		{
@@ -19,6 +20,9 @@ package EgyptianInvasion
 			this.main = main;
 			this.nodeMan = nodeMan;
 			this.enemies = new Array();
+			
+			spawnTimer = new Timer(1000, 20); // This line defines frequency and number of enemies to spawn
+			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
 			
 			timer = new Timer(10);
 			timer.addEventListener(TimerEvent.TIMER,timeListener);
@@ -30,6 +34,12 @@ package EgyptianInvasion
 			for(var i:int = 0; i < enemies.length; i++) {
 				enemies[i].nextTimeInterval();
 			}
+		}
+		public function spawnTimeListener(e:TimerEvent):void	{
+			var enemy:Enemy = new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas)
+			enemies.push(enemy);
+			addChild(enemy);
+			main.getLevelManager().displayEnemy(enemies.length);
 		}
 		
 		// Removes an enemy and returns the gold it's carying to the most recently visited node
@@ -51,9 +61,7 @@ package EgyptianInvasion
 		}
 		
 		public function beginInvasion():void {
-			var enemy:Enemy = new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas)
-			enemies.push(enemy);
-			addChild(enemy);
+			spawnTimer.start();
 		}
 	}
 }
