@@ -10,9 +10,10 @@
 	
 	public class UI extends Sprite {
 		private var removeNodeBtn:Button;
-		private var placeNodeBtn:Button;
 		private var beginInvasionBtn:Button;
 		private var popout:PopoutMenu; // Reference our addnode submenu
+		// Check on whether path from begin->end exists, display BeginInvasion appropraitely.
+		private var pathExists:Boolean; 
 		
 		// Here only as example of how to do run-time image loading
 		// private var loader:Loader;
@@ -49,56 +50,16 @@
 			removeNodeBtn= new Button(new assets.ToggleButton(), 10,50, "Remove Node",canvas, main);
 			addChild(removeNodeBtn); // TODO WB For some reason addChildAt makes things crash here
 			
-			placeNodeBtn = new Button(new assets.ToggleButton(), 10,100, "Add Node", canvas, main);
-			placeNodeBtn.addEventListener(MouseEvent.MOUSE_DOWN, addNodeHandler);
-			//addEventListener(MouseEvent.MOUSE_DOWN, addNodeAlt);
-			addChild(placeNodeBtn);
-			
-			var beginInvasionBtn:Button = new Button(new assets.ToggleButton(), 10, 150, "Begin Invasion!", canvas, main);
+			beginInvasionBtn = new Button(new assets.ToggleButton(), 10, 150, "Begin Invasion!", canvas, main);
 			beginInvasionBtn.addEventListener(MouseEvent.MOUSE_DOWN, beginInvasionHandler);
 			addChild(beginInvasionBtn);
+			beginInvasionBtn.visible = false;
 			
-			popout = new PopoutMenu(10, 150, canvas, main);
+			popout = new PopoutMenu(10, 0, canvas, main);
 			addChild(popout);
 		}
 		
 		public function getPopout():PopoutMenu { return popout;}
-			
-		public function addNodeAlt(e:MouseEvent):void
-		{
-			if(e.target == placeNodeBtn)
-			{
-				// If button already down, untoggle it (?)
-				if (placeNodeBtn.isDown()){
-					placeNodeBtn.setDown(false);
-					main.getNodeManager().setToggledNode(null);
-					//Main(placeNodeBtn.parent).nodeMan.setToggledNode(null);
-				}
-					// Otherwise, add a new node
-				else {
-					placeNodeBtn.setDown(true);
-					main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
-				}
-			}
-		}
-		
-		// Event handler for adding a node on a mouseDown button click
-		public function addNodeHandler(e:MouseEvent):void {
-			var button:Button = Button(e.currentTarget);
-			
-			// If button already down, untoggle it (?)
-			if (button.isDown()){
-				button.setDown(false);
-				main.getNodeManager().setToggledNode(null);
-				//Main(button.parent).nodeMan.setToggledNode(null);
-			}
-			// Otherwise, add a new node
-			else {
-				button.setDown(true);
-				button.getMain().getNodeManager().addNode(new SnakeRoom(0, 0, button.getCanvas(), main.getNodeManager()));
-			//	main.getNodeManager().addNode(new Node(0, 0, button.getCanvas(),main.getNodeManager()));
-			}
-		}
 		
 		public function beginInvasionHandler(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
@@ -110,9 +71,17 @@
 					main.setBuildPhase(false);
 					
 					main.getEnemyManager().beginInvasion();
-				}
-				
+				}	
 			}
+		}
+		
+		public function setPathExists(b:Boolean):void
+		{
+			pathExists = b;
+			if (pathExists)
+				beginInvasionBtn.visible = true;
+			else
+				beginInvasionBtn.visible = false;
 		}
 		
 		/*private function mouseDownListener (e:MouseEvent):void {
