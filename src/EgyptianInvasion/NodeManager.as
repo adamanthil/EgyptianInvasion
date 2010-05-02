@@ -4,6 +4,7 @@ package EgyptianInvasion
 	
 	import flash.display.*;
 	import flash.events.*;
+	import flash.ui.Keyboard;
 	import flash.utils.Timer;
 	/*
 	The NodeManager class is a manager for a set of nodes on a scene. this is primarily created
@@ -183,26 +184,14 @@ package EgyptianInvasion
 		}
 		private function keyListener(e:KeyboardEvent):void
 		{
-			/*if(e.charCode == 97)
-			{
-				toggledNode = new Node(0,0,canvas);
-				toggledNode.addSibling(selectedNode);
-				selectedNode.addSibling(toggledNode);
-				toggledNode.setPlaced(false);
-				this.addChild(toggledNode);
-				addNode(new Node(0,0,canvas,this));
-			}*/
-			if(e.ctrlKey && toggledNode != null)
+			if((e.keyCode == Keyboard.CONTROL || e.keyCode == Keyboard.ESCAPE)
+				&& toggledNode != null)
 			{
 				this.removeChild(toggledNode);
 				selectedNode.removeSibling(toggledNode);
 				toggledNode = null;
 				sup.getPlaceNodeButton().setDown(false);
 			}
-			/*if(e.charCode == 100)
-			{
-				removeNode();
-			}*/
 		}
 		private function mouseUpListener (e:MouseEvent):void {
 			cantSet = false;

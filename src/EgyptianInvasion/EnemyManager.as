@@ -1,6 +1,8 @@
 package EgyptianInvasion
 {
 	import flash.display.*;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	// Manages the creation and removal of enemies
 	public class EnemyManager extends Sprite
@@ -9,6 +11,7 @@ package EgyptianInvasion
 		private var main:Main;
 		private var nodeMan:NodeManager;		
 		private var enemies:Array;
+		private var timer:Timer;
 		
 		public function EnemyManager(main:Main, nodeMan:NodeManager)
 		{
@@ -16,6 +19,17 @@ package EgyptianInvasion
 			this.main = main;
 			this.nodeMan = nodeMan;
 			this.enemies = new Array();
+			
+			timer = new Timer(10);
+			timer.addEventListener(TimerEvent.TIMER,timeListener);
+			timer.start();
+		}
+		
+		// Call "nextTimeInterval" on all enemies
+		public function timeListener(e:TimerEvent):void	{
+			for(var i:int = 0; i < enemies.length; i++) {
+				enemies[i].nextTimeInterval();
+			}
 		}
 		
 		// Removes an enemy and returns the gold it's carying to the most recently visited node

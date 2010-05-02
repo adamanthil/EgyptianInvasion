@@ -18,6 +18,7 @@ package EgyptianInvasion
 		private var loader:URLLoader;
 		private var s_x:String;
 		private var goldTextField:TextField;
+		private var enemyTextField:TextField;
 		private var format:TextFormat;
 		private var nodeLimit:Number;
 		
@@ -47,7 +48,8 @@ package EgyptianInvasion
 			interest = 0.3;
 			setStartEndNode();
 			displayGold(currGold);
-			deductGold(20);
+			//deductGold(20);
+			displayEnemy(10);
 			
 		}
 		
@@ -102,10 +104,24 @@ package EgyptianInvasion
 			goldTextField.text = "GOLD LEFT: "+ gold;
 			goldTextField.setTextFormat(format);
 			//myTextField_txt.text.
-			goldTextField.x = 400;
+			goldTextField.x = 450;
 			goldTextField.y = 10;
 			goldTextField.selectable = false;
 			main.addChild(goldTextField);
+			
+		}
+		
+		public function displayEnemy(amtEnemy:Number):void{
+
+			enemyTextField = new TextField();
+			//myTextField_txt.wordWrap=true;
+			enemyTextField.autoSize=TextFieldAutoSize.LEFT;
+			enemyTextField.text = "ENEMY LEFT: "+ amtEnemy;
+			enemyTextField.setTextFormat(format);
+			enemyTextField.x = 350;
+			enemyTextField.y = 10;
+			enemyTextField.selectable = false;
+			main.addChild(enemyTextField);
 			
 		}
 		
