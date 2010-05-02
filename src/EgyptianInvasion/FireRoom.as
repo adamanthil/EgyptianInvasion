@@ -123,7 +123,6 @@ package EgyptianInvasion
 				displayFaded();
 
 			fireTimeLeft--;
-			trace(fireTimeLeft);
 			if(fireTimeLeft <0)
 				active = false;
 		}

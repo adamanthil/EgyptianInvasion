@@ -19,6 +19,7 @@ package EgyptianInvasion
 		private var s_x:String;
 		private var goldTextField:TextField;
 		private var format:TextFormat;
+		private var nodeLimit:Number;
 		
 		public const fireRoomCost:Number = 100;
 		public const pitRoomCost:Number = 20;
@@ -40,6 +41,7 @@ package EgyptianInvasion
 			this.noMan = nm;
 			this.ui = ui;
 			this.canvas =can;
+			//this.nodeLimit = 30;
 			currLevel = 1;
 			currGold = 100;
 			interest = 0.3;
@@ -109,13 +111,16 @@ package EgyptianInvasion
 		
 		public function deductGold(amount:Number):void{
 			currGold -=amount;
-			
-			goldTextField.text = "GOLD LEFT: " + currGold;
+			goldTextField.text = "GOLD LEFT: " + currGold.toFixed(2);
 			goldTextField.setTextFormat(format);
 		}
 		
 		public function setInterest(amount:Number):void{
 			interest = amount;
+		}
+		
+		public function getGoldAmt():Number{
+			return currGold;
 		}
 	}
 }
