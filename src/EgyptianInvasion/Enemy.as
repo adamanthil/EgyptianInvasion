@@ -13,7 +13,8 @@ package EgyptianInvasion
 		private var canvas:Stage;
 		private var time:Timer;
 		private var startNode:Node;	// The fist node we start at
-		private var endNode:Node;	// Our eventual goal
+		private var endNode:Node;	// The end/tomb node where the gold exists
+		private var goalNode:Node;	// Our eventual goal
 		private var originNode:Node;	// The most recently visited Node
 		private var targetNode:Node;	// Node we are moving toward
 		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
@@ -33,7 +34,7 @@ package EgyptianInvasion
 			this.x = startNode.x;
 			this.y = startNode.y;
 			this.canvas = canvas;
-			this.endNode = endNode;
+			this.goalNode = endNode;
 			this.targetNode = startNode;	// Make a decision at the start node first
 			this.originNode = startNode;
 			this.startNode = startNode;
@@ -105,7 +106,7 @@ package EgyptianInvasion
 						var node:Node = targetNode.getSiblings()[i];
 						var dist:Number = Math.sqrt(Math.pow(x - node.x,2) + Math.pow(y - node.y,2));
 						
-						var remainingEstimate:Number = Math.sqrt(Math.pow(node.x - endNode.x,2) + Math.pow(node.y - endNode.y,2));
+						var remainingEstimate:Number = Math.sqrt(Math.pow(node.x - goalNode.x,2) + Math.pow(node.y - goalNode.y,2));
 						var distEstimate:Number = dist + remainingEstimate;
 						
 						// Save if best node (and not where we are)
@@ -168,7 +169,7 @@ package EgyptianInvasion
 					
 					
 					// If we've reached the destination, set target to null
-					if(targetNode == endNode) {
+					if(targetNode == goalNode) {
 						figure.stand();
 						targetNode = null;
 					}
@@ -216,7 +217,20 @@ package EgyptianInvasion
 		}
 		
 		public function setGold(goldAmt:int):void {
-			this.goldAmt = goldAmt;
+			if(this.goldAmt != goldAmt) {
+				this.goldAmt = goldAmt;
+				
+				// If we have gold, move toward the exit
+				if(goldAmt > 0) {
+					this.goalNode = this.startNode;
+				}
+				else {
+					this.goalNode = this.endNode;
+				}
+				
+				// We need to make a new decision if we changed our goal
+				this.moving = false;
+			}
 		}
 		
 		// ------ Functions that affect enemy in game - overridden by children if necessary -----
