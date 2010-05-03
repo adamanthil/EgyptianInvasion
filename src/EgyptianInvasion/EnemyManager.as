@@ -91,5 +91,14 @@ package EgyptianInvasion
 		public function beginInvasion():void {
 			spawnTimer.start();
 		}
+		
+		public function hasEnemies():Boolean {
+			if(enemies.length == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
 	}
 }
