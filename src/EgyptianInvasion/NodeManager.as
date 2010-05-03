@@ -48,7 +48,7 @@ package EgyptianInvasion
 			baseNode.setSelected(true);
 			enterNode = baseNode;
 			baseNode.setPlaced(true);
-			var finalNode:Node = new Node(endx,endy,canvas,this);
+			var finalNode:Node = new EndRoom(endx,endy,canvas,this);
 			tombNode = finalNode;
 			allNodes.push(tombNode);
 			this.addChild(baseNode);
@@ -68,6 +68,14 @@ package EgyptianInvasion
 		{
 			tombNode.x = x;
 			tombNode.y = y;
+		}
+		public function stopDraw():void
+		{
+			for(var i:Number = 0; i< allNodes.length; i++)
+			{
+				allNodes[i].stopDraw();
+			}
+			tombNode.addGold(sup.getLevelManager().getGoldAmt());
 		}
 		public function getCanvas ():Stage
 		{
@@ -184,25 +192,13 @@ package EgyptianInvasion
 		}
 		private function keyListener(e:KeyboardEvent):void
 		{
-			if(e.charCode == 97)
-			{
-				/*toggledNode = new Node(0,0,canvas);
-				toggledNode.addSibling(selectedNode);
-				selectedNode.addSibling(toggledNode);
-				toggledNode.setPlaced(false);
-				this.addChild(toggledNode);*/
-				addNode(new Node(0,0,canvas,this));
-			}
-			if(e.keyCode == Keyboard.ESCAPE && toggledNode != null)
+			if((e.keyCode == Keyboard.CONTROL || e.keyCode == Keyboard.ESCAPE)
+				&& toggledNode != null)
 			{
 				this.removeChild(toggledNode);
 				selectedNode.removeSibling(toggledNode);
 				toggledNode = null;
 				sup.getPlaceNodeButton().setDown(false);
-			}
-			if(e.charCode == 100)
-			{
-				removeNode();
 			}
 		}
 		private function mouseUpListener (e:MouseEvent):void {
@@ -214,7 +210,7 @@ package EgyptianInvasion
 			this.addChild(nod);
 			this.allNodes.push(nod);
 		}
-		private function removeNode():void
+		public function removeNode():void
 		{
 			if(selectedNode !=enterNode && selectedNode != tombNode)
 			{

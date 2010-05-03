@@ -91,6 +91,8 @@
 				}
 				var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"pit button",canvas,sup.parent as Main);
 				activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
+				activeButton.scaleX = .1;
+				activeButton.scaleY = .1;
 				this.addChild(activeButton);
 				button = activeButton;
 				roomImage.x = -15;
@@ -109,6 +111,8 @@
 					}
 					if(triggerNode != null && !guy.isDead())
 						triggerNode.trigger();
+					if(!guy.isDead() &&this.goldWithin > 0 )
+						goldWithin = guy.giveGold(goldWithin);
 					return true;
 				}
 				else

@@ -23,10 +23,7 @@ package EgyptianInvasion
 			this.blendMode = BlendMode.LAYER;
 			
 			this.addChild(new FarBackground());			
-			this.addChild(new NearBackground(stage));
-			
-			placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage, this);
-			
+			this.addChild(new NearBackground(stage));			
 			
 			/*placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
 			placeNodeButton.setMouseDown(addNodeHandler);
@@ -57,7 +54,7 @@ package EgyptianInvasion
 		}
 		public function getPlaceNodeButton():Button
 		{
-			return placeNodeButton;
+			return ui.getPopout().getPitTrapBtn();
 		}
 		public function getLevelManager():LevelManager
 		{
@@ -79,7 +76,12 @@ package EgyptianInvasion
 		}
 		
 		public function getBuildPhase():Boolean {return buildingPhase;}
-		public function setBuildPhase(b:Boolean):void {buildingPhase = b;}
+		public function setBuildPhase(b:Boolean):void {buildingPhase = b;
+		if(!b)
+		{
+			trace("drawing stopping...");
+			nodeMan.stopDraw();
+		}}
 		
 		// -- Button Event Handlers -------------------------
 		

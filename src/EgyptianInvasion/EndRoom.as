@@ -6,12 +6,12 @@ package EgyptianInvasion
 	
 	import mx.core.BitmapAsset;
 	
-	public class StartRoom extends Node
+	public class EndRoom extends Node
 	{
-		[Embed(source="../assets/img/startRoom.jpg")]
+		[Embed(source="../assets/img/endRoom.jpg")]
 		private var RoomImage:Class;
 		private var roomImage:BitmapAsset;
-		public function StartRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
+		public function EndRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
 			super(nodex,nodey,canvas,refup);
 			roomImage  = new RoomImage();
@@ -32,10 +32,10 @@ package EgyptianInvasion
 		}
 		public override function processEnemy(guy:Enemy):Boolean
 		{
-			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.getGold() > 0)
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)// && guy.getGold() > 0)
 			{
-				(sup.parent as Main).getLevelManager().deductGold(guy.getGold());
-				(guy.parent as EnemyManager).removeEnemy(guy);
+				//				(sup.parent as Main).getLevelManager().deductGold(guy.getGold());
+				//				(guy.parent as EnemyManager).removeGuy(guy);
 				return true;
 			}
 			else
@@ -49,7 +49,7 @@ package EgyptianInvasion
 			{
 				graphics.beginFill(0x00FF00,.5);
 				graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);
-
+				
 			}
 			roomImage.alpha = 1;
 			if(this.selected)
