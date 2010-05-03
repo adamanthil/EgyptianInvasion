@@ -214,23 +214,29 @@ package EgyptianInvasion
 		// At every time interval, determines whether to move or decide next movement.  Called by EnemyManager
 		public function nextTimeInterval():void	{
 			
-			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
-			if(originNode != null) {
-				originNode.processEnemy(this);
-			}
-			if(targetNode != null) {
-				targetNode.processEnemy(this);
-			}
-			
-			if(moving) {
-				move();
+			// Check if we need to be deleted cause we're dead
+			if(this.health <= 0) {
+				EnemyManager(this.parent).removeChild(this);
 			}
 			else {
-				makeDecision();
+				// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
+				if(originNode != null) {
+					originNode.processEnemy(this);
+				}
+				if(targetNode != null) {
+					targetNode.processEnemy(this);
+				}
+				
+				if(moving) {
+					move();
+				}
+				else {
+					makeDecision();
+				}
+				
+				// Update last interval time to keep movement framerate independent
+				this.lastIntervalTime = getTimer();	
 			}
-			
-			// Update last interval time to keep movement framerate independent
-			this.lastIntervalTime = getTimer();
 		}
 		
 		public function getOriginNode():Node {
@@ -250,10 +256,10 @@ package EgyptianInvasion
 		}
 		
 		// Gives gold to the enemy.  Number returned is amt of gold left after enemy takes as much as he can carry
-		public function giveGold(goldAmt:int):Number {
+		public function giveGold(goldAmt:Number):Number {
 			
 			// Amount of gold that can still be carried
-			var goldAdded:Number = this.goldCapacity - this.goldAmt;
+			var goldAdded:Number = Math.min(this.goldCapacity - this.goldAmt,goldAmt);
 			this.goldAmt += goldAdded;
 			
 			var goldLeft:Number = goldAmt - goldAdded;
