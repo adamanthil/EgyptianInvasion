@@ -101,18 +101,21 @@
 			{
 				if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 				{
-					this.addGuy(guy);
 					if(!guy.isDead())
 					{
-						if(this.active && deadGuys < 30)
-							guy.killSpikes();
-						if(guy.isDead())
-							deadGuys++;
+						if(this.active && deadGuys < 10)
+						{
+							if(currentInside.indexOf(guy) == -1)
+								guy.killSpikes();
+							if(guy.isDead())
+								deadGuys++;
+						}
 					}
 					if(triggerNode != null && !guy.isDead())
 						triggerNode.trigger();
 					if(!guy.isDead() &&this.goldWithin > 0 )
 						goldWithin = guy.giveGold(goldWithin);
+					this.addGuy(guy);
 					return true;
 				}
 				else

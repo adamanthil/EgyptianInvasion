@@ -4,6 +4,7 @@ package EgyptianInvasion
 	import flash.events.*;
 	import flash.net.*;
 	import flash.text.*;
+	import mx.managers.*;
 	
 	public class LevelManager
 	{

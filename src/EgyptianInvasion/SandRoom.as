@@ -117,7 +117,7 @@ package EgyptianInvasion
 				if(currentDrowning == null && guy.setDrowning(true) && currentInside.length < 2 )
 				{
 					currentDrowning = guy;
-					drowningCool = 200;
+					drowningCool = 20;
 				}
 				else if(currentDrowning != null && guy != currentDrowning && guy.setDelay(200))
 				{
