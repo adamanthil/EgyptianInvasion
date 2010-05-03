@@ -33,7 +33,7 @@ package EgyptianInvasion
 			addChild(buttonAsset);
 			format = new TextFormat();
 			format.color = 0xFFFF32; 
-			//format.size = 48; 
+			format.size = 10; 
 			
 			text = new TextField();
 			text.selectable = false;

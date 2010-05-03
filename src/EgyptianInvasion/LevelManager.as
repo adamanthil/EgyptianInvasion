@@ -53,8 +53,9 @@ package EgyptianInvasion
 			currGold = 100;
 			interest = 0.3;
 			setStartEndNode();
+			goldTextField = new TextField();
+			enemyTextField = new TextField();
 			displayGold(currGold);
-			//deductGold(20);
 			displayEnemy(0);
 			main.addChild(goldTextField);
 			main.addChild(enemyTextField);
@@ -102,8 +103,6 @@ package EgyptianInvasion
 		}
 		
 		public function displayGold(gold:Number):void{
-	
-			goldTextField = new TextField();
 			//myTextField_txt.wordWrap=true;
 			goldTextField.autoSize=TextFieldAutoSize.LEFT;
 			goldTextField.text = "GOLD LEFT: "+ gold;
@@ -115,8 +114,6 @@ package EgyptianInvasion
 		}
 		
 		public function displayEnemy(amtEnemy:Number):void{
-			//main.removeChild(enemyTextField);
-			enemyTextField = new TextField();
 			//myTextField_txt.wordWrap=true;
 			enemyTextField.autoSize=TextFieldAutoSize.LEFT;
 			enemyTextField.text = "ENEMIES LEFT: "+ amtEnemy;
@@ -130,10 +127,6 @@ package EgyptianInvasion
 			currGold -=amount;
 			goldTextField.text = "GOLD LEFT: " + currGold.toFixed(2);
 			goldTextField.setTextFormat(format);
-		}
-		public function deductEnemy(amount:Number):void{
-			enemyTextField.text = "ENEMIES LEFT " + amount;
-			enemyTextField.setTextFormat(format);
 		}
 		
 		public function setInterest(amount:Number):void{

@@ -52,6 +52,14 @@ package EgyptianInvasion
 			addChild(photo);
 			
 			// Add the description objects here
+			fireDesc = new fireExp();
+			fireDesc.scaleX = 0.4;
+			fireDesc.scaleY = 0.4;
+			fireDesc.x = 250;
+			fireDesc.y = 120;
+			fireDesc.visible = false;
+			addChild(fireDesc);
+			
 			pitDesc = new pitExp();
 			pitDesc.scaleX = 0.4;
 			pitDesc.scaleY = 0.4;
@@ -59,6 +67,14 @@ package EgyptianInvasion
 			pitDesc.y = 120;
 			pitDesc.visible = false;
 			addChild(pitDesc);
+			
+			quickDesc = new sandExp();
+			quickDesc.scaleX = 0.4;
+			quickDesc.scaleY = 0.4;
+			quickDesc.x = 270;
+			quickDesc.y = 120;
+			quickDesc.visible = false;
+			addChild(quickDesc);
 			
 			// Add the other buttons
 			pitTrapBtn = new Button(new assets.ToggleButton(), 100,30, "Pit Room (Q)", canvas, main);
@@ -68,17 +84,17 @@ package EgyptianInvasion
 			
 			snakeTrapBtn = new Button(new assets.ToggleButton(), 100,60, "Snake Room (W)", canvas, main);
 			snakeTrapBtn.visible = false;
-			snakeTrapBtn.setDescription(pitDesc);
+			//snakeTrapBtn.setDescription(snakeDesc);
 			addChild(snakeTrapBtn);
 			
 			quickTrapBtn = new Button(new assets.ToggleButton(), 100,90, "Quicksand Room (E)", canvas, main);
 			quickTrapBtn.visible = false;
-			quickTrapBtn.setDescription(pitDesc);
+			quickTrapBtn.setDescription(quickDesc);
 			addChild(quickTrapBtn);
 			
 			fireTrapBtn = new Button(new assets.ToggleButton(), 100,120, "Fire Room (R)", canvas, main);
 			fireTrapBtn.visible = false;
-			fireTrapBtn.setDescription(pitDesc);
+			fireTrapBtn.setDescription(fireDesc);
 			addChild(fireTrapBtn);
 			
 			connectNodeBtn = new Button(new assets.ToggleButton(), 100, 150, "Connection Node (A)", canvas, main);
@@ -128,6 +144,7 @@ package EgyptianInvasion
 		
 		public function popoutDescription(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
+			button.getDescription().gotoAndStop("startFrame");
 			button.getDescription().visible = true;
 			button.getDescription().play();
 		}
@@ -135,7 +152,6 @@ package EgyptianInvasion
 			var button:Button = Button(e.currentTarget);
 			button.getDescription().visible = false;
 			button.getDescription().stop();
-			//button.getDescription().gotoAndStop("startFrame");
 		}
 		
 		public function addFireNodeHandler(e:MouseEvent):void {

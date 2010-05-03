@@ -42,7 +42,7 @@ package EgyptianInvasion
 			var enemy:Enemy = new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas)
 			enemies.push(enemy);
 			addChild(enemy);
-			main.getLevelManager().deductEnemy(enemies.length);
+			main.getLevelManager().displayEnemy(enemies.length);
 		}
 		
 		// Removes an enemy and returns the gold it's carying to the most recently visited node
@@ -58,7 +58,7 @@ package EgyptianInvasion
 				// Since you can only remove the last item, replace the one we want to remove with the one currently at the end
 				enemies[index] = enemies[enemies.length -1];
 				enemies.pop();
-				
+				main.getLevelManager().displayEnemy(enemies.length);
 				return true;
 			}
 		}
