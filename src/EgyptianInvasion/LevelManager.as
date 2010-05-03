@@ -1,9 +1,12 @@
 package EgyptianInvasion
 {
+	import assets.popUpWin;
+	
 	import flash.display.*;
 	import flash.events.*;
 	import flash.net.*;
 	import flash.text.*;
+	
 	import mx.managers.*;
 	
 	public class LevelManager
@@ -22,6 +25,9 @@ package EgyptianInvasion
 		private var enemyTextField:TextField;
 		private var format:TextFormat;
 		private var nodeLimit:Number;
+		private var startPop:popUpWin;
+		private var startButton:Button;
+		private var startTitle:TextField;
 		
 		public const fireRoomCost:Number = 100;
 		public const pitRoomCost:Number = 20;
@@ -59,6 +65,38 @@ package EgyptianInvasion
 			displayEnemy(0);
 			main.addChild(goldTextField);
 			main.addChild(enemyTextField);
+			getStartPop();
+			//main.remove
+		}
+		
+		private function getStartPop(){
+			startPop = new popUpWin();
+			startPop.x = 250;
+			startPop.y = 200;
+			startPop.stop();
+			startPop.gotoAndStop("cover");
+			main.addChild(startPop);
+			startButton = new Button(new assets.ToggleButton(), 0,0, "START",canvas, main);
+			startButton.addEventListener(MouseEvent.MOUSE_DOWN, startPressed);
+			startPop.addChild(startButton);
+			startTitle = new TextField();
+			startTitle.autoSize=TextFieldAutoSize.LEFT;
+			startTitle.text = "WELCOME TO EGYPTIAN INVASION!!!";
+			var titleFormat = new TextFormat();
+			titleFormat.font = "Tw Cen MT";
+			titleFormat.size = 20;
+			startTitle.setTextFormat(titleFormat);
+			startTitle.x = -150;
+			startTitle.y = -100;
+			startPop.addChild(startTitle);
+		}
+		
+		private function startPressed(e:MouseEvent){
+			startPop.gotoAndStop("minimize");
+			startPop.removeChild(startButton);
+			startPop.removeChild(startTitle);
+			
+			//main.removeChild(startPop);
 		}
 		
 		public function setStartEndNode():void{
