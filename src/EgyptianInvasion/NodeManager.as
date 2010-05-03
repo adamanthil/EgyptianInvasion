@@ -108,7 +108,7 @@ package EgyptianInvasion
 		// node that the player is in the process of placing.
 		public function addNode(toggle:Node):void
 		{
-			if(this.selectedNode.connectable() && toggledNode ==null)
+			if(sup.getBuildPhase() && this.selectedNode.connectable() && toggledNode ==null)
 			{
 				toggledNode = toggle;
 				toggledNode.addSibling(selectedNode);
@@ -212,7 +212,7 @@ package EgyptianInvasion
 		}
 		public function removeNode():void
 		{
-			if(selectedNode !=enterNode && selectedNode != tombNode)
+			if(sup.getBuildPhase() && selectedNode !=enterNode && selectedNode != tombNode)
 			{
 				var temp:Node = selectedNode;
 				for(var i:Number = 0; i < temp.getSiblings().length; i++)
