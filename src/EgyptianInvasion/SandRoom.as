@@ -25,6 +25,7 @@ package EgyptianInvasion
 			currentInside = new Array();
 			super(nodex,nodey,canvas, refup);
 			roomImage  = new RoomImage();
+			size = 13;
 			roomImage.scaleX = 0.6;
 			roomImage.scaleY = 0.6;
 			roomImage.x = -15;
@@ -130,15 +131,15 @@ package EgyptianInvasion
 			{
 				if(currentInside.indexOf(guy) == -1)
 					addGuy(guy);
-				if(currentDrowning == null && guy.setDrowning(true) && currentInside.length < 2 )
+				if(currentDrowning == null && currentInside.length < 2  && guy.freeze(true,this) )
 				{
 					currentDrowning = guy;
 					drowningCool = 20;
 				}
-				else if(currentDrowning != null && guy != currentDrowning && guy.setDelay(200))
+				else if(currentDrowning != null && guy != currentDrowning && guy.setDelay(20))
 				{
+					currentDrowning.freeze(false,this);
 					currentDrowning = null;
-					guy.setDrowning(false);
 				}
 				if(triggerNode != null && !guy.isDead())
 					triggerNode.trigger();
@@ -151,6 +152,11 @@ package EgyptianInvasion
 				removeGuy(guy);
 				trace(currentInside.length);
 				return false
+			}
+			for(var i:Number = 0; i < currentInside.length; i++)
+			{
+				if((currentInside[i] as Enemy).isDead())
+					removeGuy(currentInside[i]);
 			}
 			return false;
 		}

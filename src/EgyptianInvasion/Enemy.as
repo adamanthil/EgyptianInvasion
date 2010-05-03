@@ -19,6 +19,8 @@ package EgyptianInvasion
 		
 		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
 		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
+		private var freezeMovement:Boolean; // Whether they should stop moving (because they are drowning)
+		private var delayTime:Number;	// Time in milliseconds that movement should stop
 		
 		private var health:Number;
 		private var maxHealth:Number;
@@ -44,9 +46,12 @@ package EgyptianInvasion
 			this.health = 100;
 			this.goldAmt = 0;
 			this.goldCapacity = 10;
-			
 			this.speed = 5;
+			
+			this.delayTime = 0;
+			this.lastIntervalTime = getTimer();
 			this.moving = false;	// We need to make a decision first
+			this.freezeMovement = false;
 			this.visitedNodes = new Array();	// Initialize visited node array
 			
 			figure = new EFigure(-3,-3,canvas);
@@ -177,7 +182,7 @@ package EgyptianInvasion
 		
 		// Moves a small amount
 		private function move():void {
-			if(targetNode != null) {
+			if(targetNode != null && !freezeMovement && delayTime > 0) {
 				// Determine distance from target
 				var xDist:Number = targetNode.x - this.x;
 				var yDist:Number = targetNode.y - this.y;
@@ -215,29 +220,24 @@ package EgyptianInvasion
 		// At every time interval, determines whether to move or decide next movement.  Called by EnemyManager
 		public function nextTimeInterval():void	{
 			
-			// Check if we need to be deleted cause we're dead
-			if(this.health <= 0) {
-				EnemyManager(this.parent).removeChild(this);
+			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
+			if(originNode != null) {
+				originNode.processEnemy(this);
+			}
+			if(targetNode != null) {
+				targetNode.processEnemy(this);
+			}
+			
+			if(moving) {
+				move();
 			}
 			else {
-				// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
-				if(originNode != null) {
-					originNode.processEnemy(this);
-				}
-				if(targetNode != null) {
-					targetNode.processEnemy(this);
-				}
-				
-				if(moving) {
-					move();
-				}
-				else {
-					makeDecision();
-				}
-				
-				// Update last interval time to keep movement framerate independent
-				this.lastIntervalTime = getTimer();	
+				makeDecision();
 			}
+			
+			// Update last interval time to keep movement framerate independent
+			this.delayTime -= (this.lastIntervalTime - getTimer());
+			this.lastIntervalTime = getTimer();
 		}
 		
 		public function getOriginNode():Node {
@@ -257,17 +257,18 @@ package EgyptianInvasion
 		}
 		
 		// Gives gold to the enemy.  Number returned is amt of gold left after enemy takes as much as he can carry
-		public function giveGold(goldAmt:Number):Number {
+		public function giveGold(goldAm:Number):Number {
 			
 			// Amount of gold that can still be carried
-			var goldAdded:Number = Math.min(this.goldCapacity - this.goldAmt,goldAmt);
+			var goldAdded:Number = Math.max(Math.min(this.goldCapacity - this.goldAmt,goldAm),this.goldAmt * -1 /* dont take away more gold than we have */);
 			this.goldAmt += goldAdded;
 			
-			var goldLeft:Number = goldAmt - goldAdded;
+			var goldLeft:Number = goldAm - goldAdded;
 			
 			// If we have gold, move toward the exit
 			if(goldAmt > 0) {
 				this.goalNode = this.startNode;
+				this.visitedNodes = new Array();
 			}
 			else {
 				this.goalNode = this.endNode;
@@ -282,12 +283,18 @@ package EgyptianInvasion
 		// ------ Functions that affect enemy in game - overridden by children if necessary -----
 		
 		// The enemy starts drowning
-		public function setDrowning(drown:Boolean):Boolean {
-			return true;
+		public function freeze(frozen:Boolean, freezingNode:Node):Boolean {
+			freezeMovement = frozen;
+			if(frozen) {
+				this.x = freezingNode.x;
+				this.y = freezingNode.y;
+			}
+			return true;	// by default, enemies will freeze if a node wants them to
 		}
 		
 		// enemy stays at node for x milliseconds
 		public function setDelay(x:Number):Boolean {
+			this.delayTime = x;
 			return true;
 		}
 		
