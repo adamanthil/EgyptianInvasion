@@ -35,6 +35,10 @@ package EgyptianInvasion
 			timer.start();
 		}
 		
+		public function removeTimer(){
+			spawnTimer.removeEventListener(TimerEvent.TIMER, spawnTimeListener);
+			timer.removeEventListener(TimerEvent.TIMER, timeListener);
+		}
 		// Call "nextTimeInterval" on all enemies
 		public function timeListener(e:TimerEvent):void	{
 			

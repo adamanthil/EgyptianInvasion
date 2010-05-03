@@ -9,10 +9,11 @@ package EgyptianInvasion
 	
 	import mx.managers.*;
 	
-	public class LevelManager
+	public class LevelManager extends Sprite
 	{
 		private var currLevel:Number;
 		private var currGold:Number;
+		private var prevGold:Number;
 		private var main:Main;
 		private var enMan:EnemyManager;
 		private var noMan:NodeManager;
@@ -60,6 +61,7 @@ package EgyptianInvasion
 			//this.nodeLimit = 30;
 			currLevel = 1;
 			currGold = 100;
+			prevGold = currGold;
 			interest = 0.3;
 			setStartEndNode();
 			goldTextField = new TextField();
@@ -146,7 +148,28 @@ package EgyptianInvasion
 		}
 		
 		private function reInitialize():void{
+			this.enMan.removeTimer();
+			this.main.setBuildPhase(true);
+			this.main.removeChild(noMan);
+			noMan = new NodeManager(this.main,69,365,200,300);
+			this.main.addChild(noMan);
+			this.main.setNodeManager(noMan);
+			//this.main.setChildIndex(noMan,this.main.numChildren - 1);
 			
+			this.main.removeChild(this.ui);
+			this.ui = new UI(50,0,this.main.stage,this.main);
+			this.main.addChild(ui);
+			this.main.setUI(this.ui);
+			
+			this.main.removeChild(enMan);
+			enMan = new EnemyManager(this.main,noMan);
+			this.main.addChild(enMan);
+			this.main.setEnemyManager(enMan);
+			
+			this.main.setChildIndex(this.startPop,this.main.numChildren -1);
+			displayEnemy(0);
+			displayGold(currGold);
+			//levelMan = new LevelManager(this,enemyMan,nodeMan,stage,ui);
 		}
 		
 		public function displayGold(gold:Number):void{
@@ -179,7 +202,7 @@ package EgyptianInvasion
 			goldTextField.text = "GOLD LEFT: " + currGold.toFixed(2);
 			goldTextField.setTextFormat(format);
 			if (main.getBuildPhase()==false && currGold <= 0){
-				//popLoseWin();
+				popLoseWin();
 			}
 		}
 		
@@ -188,6 +211,8 @@ package EgyptianInvasion
 			startPop.gotoAndStop("minimize");
 			startPop.removeChild(againButton);
 			startPop.removeChild(startTitle);
+			currGold = prevGold;
+			reInitialize();
 		}
 		
 		private function nextPressed(e:MouseEvent):void{
@@ -197,6 +222,7 @@ package EgyptianInvasion
 			startPop.removeChild(startTitle);
 			calculateGold(currGold);
 			nextLevel(currGold);
+			prevGold = currGold;
 		}
 		
 		private function popLoseWin():void{
