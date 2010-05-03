@@ -25,6 +25,8 @@ package EgyptianInvasion
 		{
 			this.buttonAsset = buttonAsset;
 			buttonAsset.stop();
+			this.buttonMode = true;
+			this.useHandCursor = true;
 			down = false;
 			x = nodex;
 			y = nodey;

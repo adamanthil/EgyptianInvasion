@@ -25,14 +25,14 @@ package EgyptianInvasion
 		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
 		
 		private var health:Number;
+		private var maxHealth:Number;
 		private var goldAmt:Number;
 		private var goldCapacity:Number;
-		private var speed:Number;	// How fast we move
-		
-		// Adds a reference to a bitmap at compile-time
-		[Embed(source="../assets/img/enemy.jpg")] private var BGImage:Class;
-		
+		private var speed:Number;	// How fast we move		
 		private var figure:EFigure;
+		
+		private var healthBar:DisplayBar;
+		private var goldCarryingBar:DisplayBar;
 		
 		public function Enemy(startNode:Node, endNode:Node, canvas:Stage) {
 			this.x = startNode.x;
@@ -43,6 +43,7 @@ package EgyptianInvasion
 			this.originNode = startNode;
 			this.startNode = startNode;
 			
+			this.maxHealth = 100;
 			this.health = 100;
 			this.goldAmt = 0;
 			this.goldCapacity = 10;
@@ -56,6 +57,20 @@ package EgyptianInvasion
 			figure.scaleY = 0.02;
 			figure.walk();
 			addChild(figure);
+			
+			healthBar = new DisplayBar(0xFF0000, 0x00FF00, 1);
+			healthBar.scaleY = .3;
+			healthBar.scaleX = .3;
+			healthBar.x = -10;
+			healthBar.y = -20;
+			addChild(healthBar);
+			
+			goldCarryingBar = new DisplayBar(0x333333, 0xFFDD00, 0);
+			goldCarryingBar.scaleY = .3;
+			goldCarryingBar.scaleX = .3;
+			goldCarryingBar.x = -10;
+			goldCarryingBar.y = -15;
+			addChild(goldCarryingBar);
 		}
 		
 		// "Explores" to a semi-random new node
@@ -280,7 +295,7 @@ package EgyptianInvasion
 			
 			// We need to make a new decision if we changed our goal
 			this.moving = false;
-			
+			goldCarryingBar.update(this.goldAmt/goldCapacity);			
 			return goldLeft;
 		}
 		
@@ -298,21 +313,25 @@ package EgyptianInvasion
 		
 		public function killSpikes():Boolean {
 			this.health = 0;
+			healthBar.update(health/maxHealth);
 			return true;
 		}
 		
 		public function quicksand():Boolean {
 			this.health = 0;
+			healthBar.update(health/maxHealth);
 			return true;
 		}
 
 		public function damageFire():Boolean {
-			this.health = 0;
+			this.health -= 50;
+			healthBar.update(health/maxHealth);
 			return true;
 		}
 		
 		public function damageSnakes():Boolean {
 			this.health = 0;
+			healthBar.update(health/maxHealth);
 			return true;
 		}
 		
