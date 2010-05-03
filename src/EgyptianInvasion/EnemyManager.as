@@ -23,6 +23,7 @@ package EgyptianInvasion
 			this.nodeMan = nodeMan;
 			this.enemies = new Array();
 			
+			//numEnemiesOnLevel = 1; // TODO WB will need to change this on per-level basis
 			numEnemiesOnLevel = 20; // TODO WB will need to change this on per-level basis
 			spawnFrequency = 1000; // One second
 			
@@ -34,10 +35,22 @@ package EgyptianInvasion
 			timer.start();
 		}
 		
+		public function removeTimer(){
+			spawnTimer.removeEventListener(TimerEvent.TIMER, spawnTimeListener);
+			timer.removeEventListener(TimerEvent.TIMER, timeListener);
+		}
 		// Call "nextTimeInterval" on all enemies
 		public function timeListener(e:TimerEvent):void	{
-			for(var i:int = 0; i < enemies.length; i++) {
-				enemies[i].nextTimeInterval();
+			
+			// iterate backwards becaues we may delete enemies
+			for(var i:int = enemies.length - 1; i >= 0; i--) {
+				// Remove dead enemies
+				if(Enemy(enemies[i]).getHealth() <= 0) {
+					removeEnemy(Enemy(enemies[i]));
+				}
+				else {
+					enemies[i].nextTimeInterval();
+				}
 			}
 		}
 		public function spawnTimeListener(e:TimerEvent):void	{
@@ -54,13 +67,17 @@ package EgyptianInvasion
 				return false;	
 			}
 			else {
-				// remove enemy from array and display
-				removeChild(enemy);
 				
+				// Transfer gold being carried to most recently visited node
+				(enemies[index] as Enemy).getOriginNode().addGold((enemies[index] as Enemy).getGold());
+				
+				// ---- remove enemy from array and display ------
 				// Since you can only remove the last item, replace the one we want to remove with the one currently at the end
 				enemies[index] = enemies[enemies.length -1];
 				enemies.pop();
 				main.getLevelManager().displayEnemy(enemies.length);
+				
+				removeChild(enemy);
 				return true;
 			}
 		}

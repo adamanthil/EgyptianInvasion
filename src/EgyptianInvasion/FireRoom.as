@@ -114,8 +114,7 @@ package EgyptianInvasion
 		}
 		public override function processEnemy(guy:Enemy):Boolean
 		{
-			
-			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)))
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < this.size)
 			{
 				if(!guy.isDead() && this.active)
 				{
@@ -123,15 +122,12 @@ package EgyptianInvasion
 					{
 						guy.damageFire();
 						this.addGuy(guy);
+						if( this.goldWithin > 0 )
+							goldWithin = guy.giveGold(goldWithin);
 					}
 					if(guy.isDead())
 					{
 						deadGuys++;	
-					}
-					else
-					{
-						if( this.goldWithin > 0 )
-							goldWithin = guy.giveGold(goldWithin);
 					}
 				}
 				if(triggerNode != null && !guy.isDead())

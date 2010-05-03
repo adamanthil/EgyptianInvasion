@@ -64,15 +64,29 @@ package EgyptianInvasion
 		{
 			return nodeMan;
 		}
+		public function setNodeManager(nm:NodeManager):void
+		{
+			nodeMan = nm;
+		}
 		
 		public function getEnemyManager():EnemyManager
 		{
 			return enemyMan;
 		}
 		
+		public function setEnemyManager(em:EnemyManager):void
+		{
+			enemyMan = em;
+		}
+		
 		public function getUI():UI
 		{
 			return ui;
+		}
+		
+		public function setUI(ui:UI):void
+		{
+			this.ui = ui;
 		}
 		
 		public function getBuildPhase():Boolean {return buildingPhase;}

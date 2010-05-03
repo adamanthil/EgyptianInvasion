@@ -16,13 +16,11 @@ package EgyptianInvasion
 		private var originNode:Node;	// The most recently visited Node
 		private var targetNode:Node;	// Node we are moving toward
 		private var visitedNodes:Array; // The set of nodes already visited
-		private var distTraveled:Number;	// The distance we have traveled so far
 		
-		private var intervalsWithoutTarget:int;	// The number of consecutive decision steps without a target set
-		public static var INTERVALS_BEFORE_EXPLORING:int = 10;	// Number of time intervals without a target before enemy starts exploring
 		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
-
 		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
+		private var freezeMovement:Boolean; // Whether they should stop moving (because they are drowning)
+		private var delayTime:Number;	// Time in milliseconds that movement should stop
 		
 		private var health:Number;
 		private var maxHealth:Number;
@@ -42,21 +40,27 @@ package EgyptianInvasion
 			this.targetNode = startNode;	// Make a decision at the start node first
 			this.originNode = startNode;
 			this.startNode = startNode;
+			this.endNode = endNode;
 			
 			this.maxHealth = 100;
 			this.health = 100;
 			this.goldAmt = 0;
 			this.goldCapacity = 10;
-			
 			this.speed = 5;
+			
+			this.delayTime = 0;
+			this.lastIntervalTime = getTimer();
 			this.moving = false;	// We need to make a decision first
+			this.freezeMovement = false;
 			this.visitedNodes = new Array();	// Initialize visited node array
 			
 			figure = new EFigure(-3,-3,canvas);
-			figure.scaleX = 0.02;
-			figure.scaleY = 0.02;
+			figure.scaleX = 0.012;
+			figure.scaleY = 0.012;
 			figure.walk();
 			addChild(figure);
+			figure.x = 3;
+			figure.y = 0;
 			
 			healthBar = new DisplayBar(0xFF0000, 0x00FF00, 1);
 			healthBar.scaleY = .3;
@@ -107,12 +111,6 @@ package EgyptianInvasion
 		
 		// Heuristically decides the next node to visit
 		private function makeHeuristicDecision():void {
-			// Determine distance traveled from previous node
-			var prevXDist:Number = x - originNode.x;
-			var prevYDist:Number = y - originNode.y;
-			var prevDist:Number = Math.sqrt(Math.pow(prevXDist,2) + Math.pow(prevYDist,2));
-			this.distTraveled += prevDist;
-			
 			this.visitedNodes.push(targetNode);
 			
 			// Loop through open set to find the best candidate to explore next
@@ -171,12 +169,7 @@ package EgyptianInvasion
 			
 			// If no target node (because we reached it). Wait 10 cycles (in case we are given gold by the node) and then start exploring
 			if(targetNode == null) {
-				if(this.intervalsWithoutTarget > INTERVALS_BEFORE_EXPLORING) {
-					makeExploreDecision(true);	// Explore without a goal 
-				}
-				else {
-					this.intervalsWithoutTarget++;
-				}
+				makeExploreDecision(true);	// Explore without a goal 
 			}
 			else {	// There is a target mode
 				// Make a random move 20% of the time if branching factor > 2
@@ -191,7 +184,7 @@ package EgyptianInvasion
 		
 		// Moves a small amount
 		private function move():void {
-			if(targetNode != null) {
+			if(targetNode != null && !freezeMovement && delayTime > 0) {
 				// Determine distance from target
 				var xDist:Number = targetNode.x - this.x;
 				var yDist:Number = targetNode.y - this.y;
@@ -209,10 +202,10 @@ package EgyptianInvasion
 					this.y = targetNode.y;
 					this.moving = false;
 					
-					
 					// If we've reached the destination, set target to null
 					if(targetNode == goalNode) {
 						figure.stand();
+						originNode = targetNode;	// We are now at the target
 						targetNode = null;
 					}
 				}
@@ -229,29 +222,24 @@ package EgyptianInvasion
 		// At every time interval, determines whether to move or decide next movement.  Called by EnemyManager
 		public function nextTimeInterval():void	{
 			
-			// Check if we need to be deleted cause we're dead
-			if(this.health <= 0) {
-				EnemyManager(this.parent).removeChild(this);
+			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
+			if(originNode != null) {
+				originNode.processEnemy(this);
+			}
+			if(targetNode != null) {
+				targetNode.processEnemy(this);
+			}
+			
+			if(moving) {
+				move();
 			}
 			else {
-				// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
-				if(originNode != null) {
-					originNode.processEnemy(this);
-				}
-				if(targetNode != null) {
-					targetNode.processEnemy(this);
-				}
-				
-				if(moving) {
-					move();
-				}
-				else {
-					makeDecision();
-				}
-				
-				// Update last interval time to keep movement framerate independent
-				this.lastIntervalTime = getTimer();	
+				makeDecision();
 			}
+			
+			// Update last interval time to keep movement framerate independent
+			this.delayTime -= (this.lastIntervalTime - getTimer());
+			this.lastIntervalTime = getTimer();
 		}
 		
 		public function getOriginNode():Node {
@@ -271,24 +259,25 @@ package EgyptianInvasion
 		}
 		
 		// Gives gold to the enemy.  Number returned is amt of gold left after enemy takes as much as he can carry
-		public function giveGold(goldAmt:Number):Number {
+		public function giveGold(goldAm:Number):Number {
 			
 			// Amount of gold that can still be carried
-			var goldAdded:Number = Math.min(this.goldCapacity - this.goldAmt,goldAmt);
+			var goldAdded:Number = Math.max(Math.min(this.goldCapacity - this.goldAmt,goldAm),this.goldAmt * -1 /* dont take away more gold than we have */);
 			this.goldAmt += goldAdded;
 			
-			var goldLeft:Number = goldAmt - goldAdded;
+			var goldLeft:Number = goldAm - goldAdded;
 			
 			// If we have gold, move toward the exit
 			if(goldAmt > 0) {
 				this.goalNode = this.startNode;
+				this.visitedNodes = new Array();
 			}
 			else {
 				this.goalNode = this.endNode;
 			}
 			
 			// We need to make a new decision if we changed our goal
-			this.moving = false;
+			//this.moving = false;
 			goldCarryingBar.update(this.goldAmt/goldCapacity);			
 			return goldLeft;
 		}
@@ -296,12 +285,18 @@ package EgyptianInvasion
 		// ------ Functions that affect enemy in game - overridden by children if necessary -----
 		
 		// The enemy starts drowning
-		public function setDrowning(drown:Boolean):Boolean {
-			return true;
+		public function freeze(frozen:Boolean, freezingNode:Node):Boolean {
+			freezeMovement = frozen;
+			if(frozen) {
+				this.x = freezingNode.x;
+				this.y = freezingNode.y;
+			}
+			return true;	// by default, enemies will freeze if a node wants them to
 		}
 		
 		// enemy stays at node for x milliseconds
 		public function setDelay(x:Number):Boolean {
+			this.delayTime = x;
 			return true;
 		}
 		
@@ -318,7 +313,7 @@ package EgyptianInvasion
 		}
 
 		public function damageFire():Boolean {
-			this.health -= 50;
+			this.health -= 25;
 			healthBar.update(health/maxHealth);
 			return true;
 		}

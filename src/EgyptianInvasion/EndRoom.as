@@ -6,11 +6,11 @@ package EgyptianInvasion
 	
 	import mx.core.BitmapAsset;
 	
-	public class EndRoom extends Node
+	public class EndRoom extends Trap
 	{
 		[Embed(source="../assets/img/endRoom.jpg")]
 		private var RoomImage:Class;
-		private var roomImage:BitmapAsset;
+		
 		public function EndRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
 			super(nodex,nodey,canvas,refup);
@@ -34,16 +34,21 @@ package EgyptianInvasion
 		{
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 			{
+				if(currentInside.indexOf(guy)==-1)
+				{
+					this.addGuy(guy);
+					if(!guy.isDead() &&this.goldWithin > 0 )
+						goldWithin = guy.giveGold(goldWithin);
+				}
 				if(triggerNode != null && !guy.isDead())
 				{
 					triggerNode.trigger();
 				}
-				if(!guy.isDead() &&this.goldWithin > 0 )
-					goldWithin = guy.giveGold(goldWithin);
 				return true;
 			}
 			else
 			{
+				this.removeGuy(guy);
 				return false;
 			}
 		}

@@ -127,17 +127,19 @@
 				{
 					if(!guy.isDead())
 					{
-						if(this.active && deadGuys <= 10)
+						if(this.active && deadGuys < 10)
 						{
 							if(currentInside.indexOf(guy) == -1)
 							{
 								this.addGuy(guy);
 								guy.killSpikes();
+								if(!guy.isDead() &&this.goldWithin > 0 )
+									goldWithin = guy.giveGold(goldWithin);
 							}
 							if(guy.isDead())
 								deadGuys++;
 							deadguyBar.update(deadGuys/10);
-							if(deadGuys>=10)
+							if(deadGuys==10)
 							{
 								roomImage.alpha = 0;
 								deactivateImage.alpha = 0;
@@ -146,8 +148,6 @@
 					}
 					if(triggerNode != null && !guy.isDead())
 						triggerNode.trigger();
-					if(!guy.isDead() &&this.goldWithin > 0 )
-						goldWithin = guy.giveGold(goldWithin);
 					return true;
 				}
 				else

@@ -36,6 +36,8 @@ package EgyptianInvasion
 					{
 						guy.damageSnakes();
 						this.addGuy(guy);
+						if( this.goldWithin > 0 )
+							goldWithin = guy.giveGold(goldWithin);
 					}
 					if(guy.isDead())
 					{

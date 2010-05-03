@@ -35,6 +35,7 @@ package EgyptianInvasion
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size && guy.getGold() > 0)
 			{
 				(sup.parent as Main).getLevelManager().deductGold(guy.getGold());
+				guy.giveGold(-1 * guy.getGold());	// Remove his gold before we kill him
 				(guy.parent as EnemyManager).removeEnemy(guy);
 				return true;
 			}
