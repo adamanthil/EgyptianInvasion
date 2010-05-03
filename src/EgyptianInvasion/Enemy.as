@@ -333,7 +333,7 @@ package EgyptianInvasion
 		}
 		
 		public function poison():Boolean {
-			if(Math.random() > .68)
+			//if(Math.random() > .68)
 				this.poisoned = true;
 			return true;	// By default enemies can be poisoned
 		}
