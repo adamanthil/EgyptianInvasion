@@ -18,12 +18,25 @@
 			[Embed(source="../assets/img/pitIconicDeactivate.jpg")]
 			private var DeactivateImage:Class;
 			private var deactivateImage:BitmapAsset;
+			
+			[Embed(source="../assets/img/pitIconicFull.jpg")]
+			private var FullImage:Class;
+			private var fullImage:BitmapAsset;
 			private var button:Button;
+			
+			private var deadguyBar:DisplayBar;
 			
 			public function PitRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 			{
 				active = false;
 				super(nodex,nodey,canvas, refup);
+				
+				fullImage  = new FullImage();
+				fullImage.scaleX = 0.6;
+				fullImage.scaleY = 0.6;
+				fullImage.x = -15;
+				fullImage.y = -15;
+				addChild(fullImage);
 				
 				deactivateImage  = new DeactivateImage();
 				deactivateImage.scaleX = 0.6;
@@ -38,10 +51,13 @@
 				roomImage.x = -15;
 				roomImage.y = -15;
 				addChild(roomImage);
+				
 				value = 5;
 				
+				deadguyBar = new DisplayBar(0x000000,0xEEEEEE,1);
 				graphics.beginFill(0x00FF00,.5);
 				graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);
+				deadGuys = 0;
 				//this.cacheAsBitmap = true;
 			}
 			public function activeTrigger(e:MouseEvent):void {
@@ -96,6 +112,14 @@
 				this.addChild(activeButton);
 				button = activeButton;
 				roomImage.x = -15;
+				
+				this.addChild(deadguyBar);
+				deadguyBar.x = -15;
+				deadguyBar.y = 10;
+				deadguyBar.scaleY = .3;
+				deadguyBar.scaleX = .5;
+				deadguyBar.update(0);
+				
 			}
 			public override function processEnemy(guy:Enemy):Boolean
 			{
@@ -103,12 +127,18 @@
 				{
 					if(!guy.isDead())
 					{
-						if(this.active && deadGuys < 10)
+						if(this.active && deadGuys <= 10)
 						{
 							if(currentInside.indexOf(guy) == -1)
 								guy.killSpikes();
 							if(guy.isDead())
 								deadGuys++;
+							deadguyBar.update(deadGuys/10);
+							if(deadGuys>=10)
+							{
+								roomImage.alpha = 0;
+								deactivateImage.alpha = 0;
+							}
 						}
 					}
 					if(triggerNode != null && !guy.isDead())
@@ -140,8 +170,16 @@
 					graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);
 					
 				}
-				roomImage.alpha = 1;
-				deactivateImage.alpha = 1;
+				if(this.deadGuys >= 10)
+				{
+					deactivateImage.alpha = 0;
+					roomImage.alpha = 0;
+				}
+				else
+				{
+					roomImage.alpha = 1;
+					deactivateImage.alpha = 1;
+				}
 				if(this.selected)
 				{
 					roomImage.alpha = .5;

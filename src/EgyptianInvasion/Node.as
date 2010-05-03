@@ -84,9 +84,6 @@ package EgyptianInvasion
 			
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 			{
-				trace("guy inside");
-				trace(sup.getEndNode() == this);
-				trace(goldWithin);
 				if(triggerNode != null && !guy.isDead())
 				{
 					triggerNode.trigger();

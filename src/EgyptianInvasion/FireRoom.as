@@ -124,7 +124,6 @@ package EgyptianInvasion
 					this.addGuy(guy);
 					if(guy.isDead())
 					{
-						(guy.parent as EnemyManager).removeEnemy(guy);
 						deadGuys++;	
 					}
 					else
