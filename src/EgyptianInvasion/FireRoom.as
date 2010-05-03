@@ -36,7 +36,6 @@ package EgyptianInvasion
 			deactivateImage.x = -15;
 			deactivateImage.y = -15;
 			addChild(deactivateImage);
-			
 			roomImage  = new RoomImage();
 			roomImage.scaleX = 0.6;
 			roomImage.scaleY = 0.6;
@@ -115,6 +114,7 @@ package EgyptianInvasion
 		}
 		public override function processEnemy(guy:Enemy):Boolean
 		{
+			
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)))
 			{
 				if(!guy.isDead() && this.active)
