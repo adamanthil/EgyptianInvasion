@@ -15,16 +15,19 @@ package EgyptianInvasion
 		private var goalNode:Node;	// Our eventual goal
 		private var originNode:Node;	// The most recently visited Node
 		private var targetNode:Node;	// Node we are moving toward
-		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
-		private var speed:Number;	// How fast we move
 		private var visitedNodes:Array; // The set of nodes already visited
 		private var distTraveled:Number;	// The distance we have traveled so far
+		
+		private var intervalsWithoutTarget:int;	// The number of consecutive decision steps without a target set
+		public static var INTERVALS_BEFORE_EXPLORING:int = 10;	// Number of time intervals without a target before enemy starts exploring
+		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
 
 		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
 		
 		private var health:Number;
 		private var goldAmt:Number;
 		private var goldCapacity:Number;
+		private var speed:Number;	// How fast we move
 		
 		// Adds a reference to a bitmap at compile-time
 		[Embed(source="../assets/img/enemy.jpg")] private var BGImage:Class;
@@ -55,91 +58,118 @@ package EgyptianInvasion
 			addChild(figure);
 		}
 		
+		// "Explores" to a semi-random new node
+		private function makeExploreDecision(reachedGoal:Boolean = false):void {
+			
+			// If we have reached our goal, use the goal node as the target
+			var reachedNode:Node;
+			if(reachedGoal) {
+				reachedNode = goalNode;
+			}
+			else {
+				reachedNode = targetNode;
+			}
+			
+			// Add node to visited nodes
+			this.visitedNodes.push(reachedNode);
+			
+			var siblings:Array = reachedNode.getSiblings();
+			var index:int = Math.floor(Math.random() * siblings.length);
+			var potentialTarget:Node = Node(siblings[index]);
+			var attempts:int = 0;
+			while((potentialTarget == originNode || potentialTarget == startNode) && attempts < 5) {	// Try 5 times to not go back exactly where we came from
+				index = Math.floor(Math.random() * siblings.length);
+				potentialTarget = siblings[index];
+				attempts++;
+			}
+			
+			// Set most recently visited node to the one we arrived at
+			this.originNode = reachedNode;
+			
+			this.targetNode = potentialTarget;
+			this.moving = true;
+		}
+		
+		// Heuristically decides the next node to visit
+		private function makeHeuristicDecision():void {
+			// Determine distance traveled from previous node
+			var prevXDist:Number = x - originNode.x;
+			var prevYDist:Number = y - originNode.y;
+			var prevDist:Number = Math.sqrt(Math.pow(prevXDist,2) + Math.pow(prevYDist,2));
+			this.distTraveled += prevDist;
+			
+			this.visitedNodes.push(targetNode);
+			
+			// Loop through open set to find the best candidate to explore next
+			var bestNode:Node = null;
+			var bestUnvisitedNode:Node = null;
+			var bestNotLastNode:Node = null;	// Best node that isn't the one we just came from
+			var bestNotLastHeuristic:Number = Number.MAX_VALUE;
+			var bestUnvisitedHeuristic:Number = Number.MAX_VALUE;
+			var bestHeuristic:Number = Number.MAX_VALUE;	// Estimated distance to the goal for visiting the node
+			for(var i:int = 0; i < targetNode.getSiblings().length; i++) {
+				var node:Node = targetNode.getSiblings()[i];
+				var dist:Number = Math.sqrt(Math.pow(x - node.x,2) + Math.pow(y - node.y,2));
+				
+				var remainingEstimate:Number = Math.sqrt(Math.pow(node.x - goalNode.x,2) + Math.pow(node.y - goalNode.y,2));
+				var distEstimate:Number = dist + remainingEstimate;
+				
+				// Save if best node (and not where we are)
+				if(distEstimate < bestHeuristic && node != targetNode) {
+					bestHeuristic = distEstimate;
+					bestNode = node;
+				}
+				
+				// Save best node that is not the last node
+				if(distEstimate < bestNotLastHeuristic && node != originNode) {
+					bestNotLastHeuristic = distEstimate;
+					bestNotLastNode = node;
+				}
+				
+				// Save if unvisited and best
+				if(visitedNodes.indexOf(node) < 0 && distEstimate < bestUnvisitedHeuristic) {
+					bestUnvisitedHeuristic = bestHeuristic;
+					bestUnvisitedNode = node;
+				}
+			}
+			
+			// Set most recently visited node to the one we arrived at
+			this.originNode = this.targetNode;
+			
+			// Set target and start moving again
+			this.moving = true;
+			// First try unvisited, then not last, then best overall
+			if(bestUnvisitedNode != null) {
+				this.targetNode = bestUnvisitedNode
+			}
+			else if(bestNotLastNode != null) {
+				this.targetNode = bestNotLastNode;
+			}
+			else {
+				this.targetNode = bestNode;
+			}
+		}
+		
 		// Decide what node to move to next
 		private function makeDecision():void {
 			// ---- Vaguely inspired by A* but modified to mimic an actual exploring agent -----------
 			
-			if(targetNode != null) {
-				
-				// Make a random move 20% of the time if branching factor > 2
-				if(Math.random() > 0.20 && targetNode.getSiblings().length > 2) {
-					
-					// Add node to visited nodes
-					this.visitedNodes.push(targetNode);
-					
-					var siblings:Array = targetNode.getSiblings();
-					var index:int = Math.floor(Math.random() * siblings.length);
-					var potentialTarget:Node = Node(siblings[index]);
-					var attempts:int = 0;
-					while((potentialTarget == originNode || potentialTarget == startNode) && attempts < 5) {	// Make sure we don't go back exactly where we came from
-						index = Math.floor(Math.random() * siblings.length);
-						potentialTarget = siblings[index];
-						attempts++;
-					}
-					
-					// Set most recently visited node to the one we arrived at
-					this.originNode = this.targetNode;
-					
-					this.targetNode = potentialTarget;
-					this.moving = true;
+			// If no target node (because we reached it). Wait 10 cycles (in case we are given gold by the node) and then start exploring
+			if(targetNode == null) {
+				if(this.intervalsWithoutTarget > INTERVALS_BEFORE_EXPLORING) {
+					makeExploreDecision(true);	// Explore without a goal 
 				}
 				else {
-					// Determine distance traveled from previous node
-					var prevXDist:Number = x - originNode.x;
-					var prevYDist:Number = y - originNode.y;
-					var prevDist:Number = Math.sqrt(Math.pow(prevXDist,2) + Math.pow(prevYDist,2));
-					this.distTraveled += prevDist;
-					
-					this.visitedNodes.push(targetNode);
-					
-					// Loop through open set to find the best candidate to explore next
-					var bestNode:Node = null;
-					var bestUnvisitedNode:Node = null;
-					var bestNotLastNode:Node = null;	// Best node that isn't the one we just came from
-					var bestNotLastHeuristic:Number = Number.MAX_VALUE;
-					var bestUnvisitedHeuristic:Number = Number.MAX_VALUE;
-					var bestHeuristic:Number = Number.MAX_VALUE;	// Estimated distance to the goal for visiting the node
-					for(var i:int = 0; i < targetNode.getSiblings().length; i++) {
-						var node:Node = targetNode.getSiblings()[i];
-						var dist:Number = Math.sqrt(Math.pow(x - node.x,2) + Math.pow(y - node.y,2));
-						
-						var remainingEstimate:Number = Math.sqrt(Math.pow(node.x - goalNode.x,2) + Math.pow(node.y - goalNode.y,2));
-						var distEstimate:Number = dist + remainingEstimate;
-						
-						// Save if best node (and not where we are)
-						if(distEstimate < bestHeuristic && node != targetNode) {
-							bestHeuristic = distEstimate;
-							bestNode = node;
-						}
-						
-						// Save best node that is not the last node
-						if(distEstimate < bestNotLastHeuristic && node != originNode) {
-							bestNotLastHeuristic = distEstimate;
-							bestNotLastNode = node;
-						}
-						
-						// Save if unvisited and best
-						if(visitedNodes.indexOf(node) < 0 && distEstimate < bestUnvisitedHeuristic) {
-							bestUnvisitedHeuristic = bestHeuristic;
-							bestUnvisitedNode = node;
-						}
-					}
-					
-					// Set most recently visited node to the one we arrived at
-					this.originNode = this.targetNode;
-					
-					// Set target and start moving again
-					this.moving = true;
-					// First try unvisited, then not last, then best overall
-					if(bestUnvisitedNode != null) {
-						this.targetNode = bestUnvisitedNode
-					}
-					else if(bestNotLastNode != null) {
-						this.targetNode = bestNotLastNode;
-					}
-					else {
-						this.targetNode = bestNode;
-					}
+					this.intervalsWithoutTarget++;
+				}
+			}
+			else {	// There is a target mode
+				// Make a random move 20% of the time if branching factor > 2
+				if(Math.random() > 0.20 && targetNode.getSiblings().length > 2) {
+					makeExploreDecision();
+				}
+				else {
+					makeHeuristicDecision();
 				}
 			}
 		}
