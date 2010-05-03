@@ -19,8 +19,13 @@ package EgyptianInvasion
 		private var deactivateImage:BitmapAsset;
 		private var button:Button;
 		
+		private var fireCoolBar:DisplayBar;
+		private var fireBlastBar:DisplayBar;
+		
 		public function FireRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
+			fireCoolBar = new DisplayBar(0xF00F00,0x888888,1);
+			fireBlastBar = new DisplayBar(0xAAAAAA,0xFF6600,1);
 			fireTimeLeft = 0;
 			super(nodex,nodey,canvas, refup);
 			
@@ -89,11 +94,22 @@ package EgyptianInvasion
 			this.addChild(activeButton);
 			button = activeButton;
 			roomImage.x = -15;
+			this.addChild(fireCoolBar);
+			fireCoolBar.x = -15;
+			fireCoolBar.y = 10;
+			fireCoolBar.scaleY = .3;
+			fireCoolBar.scaleX = .5;
+			
+			this.addChild(fireBlastBar);
+			fireBlastBar.x = -15;
+			fireBlastBar.y = 15;
+			fireBlastBar.scaleY = .3;
+			fireBlastBar.scaleX = .5;
 		}
 		public function activeTrigger(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
 			
-			if (!button.isDown() && fireTimeLeft < -250){
+			if (!button.isDown() && fireTimeLeft < -25){
 				this.trigger();				
 			}
 		}
@@ -103,7 +119,8 @@ package EgyptianInvasion
 			{
 				if(!guy.isDead() && this.active)
 				{
-					guy.damageSnakes();
+					if(currentInside.indexOf(guy) == -1)
+						guy.damageFire();
 					this.addGuy(guy);
 					if(guy.isDead())
 					{
@@ -135,13 +152,21 @@ package EgyptianInvasion
 				displayFaded();
 
 			fireTimeLeft--;
+			if(fireTimeLeft >= -25)
+			{
+				this.fireCoolBar.update((fireTimeLeft+25)/50);
+			}
+			if(fireTimeLeft >= 0)
+			{
+				this.fireBlastBar.update((fireTimeLeft)/25);
+			}
 			if(fireTimeLeft <0)
 				active = false;
 		}
 		public override function trigger():void
 		{
 			active = true;
-			fireTimeLeft = 250;
+			fireTimeLeft = 25;
 		}
 		public override function getImpassible():Boolean
 		{
