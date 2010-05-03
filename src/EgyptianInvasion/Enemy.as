@@ -16,12 +16,8 @@ package EgyptianInvasion
 		private var originNode:Node;	// The most recently visited Node
 		private var targetNode:Node;	// Node we are moving toward
 		private var visitedNodes:Array; // The set of nodes already visited
-		private var distTraveled:Number;	// The distance we have traveled so far
 		
-		private var intervalsWithoutTarget:int;	// The number of consecutive decision steps without a target set
-		public static var INTERVALS_BEFORE_EXPLORING:int = 0;	// Number of time intervals without a target before enemy starts exploring
 		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
-
 		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
 		
 		private var health:Number;
@@ -42,6 +38,7 @@ package EgyptianInvasion
 			this.targetNode = startNode;	// Make a decision at the start node first
 			this.originNode = startNode;
 			this.startNode = startNode;
+			this.endNode = endNode;
 			
 			this.maxHealth = 100;
 			this.health = 100;
@@ -107,12 +104,6 @@ package EgyptianInvasion
 		
 		// Heuristically decides the next node to visit
 		private function makeHeuristicDecision():void {
-			// Determine distance traveled from previous node
-			var prevXDist:Number = x - originNode.x;
-			var prevYDist:Number = y - originNode.y;
-			var prevDist:Number = Math.sqrt(Math.pow(prevXDist,2) + Math.pow(prevYDist,2));
-			this.distTraveled += prevDist;
-			
 			this.visitedNodes.push(targetNode);
 			
 			// Loop through open set to find the best candidate to explore next
@@ -172,13 +163,6 @@ package EgyptianInvasion
 			// If no target node (because we reached it). Wait 10 cycles (in case we are given gold by the node) and then start exploring
 			if(targetNode == null) {
 				makeExploreDecision(true);	// Explore without a goal 
-				/*
-				if(this.intervalsWithoutTarget > INTERVALS_BEFORE_EXPLORING) {
-					
-				}
-				else {
-					this.intervalsWithoutTarget++;
-				}*/
 			}
 			else {	// There is a target mode
 				// Make a random move 20% of the time if branching factor > 2
@@ -273,7 +257,7 @@ package EgyptianInvasion
 		}
 		
 		// Gives gold to the enemy.  Number returned is amt of gold left after enemy takes as much as he can carry
-		public function giveGold(goldAmt:Number):Number {
+		public function giveGold(goldAmt:Number, node:Node):Number {
 			
 			// Amount of gold that can still be carried
 			var goldAdded:Number = Math.min(this.goldCapacity - this.goldAmt,goldAmt);
@@ -284,17 +268,13 @@ package EgyptianInvasion
 			// If we have gold, move toward the exit
 			if(goldAmt > 0) {
 				this.goalNode = this.startNode;
-				this.targetNode = this.endNode;
-				this.originNode = this.endNode;
 			}
 			else {
 				this.goalNode = this.endNode;
-				this.targetNode = this.startNode;
-				this.originNode = this.startNode;
 			}
 			
 			// We need to make a new decision if we changed our goal
-			this.moving = false;
+			//this.moving = false;
 			goldCarryingBar.update(this.goldAmt/goldCapacity);			
 			return goldLeft;
 		}
