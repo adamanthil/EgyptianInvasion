@@ -54,7 +54,13 @@ package EgyptianInvasion
 			}
 		}
 		public function spawnTimeListener(e:TimerEvent):void {
-			var enemy:Enemy = new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas)
+			var enemy:Enemy;
+			if(Math.random() < 0.2) {	// Spaw BigEnemy 20% of the time
+				enemy = new BigEnemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas);
+			}
+			else {
+				enemy = new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas);
+			}
 			enemies.push(enemy);
 			addChild(enemy);
 			main.getLevelManager().displayEnemy(enemies.length);
