@@ -32,14 +32,23 @@ package EgyptianInvasion
 		}
 		public override function processEnemy(guy:Enemy):Boolean
 		{
-			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)// && guy.getGold() > 0)
+			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 			{
-				//				(sup.parent as Main).getLevelManager().deductGold(guy.getGold());
-				//				(guy.parent as EnemyManager).removeGuy(guy);
+				trace("guy inside");
+				trace(sup.getEndNode() == this);
+				trace(goldWithin);
+				if(triggerNode != null && !guy.isDead())
+				{
+					triggerNode.trigger();
+				}
+				if(!guy.isDead() &&this.goldWithin > 0 )
+					goldWithin = guy.giveGold(goldWithin);
 				return true;
 			}
 			else
+			{
 				return false;
+			}
 		}
 		protected override function displaySolid():void
 		{
