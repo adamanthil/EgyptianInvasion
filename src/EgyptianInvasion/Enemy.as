@@ -19,7 +19,7 @@ package EgyptianInvasion
 		private var distTraveled:Number;	// The distance we have traveled so far
 		
 		private var intervalsWithoutTarget:int;	// The number of consecutive decision steps without a target set
-		public static var INTERVALS_BEFORE_EXPLORING:int = 10;	// Number of time intervals without a target before enemy starts exploring
+		public static var INTERVALS_BEFORE_EXPLORING:int = 0;	// Number of time intervals without a target before enemy starts exploring
 		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
 
 		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
@@ -156,12 +156,14 @@ package EgyptianInvasion
 			
 			// If no target node (because we reached it). Wait 10 cycles (in case we are given gold by the node) and then start exploring
 			if(targetNode == null) {
+				makeExploreDecision(true);	// Explore without a goal 
+				/*
 				if(this.intervalsWithoutTarget > INTERVALS_BEFORE_EXPLORING) {
-					makeExploreDecision(true);	// Explore without a goal 
+					
 				}
 				else {
 					this.intervalsWithoutTarget++;
-				}
+				}*/
 			}
 			else {	// There is a target mode
 				// Make a random move 20% of the time if branching factor > 2
@@ -194,10 +196,10 @@ package EgyptianInvasion
 					this.y = targetNode.y;
 					this.moving = false;
 					
-					
 					// If we've reached the destination, set target to null
 					if(targetNode == goalNode) {
 						figure.stand();
+						originNode = targetNode;	// We are now at the target
 						targetNode = null;
 					}
 				}
@@ -267,9 +269,13 @@ package EgyptianInvasion
 			// If we have gold, move toward the exit
 			if(goldAmt > 0) {
 				this.goalNode = this.startNode;
+				this.targetNode = this.endNode;
+				this.originNode = this.endNode;
 			}
 			else {
 				this.goalNode = this.endNode;
+				this.targetNode = this.startNode;
+				this.originNode = this.startNode;
 			}
 			
 			// We need to make a new decision if we changed our goal
