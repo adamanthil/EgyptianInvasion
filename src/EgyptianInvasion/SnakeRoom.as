@@ -33,8 +33,10 @@ package EgyptianInvasion
 				if(!guy.isDead())
 				{
 					if(currentInside.indexOf(guy) == -1)
+					{
 						guy.damageSnakes();
-					this.addGuy(guy);
+						this.addGuy(guy);
+					}
 					if(guy.isDead())
 					{
 						(guy.parent as EnemyManager).removeEnemy(guy);

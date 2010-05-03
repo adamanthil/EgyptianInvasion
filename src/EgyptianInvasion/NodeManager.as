@@ -215,6 +215,10 @@ package EgyptianInvasion
 			if(selectedNode !=enterNode && selectedNode != tombNode)
 			{
 				var temp:Node = selectedNode;
+				for(var i:Number = 0; i < temp.getSiblings().length; i++)
+				{
+					sup.getLevelManager().deductGold(-1*temp.getPathCost()*(Math.sqrt(Math.pow(temp.x - (temp.getSiblings()[i] as Node).x,2) + Math.pow(temp.y - (temp.getSiblings()[i] as Node).y,2))));
+				}
 				for(var i:Number = 0; i < allNodes.length; i++)
 				{
 					var temptemp:Node = allNodes[i];
@@ -229,6 +233,7 @@ package EgyptianInvasion
 					allNodes[int] = allNodes[allNodes.length -1];
 					allNodes.pop();
 				}
+				sup.getLevelManager().deductGold(-1*temp.getNodeCost());
 				selectedNode = enterNode;
 			}
 			sup.getUI().setPathExists(enterNode.pathExists(tombNode));

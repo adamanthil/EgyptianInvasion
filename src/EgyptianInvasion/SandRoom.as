@@ -15,8 +15,11 @@ package EgyptianInvasion
 		private var currentDrowning:Enemy;
 		private var drowningCool:Number;
 		
+		private var drowningBar:DisplayBar;
+		
 		public function SandRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
+			drowningBar = new DisplayBar(0x330000,0x663300,0);
 			drowningCool = 0;
 			currentDrowning = null;
 			currentInside = new Array();
@@ -72,6 +75,13 @@ package EgyptianInvasion
 				otherSide.setPlaced(true);
 			}
 			roomImage.x = -15;
+			
+			this.addChild(drowningBar);
+			drowningBar.x = -15;
+			drowningBar.y = 15;
+			drowningBar.scaleY = .3;
+			drowningBar.scaleX = .5;
+			
 		}
 		protected override function displayFaded():void
 		{
@@ -83,14 +93,19 @@ package EgyptianInvasion
 				this.blendMode = BlendMode.SCREEN;
 		}
 		protected override function TimeListener(e:TimerEvent):void	{
-			if(drowningCool > 0)
+			if(drowningCool >= 0)
+			{
+				drowningBar.update((20-drowningCool)/20);
 				drowningCool --;
-			else(currentDrowning != null && currentDrowning.quicksand())
+			}
+			else if(currentDrowning != null && currentDrowning.quicksand())
 			{
 				this.removeGuy(currentDrowning);
 //				(currentDrowning.parent as EnemyManager).removeEnemy(currentDrowning);
 				currentDrowning = null;
 			}
+			if(currentDrowning == null)
+				drowningBar.update(0);
 			if(placed)
 				displaySolid();
 			else
@@ -113,7 +128,8 @@ package EgyptianInvasion
 		{
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 			{
-				addGuy(guy);
+				if(currentInside.indexOf(guy) == -1)
+					addGuy(guy);
 				if(currentDrowning == null && guy.setDrowning(true) && currentInside.length < 2 )
 				{
 					currentDrowning = guy;
@@ -133,6 +149,7 @@ package EgyptianInvasion
 			else
 			{
 				removeGuy(guy);
+				trace(currentInside.length);
 				return false
 			}
 			return false;
