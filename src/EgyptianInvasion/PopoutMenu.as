@@ -84,7 +84,7 @@ package EgyptianInvasion
 			
 			snakeTrapBtn = new Button(new assets.ToggleButton(), 100,60, "Snake Room (W)", canvas, main);
 			snakeTrapBtn.visible = false;
-			//snakeTrapBtn.setDescription(snakeDesc);
+			snakeTrapBtn.setDescription(fireDesc); // TODO WB will change this to snake desc when that's done
 			addChild(snakeTrapBtn);
 			
 			quickTrapBtn = new Button(new assets.ToggleButton(), 100,90, "Quicksand Room (E)", canvas, main);
