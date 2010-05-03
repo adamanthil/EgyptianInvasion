@@ -127,7 +127,7 @@
 				{
 					if(!guy.isDead())
 					{
-						if(this.active && deadGuys <= 10)
+						if(this.active && deadGuys < 10)
 						{
 							if(currentInside.indexOf(guy) == -1)
 							{
@@ -137,7 +137,7 @@
 							if(guy.isDead())
 								deadGuys++;
 							deadguyBar.update(deadGuys/10);
-							if(deadGuys>=10)
+							if(deadGuys==10)
 							{
 								roomImage.alpha = 0;
 								deactivateImage.alpha = 0;

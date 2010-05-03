@@ -311,7 +311,7 @@ package EgyptianInvasion
 		}
 
 		public function damageFire():Boolean {
-			this.health -= 50;
+			this.health -= 25;
 			healthBar.update(health/maxHealth);
 			return true;
 		}
