@@ -13,6 +13,7 @@ package EgyptianInvasion
 		private var enemies:Array;
 		private var timer:Timer;
 		private var spawnTimer:Timer;
+		private var numEnemiesOnLevel:Number;
 		
 		public function EnemyManager(main:Main, nodeMan:NodeManager)
 		{
@@ -21,7 +22,9 @@ package EgyptianInvasion
 			this.nodeMan = nodeMan;
 			this.enemies = new Array();
 			
-			spawnTimer = new Timer(1000, 20); // This line defines frequency and number of enemies to spawn
+			numEnemiesOnLevel = 20; // TODO WB will need to change this on per-level basis
+			
+			spawnTimer = new Timer(1000, numEnemiesOnLevel); // This line defines frequency and number of enemies to spawn
 			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
 			
 			timer = new Timer(10);
@@ -39,7 +42,7 @@ package EgyptianInvasion
 			var enemy:Enemy = new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas)
 			enemies.push(enemy);
 			addChild(enemy);
-			main.getLevelManager().displayEnemy(enemies.length);
+			main.getLevelManager().deductEnemy(enemies.length);
 		}
 		
 		// Removes an enemy and returns the gold it's carying to the most recently visited node

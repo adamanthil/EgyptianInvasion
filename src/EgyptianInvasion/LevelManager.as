@@ -37,6 +37,11 @@ package EgyptianInvasion
 			
 			
 			em = new EnemyManager(m,nm);*/
+			
+			format = new TextFormat();
+			format.color = 0x112222; 
+			format.size = 10; 
+			
 			this.main = m;
 			this.enMan = em;
 			this.noMan = nm;
@@ -49,8 +54,9 @@ package EgyptianInvasion
 			setStartEndNode();
 			displayGold(currGold);
 			//deductGold(20);
-			displayEnemy(10);
-			
+			displayEnemy(0);
+			main.addChild(goldTextField);
+			main.addChild(enemyTextField);
 		}
 		
 		public function setStartEndNode():void{
@@ -95,9 +101,7 @@ package EgyptianInvasion
 		}
 		
 		public function displayGold(gold:Number):void{
-			format = new TextFormat();
-			format.color = 0xFFFF32; 
-			format.size = 10; 	
+	
 			goldTextField = new TextField();
 			//myTextField_txt.wordWrap=true;
 			goldTextField.autoSize=TextFieldAutoSize.LEFT;
@@ -106,29 +110,29 @@ package EgyptianInvasion
 			//myTextField_txt.text.
 			goldTextField.x = 450;
 			goldTextField.y = 10;
-			goldTextField.selectable = false;
-			main.addChild(goldTextField);
-			
+			goldTextField.selectable = false;			
 		}
 		
 		public function displayEnemy(amtEnemy:Number):void{
-
+			//main.removeChild(enemyTextField);
 			enemyTextField = new TextField();
 			//myTextField_txt.wordWrap=true;
 			enemyTextField.autoSize=TextFieldAutoSize.LEFT;
-			enemyTextField.text = "ENEMY LEFT: "+ amtEnemy;
+			enemyTextField.text = "ENEMIES LEFT: "+ amtEnemy;
 			enemyTextField.setTextFormat(format);
 			enemyTextField.x = 350;
 			enemyTextField.y = 10;
-			enemyTextField.selectable = false;
-			main.addChild(enemyTextField);
-			
+			enemyTextField.selectable = false;			
 		}
 		
 		public function deductGold(amount:Number):void{
 			currGold -=amount;
 			goldTextField.text = "GOLD LEFT: " + currGold.toFixed(2);
 			goldTextField.setTextFormat(format);
+		}
+		public function deductEnemy(amount:Number):void{
+			enemyTextField.text = "ENEMIES LEFT " + amount;
+			enemyTextField.setTextFormat(format);
 		}
 		
 		public function setInterest(amount:Number):void{

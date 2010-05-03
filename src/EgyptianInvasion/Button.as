@@ -17,6 +17,7 @@ package EgyptianInvasion
 		private var text:TextField;
 		private var format:TextFormat;
 		private var main:Main;
+		private var descriptionAsset:MovieClip;
 		
 		private var descPopout:BitmapAsset;
 		
@@ -50,11 +51,11 @@ package EgyptianInvasion
 		public function getMain():Main					{return main;}
 		public function getCanvas():Stage				{return canvas;}
 		public function isDown ():Boolean				{return down;}
-		public function getDescription():BitmapAsset 	{return descPopout;}
+		public function getDescription():MovieClip	 	{return descriptionAsset;}
 		public function getButtonAsset():MovieClip 		{return this.buttonAsset;}
 		
 		// Mutator methods
-		public function setDescription(b:BitmapAsset):void	{descPopout = b;}
+		public function setDescription(m:MovieClip):void	{descriptionAsset = m;}
 		
 		
 		// Event Handlers

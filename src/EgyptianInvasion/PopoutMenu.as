@@ -24,12 +24,11 @@ package EgyptianInvasion
 		[Embed(source="../assets/img/uiBG.jpg")]
 		private var BGImage:Class;
 		
-		[Embed(source="../assets/img/pitDesc.jpg")]
-		private var PitDescImage:Class;
-		
 		private var photo:BitmapAsset;
-		private var sampleDesc:BitmapAsset;
-		private var samplePitDesc:BitmapAsset;
+		
+		private var fireDesc:fireExp;
+		private var pitDesc:pitExp;
+		private var quickDesc:sandExp;
 		
 		public function PopoutMenu (startX:Number, startY:Number, canvasRef:Stage, mainRef:Main) {
 			
@@ -53,43 +52,37 @@ package EgyptianInvasion
 			addChild(photo);
 			
 			// Add the description objects here
-			sampleDesc = new BGImage();
-			sampleDesc.scaleX = 1.2;
-			sampleDesc.scaleY = 0.5;
-			sampleDesc.x = 150;
-			sampleDesc.y = -120;
-			sampleDesc.visible = false;
-			addChild(sampleDesc);
+			pitDesc = new pitExp();
+			pitDesc.scaleX = 0.4;
+			pitDesc.scaleY = 0.4;
+			pitDesc.x = 250;
+			pitDesc.y = 120;
+			pitDesc.visible = false;
+			addChild(pitDesc);
 			
-			samplePitDesc = new PitDescImage();
-			samplePitDesc.scaleX = 0.5;
-			samplePitDesc.scaleY = 0.5;
-			samplePitDesc.x = 150;
-			samplePitDesc.y = -120;
-			samplePitDesc.visible = false;
-			addChild(samplePitDesc);
-
 			// Add the other buttons
 			pitTrapBtn = new Button(new assets.ToggleButton(), 100,30, "Pit Room (Q)", canvas, main);
 			pitTrapBtn.visible = false;
-			pitTrapBtn.setDescription(samplePitDesc);
+			pitTrapBtn.setDescription(pitDesc);
 			addChild(pitTrapBtn);
 			
 			snakeTrapBtn = new Button(new assets.ToggleButton(), 100,60, "Snake Room (W)", canvas, main);
 			snakeTrapBtn.visible = false;
+			snakeTrapBtn.setDescription(pitDesc);
 			addChild(snakeTrapBtn);
 			
 			quickTrapBtn = new Button(new assets.ToggleButton(), 100,90, "Quicksand Room (E)", canvas, main);
 			quickTrapBtn.visible = false;
+			quickTrapBtn.setDescription(pitDesc);
 			addChild(quickTrapBtn);
 			
 			fireTrapBtn = new Button(new assets.ToggleButton(), 100,120, "Fire Room (R)", canvas, main);
 			fireTrapBtn.visible = false;
+			fireTrapBtn.setDescription(pitDesc);
 			addChild(fireTrapBtn);
 			
 			connectNodeBtn = new Button(new assets.ToggleButton(), 100, 150, "Connection Node (A)", canvas, main);
 			connectNodeBtn.visible = false;
-			connectNodeBtn.setDescription(sampleDesc);
 			addChild(connectNodeBtn);
 			
 
@@ -102,14 +95,18 @@ package EgyptianInvasion
 			pitTrapBtn.addEventListener(MouseEvent.MOUSE_OUT, hideDescription);
 			pitTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addPitNodeHandler);
 			
+			fireTrapBtn.addEventListener(MouseEvent.MOUSE_OVER, popoutDescription);
+			fireTrapBtn.addEventListener(MouseEvent.MOUSE_OUT, hideDescription);
 			fireTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addFireNodeHandler);
 			
+			snakeTrapBtn.addEventListener(MouseEvent.MOUSE_OVER, popoutDescription);
+			snakeTrapBtn.addEventListener(MouseEvent.MOUSE_OUT, hideDescription);
 			snakeTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addSnakeNodeHandler);
 			
+			quickTrapBtn.addEventListener(MouseEvent.MOUSE_OVER, popoutDescription);
+			quickTrapBtn.addEventListener(MouseEvent.MOUSE_OUT, hideDescription);
 			quickTrapBtn.addEventListener(MouseEvent.MOUSE_DOWN, addSandNodeHandler);
 			
-			connectNodeBtn.addEventListener(MouseEvent.MOUSE_OVER, popoutDescription);
-			connectNodeBtn.addEventListener(MouseEvent.MOUSE_OUT, hideDescription);
 			connectNodeBtn.addEventListener(MouseEvent.MOUSE_DOWN, addConnectNodeHandler);
 		}
 		
@@ -132,10 +129,13 @@ package EgyptianInvasion
 		public function popoutDescription(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
 			button.getDescription().visible = true;
+			button.getDescription().play();
 		}
 		public function hideDescription(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
 			button.getDescription().visible = false;
+			button.getDescription().stop();
+			//button.getDescription().gotoAndStop("startFrame");
 		}
 		
 		public function addFireNodeHandler(e:MouseEvent):void {
