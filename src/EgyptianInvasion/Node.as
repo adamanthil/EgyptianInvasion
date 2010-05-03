@@ -89,7 +89,7 @@ package EgyptianInvasion
 					triggerNode.trigger();
 				}
 				if(!guy.isDead() &&this.goldWithin > 0 )
-					goldWithin = guy.giveGold(goldWithin,this);
+					goldWithin = guy.giveGold(goldWithin);
 				return true;
 			}
 			else

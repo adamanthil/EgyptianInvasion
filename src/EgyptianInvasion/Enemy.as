@@ -257,7 +257,7 @@ package EgyptianInvasion
 		}
 		
 		// Gives gold to the enemy.  Number returned is amt of gold left after enemy takes as much as he can carry
-		public function giveGold(goldAmt:Number, node:Node):Number {
+		public function giveGold(goldAmt:Number):Number {
 			
 			// Amount of gold that can still be carried
 			var goldAdded:Number = Math.min(this.goldCapacity - this.goldAmt,goldAmt);
