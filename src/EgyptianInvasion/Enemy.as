@@ -282,7 +282,7 @@ package EgyptianInvasion
 			var goldLeft:Number = goldAm - goldAdded;
 			
 			// If we have gold, move toward the exit
-			if(goldAmt > 0) {
+			if(goldAdded > 0) {
 				this.goalNode = this.startNode;
 				this.visitedNodes = new Array();
 			}
@@ -327,7 +327,7 @@ package EgyptianInvasion
 		}
 
 		public function damageFire():Boolean {
-			this.health -= 25;
+			this.health -= 75;
 			healthBar.update(health/maxHealth);
 			return true;
 		}
