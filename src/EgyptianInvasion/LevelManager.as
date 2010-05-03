@@ -29,6 +29,9 @@ package EgyptianInvasion
 		private var startButton:Button;
 		private var startTitle:TextField;
 		
+		private var againButton:Button;
+		private var nextButton:Button;
+		
 		public const fireRoomCost:Number = 100;
 		public const pitRoomCost:Number = 20;
 		public const snakeRoomCost:Number = 50;
@@ -67,9 +70,15 @@ package EgyptianInvasion
 			main.addChild(enemyTextField);
 			getStartPop();
 			//main.remove
+			
+			againButton = new Button(new assets.ToggleButton(), 0,0, "TRY AGAIN!",canvas, main);
+			againButton.addEventListener(MouseEvent.MOUSE_DOWN, againPressed);
+			
+			nextButton = new Button(new assets.ToggleButton(), 0,0, "NEXT LEVEL",canvas, main);
+			nextButton.addEventListener(MouseEvent.MOUSE_DOWN, nextPressed);
 		}
 		
-		private function getStartPop(){
+		private function getStartPop(){//start pop up window
 			startPop = new popUpWin();
 			startPop.x = 250;
 			startPop.y = 200;
@@ -158,13 +167,62 @@ package EgyptianInvasion
 			enemyTextField.setTextFormat(format);
 			enemyTextField.x = 350;
 			enemyTextField.y = 10;
-			enemyTextField.selectable = false;			
+			enemyTextField.selectable = false;	
+			if (main.getBuildPhase()==false && amtEnemy == 0){
+				//popWinWin();
+			}
+			
 		}
 		
 		public function deductGold(amount:Number):void{
 			currGold -=amount;
 			goldTextField.text = "GOLD LEFT: " + currGold.toFixed(2);
 			goldTextField.setTextFormat(format);
+			if (main.getBuildPhase()==false && currGold <= 0){
+				//popLoseWin();
+			}
+		}
+		
+		private function againPressed(e:MouseEvent):void{
+			/**to be edited*/
+			startPop.gotoAndStop("minimize");
+			startPop.removeChild(againButton);
+			startPop.removeChild(startTitle);
+		}
+		
+		private function nextPressed(e:MouseEvent):void{
+			/**to be edited*/
+			startPop.gotoAndStop("minimize");
+			startPop.removeChild(nextButton);
+			startPop.removeChild(startTitle);
+			calculateGold(currGold);
+			nextLevel(currGold);
+		}
+		
+		private function popLoseWin():void{
+			//main.removeChild(startPop);// the start pop up is just hiding, remove it after a level
+			
+			startPop.gotoAndStop("maximize");
+			
+			
+			startPop.addChild(againButton);
+			
+			startTitle.text = "Oops, you probably just miss a little bit! Try building again!!";
+
+			startPop.addChild(startTitle);
+		}
+		
+		private function popWinWin():void{
+			//main.removeChild(startPop);// the start pop up is just hiding, remove it after a level
+			
+			startPop.gotoAndStop("maximize");
+			
+			
+			startPop.addChild(nextButton);
+			
+			startTitle.text = "Oops, you probably just miss a little bit! Try building again!!";
+			
+			startPop.addChild(startTitle);
 		}
 		
 		public function setInterest(amount:Number):void{
