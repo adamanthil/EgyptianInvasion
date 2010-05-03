@@ -27,7 +27,7 @@ package EgyptianInvasion
 			col2 = color2;
 			amnt = amount; 
 		}
-		public function update(amount:Number)
+		public function update(amount:Number):void
 		{
 			graphics.clear();
 			graphics.beginFill(col1);

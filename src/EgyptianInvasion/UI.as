@@ -65,6 +65,7 @@
 		public function beginInvasionMouseHandler(e:MouseEvent):void {
 			// If there is a path from start to end, begin the invasion!
 			if(main.getNodeManager().getStartNode().pathExists(main.getNodeManager().getEndNode())) {
+				beginInvasionBtn.visible = false;
 				main.setBuildPhase(false);
 				main.getEnemyManager().beginInvasion();
 			}	
@@ -72,9 +73,10 @@
 		
 		public function keysHandler(e:KeyboardEvent):void {
 			if(e.charCode == 98) // B for BeginInvasion
-			{
+			{	
 				if(main.getNodeManager().getStartNode().pathExists(main.getNodeManager().getEndNode())) 
 				{
+					beginInvasionBtn.visible = false;
 					main.setBuildPhase(false);			
 					main.getEnemyManager().beginInvasion();
 				}
