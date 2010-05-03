@@ -137,7 +137,7 @@
 									goldWithin = guy.giveGold(goldWithin);
 							}
 							if(guy.isDead())
-								deadGuys++;
+								deadGuys+=guy.getPitSlots();
 							deadguyBar.update(deadGuys/10);
 							if(deadGuys==10)
 							{
