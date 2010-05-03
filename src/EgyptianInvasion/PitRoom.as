@@ -107,8 +107,8 @@
 				}
 				var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"pit button",canvas,sup.parent as Main);
 				activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
-				activeButton.scaleX = .1;
-				activeButton.scaleY = .1;
+				activeButton.scaleX = .25;
+				activeButton.scaleY = .25;
 				this.addChild(activeButton);
 				button = activeButton;
 				roomImage.x = -15;
