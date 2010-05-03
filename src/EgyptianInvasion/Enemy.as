@@ -61,8 +61,8 @@ package EgyptianInvasion
 			
 			if(targetNode != null) {
 				
-				// Make a random move 20% of the time
-				if(Math.random() > 0.20) {
+				// Make a random move 20% of the time if branching factor > 2
+				if(Math.random() > 0.20 && targetNode.getSiblings().length > 2) {
 					
 					// Add node to visited nodes
 					this.visitedNodes.push(targetNode);
