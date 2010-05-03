@@ -23,18 +23,19 @@ package EgyptianInvasion
 		private var delayTime:Number;	// Time in milliseconds that movement should stop
 		
 		// Enemy type/instance variables
-		private var health:Number;
-		private var maxHealth:Number;
-		private var goldAmt:Number;
-		private var goldCapacity:Number;
-		private var speed:Number;	// How fast we move		
-		private var poisoned:Boolean;
-		private var poisonRate:Number;	// Amt of health to loose at each 
+		protected var health:Number;
+		protected var maxHealth:Number;
+		protected var goldAmt:Number;
+		protected var goldCapacity:Number;
+		protected var speed:Number;	// How fast we move		
+		protected var poisoned:Boolean;
+		protected var poisonRate:Number;	// Amt of health to loose at each 
+		protected var pitSlots:int;	// Number of pit slots this enemy takes up
 		
-		private var figure:EFigure;
+		protected var figure:EFigure;
 		
-		private var healthBar:DisplayBar;
-		private var goldCarryingBar:DisplayBar;
+		protected var healthBar:DisplayBar;
+		protected var goldCarryingBar:DisplayBar;
 		
 		public function Enemy(startNode:Node, endNode:Node, canvas:Stage) {
 			this.x = startNode.x;
@@ -46,6 +47,7 @@ package EgyptianInvasion
 			this.startNode = startNode;
 			this.endNode = endNode;
 			
+			this.pitSlots = 1;
 			this.maxHealth = 100;
 			this.health = 100;
 			this.goldAmt = 0;
@@ -230,7 +232,7 @@ package EgyptianInvasion
 			
 			// Deal poison damage
 			if(poisoned) {
-				this.health -= .1; //-= poisonRate;
+				this.health -= .17; //-= poisonRate;
 				healthBar.update(health/maxHealth);
 			}
 			
@@ -339,6 +341,9 @@ package EgyptianInvasion
 			return this.poisoned;
 		}
 		
+		public function getPitSlots():int {
+			return this.pitSlots;
+		}
 		// ----------------
 	}
 }

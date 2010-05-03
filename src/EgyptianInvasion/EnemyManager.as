@@ -35,7 +35,7 @@ package EgyptianInvasion
 			timer.start();
 		}
 		
-		public function removeTimer(){
+		public function removeTimer():void {
 			spawnTimer.removeEventListener(TimerEvent.TIMER, spawnTimeListener);
 			timer.removeEventListener(TimerEvent.TIMER, timeListener);
 		}
@@ -53,7 +53,7 @@ package EgyptianInvasion
 				}
 			}
 		}
-		public function spawnTimeListener(e:TimerEvent):void	{
+		public function spawnTimeListener(e:TimerEvent):void {
 			var enemy:Enemy = new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas)
 			enemies.push(enemy);
 			addChild(enemy);
