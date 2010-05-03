@@ -130,7 +130,11 @@ package EgyptianInvasion
 			if(Math.sqrt(Math.pow(guy.x - x,2) + Math.pow(guy.y - y, 2)) < size)
 			{
 				if(currentInside.indexOf(guy) == -1)
+				{
 					addGuy(guy);
+					if(!guy.isDead() &&this.goldWithin > 0 )
+						goldWithin = guy.giveGold(goldWithin);
+				}
 				if(currentDrowning == null && currentInside.length < 2  && guy.freeze(true,this) )
 				{
 					currentDrowning = guy;
@@ -143,8 +147,6 @@ package EgyptianInvasion
 				}
 				if(triggerNode != null && !guy.isDead())
 					triggerNode.trigger();
-				if(!guy.isDead() &&this.goldWithin > 0 )
-					goldWithin = guy.giveGold(goldWithin);
 				return true;
 			}
 			else

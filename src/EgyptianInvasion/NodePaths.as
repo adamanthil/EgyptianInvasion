@@ -27,9 +27,9 @@ package EgyptianInvasion
 				while(int < nodes.length)
 				{
 					graphics.moveTo(node.drawToPointX(),node.drawToPointY());
-					graphics.lineStyle(7, 0xFF0000);
+					graphics.lineStyle(10, 0xFF0000);
 					if(!(nodes[int] as Node).isPlaced())
-						graphics.lineStyle(7, 0xFF0000,1);
+						graphics.lineStyle(10, 0xFF0000,1);
 					
 					graphics.lineTo((nodes[int] as Node).drawToPointX(),(nodes[int] as Node).drawToPointY());
 					graphics.moveTo(0,0);

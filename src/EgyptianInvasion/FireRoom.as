@@ -36,7 +36,6 @@ package EgyptianInvasion
 			deactivateImage.x = -15;
 			deactivateImage.y = -15;
 			addChild(deactivateImage);
-			
 			roomImage  = new RoomImage();
 			roomImage.scaleX = 0.6;
 			roomImage.scaleY = 0.6;
@@ -123,15 +122,12 @@ package EgyptianInvasion
 					{
 						guy.damageFire();
 						this.addGuy(guy);
+						if( this.goldWithin > 0 )
+							goldWithin = guy.giveGold(goldWithin);
 					}
 					if(guy.isDead())
 					{
 						deadGuys++;	
-					}
-					else
-					{
-						if( this.goldWithin > 0 )
-							goldWithin = guy.giveGold(goldWithin);
 					}
 				}
 				if(triggerNode != null && !guy.isDead())

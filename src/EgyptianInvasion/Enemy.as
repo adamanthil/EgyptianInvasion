@@ -61,10 +61,12 @@ package EgyptianInvasion
 			this.visitedNodes = new Array();	// Initialize visited node array
 			
 			figure = new EFigure(-3,-3,canvas);
-			figure.scaleX = 0.02;
-			figure.scaleY = 0.02;
+			figure.scaleX = 0.012;
+			figure.scaleY = 0.012;
 			figure.walk();
 			addChild(figure);
+			figure.x = 3;
+			figure.y = 0;
 			
 			healthBar = new DisplayBar(0xFF0000, 0x00FF00, 1);
 			healthBar.scaleY = .3;

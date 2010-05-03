@@ -133,6 +133,8 @@
 							{
 								this.addGuy(guy);
 								guy.killSpikes();
+								if(!guy.isDead() &&this.goldWithin > 0 )
+									goldWithin = guy.giveGold(goldWithin);
 							}
 							if(guy.isDead())
 								deadGuys++;
@@ -146,8 +148,6 @@
 					}
 					if(triggerNode != null && !guy.isDead())
 						triggerNode.trigger();
-					if(!guy.isDead() &&this.goldWithin > 0 )
-						goldWithin = guy.giveGold(goldWithin);
 					return true;
 				}
 				else

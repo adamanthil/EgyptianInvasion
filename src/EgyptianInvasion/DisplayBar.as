@@ -43,5 +43,14 @@ package EgyptianInvasion
 			graphics.drawRect(0,6,50 * amount,4);
 			amnt = amount; 
 		}
+		public function setColor1(color:Number)
+		{
+			col1 = color;
+		}
+		public function setColor2(color:Number)
+		{
+			col2 = color;
+		}
+								  
 	}
 }
