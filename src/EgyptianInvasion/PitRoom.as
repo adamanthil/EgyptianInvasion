@@ -28,7 +28,7 @@
 			
 			public function PitRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 			{
-				active = false;
+				active = true;
 				super(nodex,nodey,canvas, refup);
 				
 				fullImage  = new FullImage();
