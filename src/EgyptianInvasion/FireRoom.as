@@ -120,8 +120,10 @@ package EgyptianInvasion
 				if(!guy.isDead() && this.active)
 				{
 					if(currentInside.indexOf(guy) == -1)
+					{
 						guy.damageFire();
-					this.addGuy(guy);
+						this.addGuy(guy);
+					}
 					if(guy.isDead())
 					{
 						deadGuys++;	

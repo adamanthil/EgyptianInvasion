@@ -130,7 +130,10 @@
 						if(this.active && deadGuys <= 10)
 						{
 							if(currentInside.indexOf(guy) == -1)
+							{
+								this.addGuy(guy);
 								guy.killSpikes();
+							}
 							if(guy.isDead())
 								deadGuys++;
 							deadguyBar.update(deadGuys/10);
@@ -145,7 +148,6 @@
 						triggerNode.trigger();
 					if(!guy.isDead() &&this.goldWithin > 0 )
 						goldWithin = guy.giveGold(goldWithin);
-					this.addGuy(guy);
 					return true;
 				}
 				else
