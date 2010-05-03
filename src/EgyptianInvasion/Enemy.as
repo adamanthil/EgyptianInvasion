@@ -22,11 +22,15 @@ package EgyptianInvasion
 		private var freezeMovement:Boolean; // Whether they should stop moving (because they are drowning)
 		private var delayTime:Number;	// Time in milliseconds that movement should stop
 		
+		// Enemy type/instance variables
 		private var health:Number;
 		private var maxHealth:Number;
 		private var goldAmt:Number;
 		private var goldCapacity:Number;
 		private var speed:Number;	// How fast we move		
+		private var poisoned:Boolean;
+		private var poisonRate:Number;	// Amt of health to loose at each 
+		
 		private var figure:EFigure;
 		
 		private var healthBar:DisplayBar;
@@ -47,6 +51,8 @@ package EgyptianInvasion
 			this.goldAmt = 0;
 			this.goldCapacity = 10;
 			this.speed = 5;
+			var secondsToDieOfPoison:Number = 10;
+			this.poisonRate = this.health / (1000 * secondsToDieOfPoison);
 			
 			this.delayTime = 0;
 			this.lastIntervalTime = getTimer();
@@ -220,6 +226,12 @@ package EgyptianInvasion
 		// At every time interval, determines whether to move or decide next movement.  Called by EnemyManager
 		public function nextTimeInterval():void	{
 			
+			// Deal poison damage
+			if(poisoned) {
+				this.health -= .1; //-= poisonRate;
+				healthBar.update(health/maxHealth);
+			}
+			
 			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
 			if(originNode != null) {
 				originNode.processEnemy(this);
@@ -316,10 +328,13 @@ package EgyptianInvasion
 			return true;
 		}
 		
-		public function damageSnakes():Boolean {
-			this.health = 0;
-			healthBar.update(health/maxHealth);
-			return true;
+		public function poison():Boolean {
+			this.poisoned = true;
+			return true;	// By default enemies can be poisoned
+		}
+		
+		public function isPoisoned():Boolean {
+			return this.poisoned;
 		}
 		
 		// ----------------
