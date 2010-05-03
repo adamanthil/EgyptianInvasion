@@ -44,7 +44,7 @@ package EgyptianInvasion
 			this.goldAmt = 0;
 			this.goldCapacity = 10;
 			
-			this.speed = 10;
+			this.speed = 5;
 			this.moving = false;	// We need to make a decision first
 			this.visitedNodes = new Array();	// Initialize visited node array
 			
@@ -173,7 +173,7 @@ package EgyptianInvasion
 				}
 				else {
 					var deltaTime:Number = getTimer() - this.lastIntervalTime;
-					var multiplier:Number = deltaTime / (1000.0/50);	// 50fps is "target"
+					var multiplier:Number = deltaTime / (1000.0/12);	// 12fps is "target"
 					
 					this.x += speed/dist * multiplier * xDist;
 					this.y += speed/dist * multiplier * yDist;
