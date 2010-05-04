@@ -6,11 +6,10 @@ package EgyptianInvasion
 	
 	import mx.core.BitmapAsset;
 	
-	public class StartRoom extends Node
+	public class StartRoom extends Trap
 	{
 		[Embed(source="../assets/img/startRoom.jpg")]
 		private var RoomImage:Class;
-		private var roomImage:BitmapAsset;
 		public function StartRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
 			super(nodex,nodey,canvas,refup);

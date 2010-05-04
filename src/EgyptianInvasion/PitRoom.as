@@ -86,6 +86,7 @@
 					otherSide.addSibling(this);
 					inbetween.setPlaced(true);
 					otherSide.setPlaced(true);
+					(parent as NodeManager).setSelected(otherSide);
 				}
 				else
 				{
@@ -104,6 +105,7 @@
 					otherSide.addSibling(this);
 					inbetween.setPlaced(true);
 					otherSide.setPlaced(true);
+					(parent as NodeManager).setSelected(otherSide);
 				}
 				var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"pit button",canvas,sup.parent as Main);
 				activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
@@ -186,6 +188,7 @@
 				{
 					roomImage.alpha = .5;
 					deactivateImage.alpha = .5;
+					fullImage.alpha = .35;
 				}
 				if(!active)
 				{

@@ -166,8 +166,8 @@ package EgyptianInvasion
 				{
 					toggledNode.setPlaced(true);
 					allNodes.push(toggledNode);
-					toggledNode.onPlaced(this);
 					sup.getLevelManager().deductGold(toggledNode.getPathCost()*(Math.sqrt(Math.pow(toggledNode.x - selectedNode.x,2) + Math.pow(toggledNode.y - selectedNode.y,2))) + toggledNode.getNodeCost())
+					toggledNode.onPlaced(this);
 					sup.getUI().setPathExists(enterNode.pathExists(tombNode));
 				}
 				else if(!toggledNode.getTrigPlace())
@@ -189,6 +189,14 @@ package EgyptianInvasion
 				//sup.getUI().getPlaceNodeButton().setDown(false);
 			}
 			
+		}
+		public function setSelected(select:Node):void
+		{
+			this.selectedNode = select;
+		}
+		public function getSelected():Node
+		{
+			return selectedNode;
 		}
 		private function keyListener(e:KeyboardEvent):void
 		{

@@ -56,6 +56,8 @@ package EgyptianInvasion
 				otherSide.addSibling(this);
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
+				
+				(parent as NodeManager).setSelected(otherSide);
 			}
 			else
 			{
@@ -74,6 +76,8 @@ package EgyptianInvasion
 				otherSide.addSibling(this);
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
+				
+				(parent as NodeManager).setSelected(otherSide);
 			}
 			roomImage.x = -15;
 			
@@ -134,7 +138,6 @@ package EgyptianInvasion
 					addGuy(guy);
 					if(!guy.isDead() &&this.goldWithin > 0 )
 						goldWithin = guy.giveGold(goldWithin);
-				}
 				if(currentDrowning == null && currentInside.length < 2  && guy.freeze(true,this) )
 				{
 					currentDrowning = guy;
@@ -147,6 +150,7 @@ package EgyptianInvasion
 				}
 				if(triggerNode != null && !guy.isDead())
 					triggerNode.trigger();
+				}
 				return true;
 			}
 			else

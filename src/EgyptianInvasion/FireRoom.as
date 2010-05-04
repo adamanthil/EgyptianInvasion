@@ -67,6 +67,7 @@ package EgyptianInvasion
 				otherSide.addSibling(this);
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
+				(parent as NodeManager).setSelected(otherSide);
 			}
 			else
 			{
@@ -85,6 +86,7 @@ package EgyptianInvasion
 				otherSide.addSibling(this);
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
+				(parent as NodeManager).setSelected(otherSide);
 			}
 			var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"fire button",canvas,sup.parent as Main);
 			activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);

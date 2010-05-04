@@ -114,7 +114,9 @@ package EgyptianInvasion
 			if(nodeImage != null)
 			{
 				if(placed)
+				{
 					nodeImage.gotoAndStop("normal");
+				}
 				else
 				{
 					if(isValid)
@@ -173,7 +175,9 @@ package EgyptianInvasion
 		}
 		
 		public function onPlaced(sup:NodeManager):void {
-		
+			(parent as NodeManager).getSelected().setSelected(false);
+			this.setSelected(true);
+			(parent as NodeManager).setSelected(this);
 		}
 		
 		public function getPossibleAngle(nodeIn:Node):Boolean {
