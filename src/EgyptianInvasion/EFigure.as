@@ -1,16 +1,15 @@
 package EgyptianInvasion
 {
-	import flash.display.Sprite;
-	import flash.display.Stage;
+	import flash.display.*;
 
 	public class EFigure extends Sprite
 	{
-		private var figure:EnemyFigure2;
+		private var figure:MovieClip;
 		private var canvas:Stage;
 		
-		public function EFigure(nodex:Number, nodey:Number, cvas:Stage)
+		public function EFigure(asset:MovieClip, nodex:Number, nodey:Number, cvas:Stage)
 		{
-			figure = new EnemyFigure2();
+			figure = asset;
 			figure.stop();
 			this.canvas = cvas;
 			x = nodex;

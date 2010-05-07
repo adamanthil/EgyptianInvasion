@@ -1,6 +1,8 @@
 // An enemy trying to find the pharaoh's treasure
 package EgyptianInvasion
 {
+	import assets.enemyWithHat;
+	
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.utils.*;
@@ -62,7 +64,7 @@ package EgyptianInvasion
 			this.freezeMovement = false;
 			this.visitedNodes = new Array();	// Initialize visited node array
 			
-			figure = new EFigure(-3,-3,canvas);
+			figure = new EFigure(new EnemyFigure2(),-3,-3,canvas);
 			figure.scaleX = 0.012;
 			figure.scaleY = 0.012;
 			figure.walk();
