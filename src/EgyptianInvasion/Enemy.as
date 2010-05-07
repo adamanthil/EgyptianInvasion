@@ -213,12 +213,12 @@ package EgyptianInvasion
 				if(distTraveled >= distTotal) {	// reached the destination node
 					this.x = targetNode.x;
 					this.y = targetNode.y;
-					figure.stand();	// Standing animation
 					this.moving = false;
 					
 					// If we've reached the destination, set target to null
 					if(targetNode == goalNode) {
 						originNode = targetNode;	// We are now at the target
+						figure.stand();	// Standing animation
 						targetNode = null;
 					}
 				}

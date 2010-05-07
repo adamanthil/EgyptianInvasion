@@ -267,7 +267,7 @@ package EgyptianInvasion
 			startPop.addChild(startTitle);
 		}
 		
-		private function popWinWin():void{
+		public function popWinWin():void{
 			//main.removeChild(startPop);// the start pop up is just hiding, remove it after a level
 			
 			startPop.gotoAndStop("maximize");
@@ -275,7 +275,7 @@ package EgyptianInvasion
 			
 			startPop.addChild(nextButton);
 			
-			startTitle.text = "Oops, you probably just miss a little bit! Try building again!!";
+			startTitle.text = "You Have successfully defended!  Proede to next level!";
 			
 			startPop.addChild(startTitle);
 		}

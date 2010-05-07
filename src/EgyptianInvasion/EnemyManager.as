@@ -14,6 +14,7 @@ package EgyptianInvasion
 		private var spawnTimer:Timer;
 		private var numEnemiesOnLevel:Number;
 		private var numEnemiesRemaining:Number;
+		private var numEnemiesKilled:int;
 		private var spawnFrequency:Number;
 		
 		public function EnemyManager(main:Main)
@@ -23,7 +24,7 @@ package EgyptianInvasion
 			this.enemies = new Array();
 			
 			//numEnemiesOnLevel = 1; // TODO WB will need to change this on per-level basis
-			numEnemiesOnLevel = 80; // TODO WB will need to change this on per-level basis
+			numEnemiesOnLevel = 1; // TODO WB will need to change this on per-level basis
 			numEnemiesRemaining = numEnemiesOnLevel;
 			spawnFrequency = 1000; // One second
 			
@@ -86,9 +87,15 @@ package EgyptianInvasion
 				main.getLevelManager().displayEnemiesOnBoard(enemies.length);
 				
 				removeChild(enemy);
+				numEnemiesKilled++;	// Increment number of enemies killed
+				
+				// Check for winning game (removed last enemy)
+				if(numEnemiesKilled == numEnemiesOnLevel) {
+					main.getLevelManager().popWinWin();
+				}
+				
 				return true;
 			}
-			
 		}
 		
 		public function getNumEnemiesOnLevel():Number{
