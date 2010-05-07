@@ -22,6 +22,18 @@ package EgyptianInvasion
 			figure.gotoAndStop("walkRight");
 		}
 		
+		public function walkLeft():void{
+			figure.gotoAndStop("walkLeft");
+		}
+		
+		public function poisonedLeft():void{
+			figure.gotoAndStop("poisonedLeft");
+		}
+		
+		public function poisonedRight():void{
+			figure.gotoAndStop("poisonedRight");
+		}
+		
 		public function stand():void {
 			figure.gotoAndStop("stand");
 		}
