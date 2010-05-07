@@ -90,6 +90,55 @@ package EgyptianInvasion
 			nextButton.addEventListener(MouseEvent.MOUSE_DOWN, nextPressed);
 		}
 		
+		public function getNoEnemyAtLevel():Number{
+			if (currLevel == 1){
+				return 30;
+			}
+			else if (currLevel == 2){
+				return 100;
+			}
+			else if (currLevel == 3){
+				return 120;
+			}		
+			return 30;
+		}
+		
+		
+		public function canSpawnBigEnemy():Boolean{
+			if (currLevel >= 2)
+				return true;
+			else
+				return false;
+		}
+		
+		public function canSpawnHatEnemy():Boolean{
+			if (currLevel >= 3)
+				return true;
+			else
+				return false;
+		}
+		
+		public function isFireRoomAvailable():Boolean{
+			return true;
+		}
+		
+		public function isPitRoomAvailable():Boolean{
+			if (currLevel >= 2)
+				return true;
+			else
+				return false;
+		}
+		
+		public function isSnakeRoomAvailable():Boolean{
+			return true;
+		}
+		
+		public function isSandRoomAvailable():Boolean{
+			if (currLevel >= 2)
+				return true;
+			else
+				return false;
+		}
 		//start pop up window
 		private function getStartPop():void{
 			startPop = new popUpWin();
