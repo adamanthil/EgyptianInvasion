@@ -59,7 +59,7 @@ package EgyptianInvasion
 				enemy = new BigEnemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas);
 			}
 			else {
-				enemy = new Enemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas);
+				enemy = new VanillaEnemy(nodeMan.getStartNode(), nodeMan.getEndNode() ,canvas);
 			}
 			enemies.push(enemy);
 			addChild(enemy);

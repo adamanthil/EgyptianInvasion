@@ -9,6 +9,8 @@ package EgyptianInvasion
 	
 	import org.osmf.events.TimeEvent;
 	
+	
+	/* Abstract class.  Should be extended not instantiated */
 	public class Enemy extends Sprite
 	{
 		private var canvas:Stage;
@@ -41,7 +43,7 @@ package EgyptianInvasion
 		protected var healthBar:DisplayBar;
 		protected var goldCarryingBar:DisplayBar;
 		
-		public function Enemy(startNode:Node, endNode:Node, canvas:Stage) {
+		public function Enemy(figure:EFigure, startNode:Node, endNode:Node, canvas:Stage) {
 			this.x = startNode.x;
 			this.y = startNode.y;
 			this.canvas = canvas;
@@ -66,7 +68,7 @@ package EgyptianInvasion
 			this.freezeMovement = false;
 			this.visitedNodes = new Array();	// Initialize visited node array
 			
-			figure = new EFigure(new EnemyFigure2(),-3,-3,canvas);
+			this.figure = figure;
 			figure.scaleX = 0.012;
 			figure.scaleY = 0.012;
 			figure.walk();
@@ -246,6 +248,7 @@ package EgyptianInvasion
 				}
 				else {
 					this.poisoned = false;
+					this.figure.poison(false);
 				}
 			}
 			
@@ -345,6 +348,7 @@ package EgyptianInvasion
 		
 		public function poison():Boolean {
 			this.poisoned = true;
+			this.figure.poison(true);
 			this.poisonTime = getTimer();
 			return true;	// By default enemies can be poisoned
 		}

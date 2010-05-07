@@ -6,7 +6,8 @@ package EgyptianInvasion
 	{
 		public function BigEnemy(startNode:Node, endNode:Node, canvas:Stage)
 		{
-			super(startNode, endNode, canvas);
+			var figure:EFigure = new EFigure(new EnemyFigure2(),-3,-3,canvas);
+			super(figure, startNode, endNode, canvas);
 			this.maxHealth = 200;
 			this.health = maxHealth;
 			this.speed = 2;

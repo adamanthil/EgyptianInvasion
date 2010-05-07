@@ -6,6 +6,7 @@ package EgyptianInvasion
 	{
 		private var figure:MovieClip;
 		private var canvas:Stage;
+		private var poisoned:Boolean;
 		
 		public function EFigure(asset:MovieClip, nodex:Number, nodey:Number, cvas:Stage)
 		{
@@ -17,21 +18,26 @@ package EgyptianInvasion
 			addChild(figure);
 		}
 		
+		public function poison(poison:Boolean):void {
+			poisoned = poison;
+		}
 		
 		public function walk():void {
-			figure.gotoAndStop("walkRight");
+			if(poisoned) {
+				figure.gotoAndStop("poisonedRight");
+			}
+			else {
+				figure.gotoAndStop("walkRight");
+			}
 		}
 		
 		public function walkLeft():void{
-			figure.gotoAndStop("walkLeft");
-		}
-		
-		public function poisonedLeft():void{
-			figure.gotoAndStop("poisonedLeft");
-		}
-		
-		public function poisonedRight():void{
-			figure.gotoAndStop("poisonedRight");
+			if(poisoned) {
+				figure.gotoAndStop("poisonedLeft");
+			}
+			else {
+				figure.gotoAndStop("walkLeft");
+			}
 		}
 		
 		public function stand():void {
