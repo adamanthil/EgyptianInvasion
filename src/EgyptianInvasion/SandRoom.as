@@ -93,9 +93,9 @@ package EgyptianInvasion
 			graphics.clear();
 			roomImage.alpha  = .5;
 			if(isValid)
-				this.blendMode = BlendMode.SUBTRACT;
-			else
 				this.blendMode = BlendMode.SCREEN;
+			else
+				this.blendMode = BlendMode.SUBTRACT;
 		}
 		protected override function TimeListener(e:TimerEvent):void	{
 			if(drowningCool >= 0)

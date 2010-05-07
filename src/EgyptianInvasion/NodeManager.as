@@ -98,12 +98,11 @@ package EgyptianInvasion
 		{
 			return enterNode;
 		}
-		
 		//returns the tomb-end node for the node web.
 		public function getEndNode():Node {
 			return this.tombNode;
 		}
-		//sets the toggledNode for the node manager. this 
+		// sets the toggledNode for the node manager. this 
 		// has the direct upshot of making this node the
 		// node that the player is in the process of placing.
 		public function addNode(toggle:Node):void
@@ -130,66 +129,6 @@ package EgyptianInvasion
 				cantSet = true;
 			}
 		}
-		
-		private function mouseDownListener (e:MouseEvent):void {
-			if(toggledNode == null || cantSet)
-			{
-				var count:Number;
-				count = 0;
-				while(count < allNodes.length)
-				{
-					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10 && toggledNode == null)
-					{
-						selectedNode.setSelected(false);
-						selectedNode = allNodes[count];
-						selectedNode.setSelected(true);
-					}
-					count++;
-				}
-				cantSet = true;
-			}
-			else
-			{
-				var potentialNode:Node;
-				count = 0;
-				while(count < allNodes.length)
-				{
-					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
-						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).getSize()+5)
-						potentialNode = allNodes[count];
-					count++;
-				}
-				if(!toggledNode.connectable())
-					potentialNode = null;
-				if(potentialNode == null)
-				{
-					toggledNode.setPlaced(true);
-					allNodes.push(toggledNode);
-					sup.getLevelManager().deductGold(toggledNode.getPathCost()*(Math.sqrt(Math.pow(toggledNode.x - selectedNode.x,2) + Math.pow(toggledNode.y - selectedNode.y,2))) + toggledNode.getNodeCost())
-					toggledNode.onPlaced(this);
-					sup.getUI().setPathExists(enterNode.pathExists(tombNode));
-				}
-				else if(!toggledNode.getTrigPlace())
-				{
-					potentialNode.addSibling(selectedNode);
-					selectedNode.addSibling(potentialNode);
-					this.removeChild(toggledNode);
-					selectedNode.removeSibling(toggledNode);
-					sup.getLevelManager().deductGold(toggledNode.getPathCost()*(Math.sqrt(Math.pow(potentialNode.x - selectedNode.x,2) + Math.pow(potentialNode.y - selectedNode.y,2))))
-					sup.getUI().setPathExists(enterNode.pathExists(tombNode));
-				}
-				else
-				{
-					selectedNode.setTrigger(potentialNode);
-					this.removeChild(toggledNode);
-					selectedNode.removeSibling(toggledNode);
-				}
-				toggledNode = null;
-				//sup.getUI().getPlaceNodeButton().setDown(false);
-			}
-			
-		}
 		public function setSelected(select:Node):void
 		{
 			this.selectedNode = select;
@@ -197,21 +136,6 @@ package EgyptianInvasion
 		public function getSelected():Node
 		{
 			return selectedNode;
-		}
-		private function keyListener(e:KeyboardEvent):void
-		{
-			if((e.keyCode == Keyboard.CONTROL || e.keyCode == Keyboard.ESCAPE)
-				&& toggledNode != null)
-			{
-				this.removeChild(toggledNode);
-				selectedNode.removeSibling(toggledNode);
-				toggledNode = null;
-				sup.getPlaceNodeButton().setDown(false);
-			}
-		}
-		private function mouseUpListener (e:MouseEvent):void {
-			cantSet = false;
-			mouseMovListener(e);
 		}
 		public function addNodeDirect(nod:Node)
 		{
@@ -387,6 +311,80 @@ package EgyptianInvasion
 			}
 			return ret;
 		}
+		private function keyListener(e:KeyboardEvent):void
+		{
+			if((e.keyCode == Keyboard.CONTROL || e.keyCode == Keyboard.ESCAPE)
+				&& toggledNode != null)
+			{
+				this.removeChild(toggledNode);
+				selectedNode.removeSibling(toggledNode);
+				toggledNode = null;
+				sup.getPlaceNodeButton().setDown(false);
+			}
+		}
+		private function mouseDownListener (e:MouseEvent):void {
+			if(toggledNode == null || cantSet)
+			{
+				var count:Number;
+				count = 0;
+				while(count < allNodes.length)
+				{
+					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < 10 && toggledNode == null)
+					{
+						selectedNode.setSelected(false);
+						selectedNode = allNodes[count];
+						selectedNode.setSelected(true);
+					}
+					count++;
+				}
+				cantSet = true;
+			}
+			else
+			{
+				var potentialNode:Node;
+				count = 0;
+				while(count < allNodes.length)
+				{
+					if(Math.sqrt(Math.pow((e.stageX -(allNodes[count] as Node).x),2) +
+						Math.pow((e.stageY -(allNodes[count] as Node).y),2)) < (allNodes[count] as Node).getSize()+5)
+						potentialNode = allNodes[count];
+					count++;
+				}
+				if(!toggledNode.connectable())
+					potentialNode = null;
+				if(potentialNode == null)
+				{
+					toggledNode.setPlaced(true);
+					allNodes.push(toggledNode);
+					sup.getLevelManager().deductGold(toggledNode.getCostToPlace(selectedNode.x, selectedNode.y));
+					toggledNode.onPlaced(this);
+					sup.getUI().setPathExists(enterNode.pathExists(tombNode));
+				}
+				else if(!toggledNode.getTrigPlace())
+				{
+					potentialNode.addSibling(selectedNode);
+					selectedNode.addSibling(potentialNode);
+					this.removeChild(toggledNode);
+					selectedNode.removeSibling(toggledNode);
+					sup.getLevelManager().deductGold(toggledNode.getPathCost()*(Math.sqrt(Math.pow(potentialNode.x - selectedNode.x,2) + Math.pow(potentialNode.y - selectedNode.y,2))))
+					sup.getUI().setPathExists(enterNode.pathExists(tombNode));
+				}
+				else
+				{
+					selectedNode.setTrigger(potentialNode);
+					this.removeChild(toggledNode);
+					selectedNode.removeSibling(toggledNode);
+				}
+				toggledNode = null;
+				sup.getLevelManager().displayCurrentPlacementCost(0);
+			}
+			
+		}
+		private function mouseUpListener (e:MouseEvent):void {
+			cantSet = false;
+			mouseMovListener(e);
+		}
 		private function mouseMovListener (e:MouseEvent):void {
 			if(toggledNode != null)
 			{
@@ -489,6 +487,7 @@ package EgyptianInvasion
 				inside = inside && Pyram.hitTestPoint(toggledNode.x - 25,toggledNode.y,true);
 				var hasTheCash:Boolean = true;
 				
+				sup.getLevelManager().displayCurrentPlacementCost(toggledNode.getCostToPlace(selectedNode.x, selectedNode.y));
 				
 				toggledNode.setValid(inside && hasTheCash &&(!(tooclose||angleclose||intersected) || connect && potentialNode != null));
 				cantSet = !inside||!hasTheCash||(tooclose||angleclose||intersected) && !(connect && potentialNode != null);

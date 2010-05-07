@@ -66,6 +66,10 @@ package EgyptianInvasion
 		public function getNodeCost():Number{
 			return value;
 		}
+		public function getCostToPlace(fromX:Number, fromY:Number):Number{
+			return ((pathVal*(Math.sqrt(Math.pow(x - fromX, 2) + Math.pow(y - fromY,2)))) + value);
+		}
+		
 		public function connectable():Boolean {
 			return isConnectable;
 		}
@@ -247,8 +251,7 @@ package EgyptianInvasion
 				graphics.moveTo(0,0);
 			}
 			blendMode = BlendMode.NORMAL;
-		}
-		
+		}	
 		protected function displaySolid():void {
 			graphics.clear();
 			
@@ -277,9 +280,7 @@ package EgyptianInvasion
 				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
 				graphics.moveTo(0,0);
 			}
-			
-		}
-		
+		}		
 		public function setPlaceTrig(trig:Boolean):void {
 			this.isTrigPlace = trig;
 		}

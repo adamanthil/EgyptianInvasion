@@ -136,7 +136,8 @@ package EgyptianInvasion
 		// Shouldn't need mutator methods for any reason I can think of
 		
 		public function popoutChoicesHandler(e:MouseEvent):void {
-			setSubMenuVisibility(true);
+			if(main.getBuildPhase())
+				setSubMenuVisibility(true);
 		}
 		public function hideChoicesHandler(e:MouseEvent):void {
 			setSubMenuVisibility(false);
@@ -175,25 +176,28 @@ package EgyptianInvasion
 		}
 		
 		public function keysHandler(e:KeyboardEvent):void {
-			if(e.charCode == 97) // A for Add Connecting Node
+			if(main.getBuildPhase())
 			{
-				main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
-			}
-			else if(e.charCode == 101) // E is for QuickSand nodes
-			{
-				main.getNodeManager().addNode(new SandRoom(0, 0, canvas, main.getNodeManager()));
-			}
-			else if(e.charCode == 113) // Q is for Pit nodes
-			{
-				main.getNodeManager().addNode(new PitRoom(0, 0, canvas, main.getNodeManager()));
-			}
-			else if(e.charCode == 114) // R is for Fire nodes
-			{
-				main.getNodeManager().addNode(new FireRoom(0, 0, canvas, main.getNodeManager()));
-			}
-			else if(e.charCode == 119) // W is for Snake nodes
-			{
-				main.getNodeManager().addNode(new SnakeRoom(0, 0, canvas, main.getNodeManager()));
+				if(e.charCode == 97) // A for Add Connecting Node
+				{
+					main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
+				}
+				else if(e.charCode == 101) // E is for QuickSand nodes
+				{
+					main.getNodeManager().addNode(new SandRoom(0, 0, canvas, main.getNodeManager()));
+				}
+				else if(e.charCode == 113) // Q is for Pit nodes
+				{
+					main.getNodeManager().addNode(new PitRoom(0, 0, canvas, main.getNodeManager()));
+				}
+				else if(e.charCode == 114) // R is for Fire nodes
+				{
+					main.getNodeManager().addNode(new FireRoom(0, 0, canvas, main.getNodeManager()));
+				}
+				else if(e.charCode == 119) // W is for Snake nodes
+				{
+					main.getNodeManager().addNode(new SnakeRoom(0, 0, canvas, main.getNodeManager()));
+				}
 			}
 		}
 		

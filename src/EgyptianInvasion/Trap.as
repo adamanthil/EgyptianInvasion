@@ -81,9 +81,9 @@ package EgyptianInvasion
 				graphics.clear();
 				roomImage.alpha  = .5;
 				if(isValid)
-					this.blendMode = BlendMode.SUBTRACT;
-				else
 					this.blendMode = BlendMode.SCREEN;
+				else
+					this.blendMode = BlendMode.SUBTRACT;
 			}
 			public override function drawToPointX():Number
 			{
