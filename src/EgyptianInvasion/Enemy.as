@@ -1,14 +1,11 @@
 // An enemy trying to find the pharaoh's treasure
 package EgyptianInvasion
-{
-	import assets.enemyWithHat;
-	
+{	
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.utils.*;
 	
 	import org.osmf.events.TimeEvent;
-	
 	
 	/* Abstract class.  Should be extended not instantiated */
 	public class Enemy extends Sprite

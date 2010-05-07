@@ -22,8 +22,10 @@ package EgyptianInvasion
 		private var interest:Number;
 		private var loader:URLLoader;
 		private var s_x:String;
-		private var goldTextField:TextField;
-		private var enemyTextField:TextField;
+		private var totalGoldText:TextField;
+		private var enemyOnBoardText:TextField;
+		private var currentGoldCostText:TextField;
+		private var enemiesRemainingText:TextField;
 		private var format:TextFormat;
 		private var nodeLimit:Number;
 		private var startPop:popUpWin;
@@ -39,40 +41,48 @@ package EgyptianInvasion
 		public const quickSoundCost:Number = 80;
 		
 		public function LevelManager(m:Main, em:EnemyManager, nm:NodeManager, can:Stage,ui:UI)
-		{
-			/*nm = new NodeManager(m);
-			m.addChild(nm);
-			
-			ui = new UI(50,0,can,m);
-			m.addChild(ui);
-			
-			
-			em = new EnemyManager(m,nm);*/
-			
-			format = new TextFormat();
-			format.color = 0x112222; 
-			format.size = 10; 
-			
+		{	
+			// Set all the level manager's references to the other managers
 			this.main = m;
 			this.enMan = em;
 			this.noMan = nm;
 			this.ui = ui;
 			this.canvas =can;
-			//this.nodeLimit = 30;
+						
 			currLevel = 1;
 			currGold = 100;
 			prevGold = currGold;
 			interest = 0.3;
-			setStartEndNode();
-			goldTextField = new TextField();
-			enemyTextField = new TextField();
-			displayGold(currGold);
-			displayEnemy(0);
-			main.addChild(goldTextField);
-			main.addChild(enemyTextField);
-			getStartPop();
-			//main.remove
 			
+			// Sets up start and end nodes for the level, with a position
+			setStartEndNode();
+			
+			// Defines a text format to use for all our fields
+			format = new TextFormat();
+			format.color = 0x112222; 
+			format.size = 10; 
+			
+			// Instantiate and initialize all our text displays
+			totalGoldText = new TextField();
+			enemyOnBoardText = new TextField();
+			currentGoldCostText = new TextField();
+			enemiesRemainingText = new TextField();
+			
+			displayGold(currGold);
+			displayEnemiesOnBoard(0);
+			displayCurrentPlacementCost(0);
+			displayEnemiesToCome(main.getEnemyManager().getNumEnemiesOnLevel());
+			
+			// Adds the text to the main display
+			main.addChild(totalGoldText);
+			main.addChild(enemyOnBoardText);
+			main.addChild(currentGoldCostText);
+			main.addChild(enemiesRemainingText);
+			
+			// Instantiates the starting splash screen
+			getStartPop();
+			
+			// Instantiates the buttons used for playing again or moving to the next level
 			againButton = new Button(new assets.ToggleButton(), 0,0, "TRY AGAIN!",canvas, main);
 			againButton.addEventListener(MouseEvent.MOUSE_DOWN, againPressed);
 			
@@ -80,7 +90,8 @@ package EgyptianInvasion
 			nextButton.addEventListener(MouseEvent.MOUSE_DOWN, nextPressed);
 		}
 		
-		private function getStartPop(){//start pop up window
+		//start pop up window
+		private function getStartPop():void{
 			startPop = new popUpWin();
 			startPop.x = 250;
 			startPop.y = 200;
@@ -93,7 +104,7 @@ package EgyptianInvasion
 			startTitle = new TextField();
 			startTitle.autoSize=TextFieldAutoSize.LEFT;
 			startTitle.text = "WELCOME TO EGYPTIAN INVASION!!!";
-			var titleFormat = new TextFormat();
+			var titleFormat:TextFormat = new TextFormat();
 			titleFormat.font = "Tw Cen MT";
 			titleFormat.size = 20;
 			startTitle.setTextFormat(titleFormat);
@@ -102,12 +113,11 @@ package EgyptianInvasion
 			startPop.addChild(startTitle);
 		}
 		
-		private function startPressed(e:MouseEvent){
+		// Minimizes the start splash and reveals the game board
+		private function startPressed(e:MouseEvent):void{
 			startPop.gotoAndStop("minimize");
 			startPop.removeChild(startButton);
 			startPop.removeChild(startTitle);
-			
-			//main.removeChild(startPop);
 		}
 		
 		public function setStartEndNode():void{
@@ -162,48 +172,67 @@ package EgyptianInvasion
 			this.main.setUI(this.ui);
 			
 			this.main.removeChild(enMan);
-			enMan = new EnemyManager(this.main,noMan);
+			enMan = new EnemyManager(this.main);
 			this.main.addChild(enMan);
 			this.main.setEnemyManager(enMan);
 			
 			this.main.setChildIndex(this.startPop,this.main.numChildren -1);
-			displayEnemy(0);
+			displayEnemiesOnBoard(0);
 			displayGold(currGold);
 			//levelMan = new LevelManager(this,enemyMan,nodeMan,stage,ui);
 		}
 		
+		// Function to initialize and edit the value of the total player gold
 		public function displayGold(gold:Number):void{
-			//myTextField_txt.wordWrap=true;
-			goldTextField.autoSize=TextFieldAutoSize.LEFT;
-			goldTextField.text = "GOLD LEFT: "+ gold;
-			goldTextField.setTextFormat(format);
-			//myTextField_txt.text.
-			goldTextField.x = 450;
-			goldTextField.y = 10;
-			goldTextField.selectable = false;			
+			totalGoldText.autoSize=TextFieldAutoSize.LEFT;
+			totalGoldText.text = "GOLD LEFT: "+ gold;
+			totalGoldText.setTextFormat(format);
+			totalGoldText.x = 420;
+			totalGoldText.y = 10;
+			totalGoldText.selectable = false;			
 		}
 		
-		public function displayEnemy(amtEnemy:Number):void{
-			//myTextField_txt.wordWrap=true;
-			enemyTextField.autoSize=TextFieldAutoSize.LEFT;
-			enemyTextField.text = "ENEMIES LEFT: "+ amtEnemy;
-			enemyTextField.setTextFormat(format);
-			enemyTextField.x = 350;
-			enemyTextField.y = 10;
-			enemyTextField.selectable = false;	
+		// Function to initialize and edit the value of the enemies currently in play
+		public function displayEnemiesOnBoard(amtEnemy:Number):void{
+			enemyOnBoardText.autoSize=TextFieldAutoSize.LEFT;
+			enemyOnBoardText.text = "ENEMIES ON BOARD: "+ amtEnemy;
+			enemyOnBoardText.setTextFormat(format);
+			enemyOnBoardText.x = 300;
+			enemyOnBoardText.y = 10;
+			enemyOnBoardText.selectable = false;	
 			if (main.getBuildPhase()==false && amtEnemy == 0){
 				//popWinWin();
 			}
-			
 		}
 		
+		// Auxillary method to simply deduct from the displayed amount of gold
 		public function deductGold(amount:Number):void{
 			currGold -=amount;
-			goldTextField.text = "GOLD LEFT: " + currGold.toFixed(2);
-			goldTextField.setTextFormat(format);
+			totalGoldText.text = "GOLD LEFT: " + currGold.toFixed(2);
+			totalGoldText.setTextFormat(format);
 			if (main.getBuildPhase()==false && currGold <= 0){
 				popLoseWin();
 			}
+		}
+		// Function to initialize and edit the value of cost of placing the currently selected node, taking path cost into consideration
+		public function displayCurrentPlacementCost(amount:Number):void{
+			/** TODO to be ediited */
+			currentGoldCostText.autoSize=TextFieldAutoSize.LEFT;
+			currentGoldCostText.text = "CURRENT PLACEMENT COST: "+ amount.toFixed(2);
+			currentGoldCostText.setTextFormat(format);
+			currentGoldCostText.x = 350;
+			currentGoldCostText.y = 30;
+			currentGoldCostText.selectable = false;
+		}
+		// Function to initialize and edit the value of Enemies still to come into play
+		public function displayEnemiesToCome(amount:Number):void{
+			enemiesRemainingText.autoSize=TextFieldAutoSize.LEFT;
+			enemiesRemainingText.text = "ENEMIES YET TO COME: "+ amount;
+			enemiesRemainingText.setTextFormat(format);
+			//myTextField_txt.text.
+			enemiesRemainingText.x = 350;
+			enemiesRemainingText.y = 50;
+			enemiesRemainingText.selectable = false;
 		}
 		
 		private function againPressed(e:MouseEvent):void{

@@ -45,7 +45,7 @@ package EgyptianInvasion
 			this.addChild(ui);
 			
 			
-			enemyMan = new EnemyManager(this,nodeMan);
+			enemyMan = new EnemyManager(this);
 			addChild(enemyMan);
 			levelMan = new LevelManager(this,enemyMan,nodeMan,stage,ui);
 			

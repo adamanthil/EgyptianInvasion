@@ -48,6 +48,7 @@
 			loader.load(new URLRequest("../assets/img/uiBG.jpg"));*/
 			
 			removeNodeBtn = new Button(new assets.ToggleButton(), 10,50, "Delete Node (D)",canvas, main);
+			removeNodeBtn.addEventListener(MouseEvent.MOUSE_DOWN, removeNodeMouseHandler);
 			addChild(removeNodeBtn); // TODO WB For some reason addChildAt makes things crash here
 			
 			beginInvasionBtn = new Button(new assets.ToggleButton(), 10, 150, "Begin Invasion! (B)", canvas, main);
@@ -71,6 +72,10 @@
 			}	
 		}
 		
+		public function removeNodeMouseHandler(e:MouseEvent):void {
+			main.getNodeManager().removeNode();
+		}
+		
 		public function keysHandler(e:KeyboardEvent):void {
 			if(e.charCode == 98) // B for BeginInvasion
 			{	
@@ -91,7 +96,7 @@
 		public function setPathExists(b:Boolean):void
 		{
 			pathExists = b;
-			if (pathExists)
+			if (pathExists && main.getBuildPhase())
 				beginInvasionBtn.visible = true;
 			else
 				beginInvasionBtn.visible = false;
