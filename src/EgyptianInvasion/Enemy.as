@@ -23,6 +23,7 @@ package EgyptianInvasion
 		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
 		private var freezeMovement:Boolean; // Whether they should stop moving (because they are drowning)
 		private var delayTime:Number;	// Time in milliseconds that movement should stop
+		private var poisonTime:Number;	// The time when an enemy was last poisoned
 		
 		// Enemy type/instance variables
 		protected var health:Number;
@@ -31,7 +32,8 @@ package EgyptianInvasion
 		protected var goldCapacity:Number;
 		protected var speed:Number;	// How fast we move		
 		protected var poisoned:Boolean;
-		protected var poisonRate:Number;	// Amt of health to loose at each 
+		protected var secondsToDieOfPoison:Number;
+		protected var poisonTimeout:Number;
 		protected var pitSlots:int;	// Number of pit slots this enemy takes up
 		
 		protected var figure:EFigure;
@@ -55,8 +57,8 @@ package EgyptianInvasion
 			this.goldAmt = 0;
 			this.goldCapacity = 10;
 			this.speed = 5;
-			var secondsToDieOfPoison:Number = 10;
-			this.poisonRate = this.health / (1000 * secondsToDieOfPoison);
+			this.secondsToDieOfPoison = 30;
+			this.poisonTimeout = 10;	// Enemies stop being poisoned after this amt of time
 			
 			this.delayTime = 0;
 			this.lastIntervalTime = getTimer();
@@ -116,7 +118,6 @@ package EgyptianInvasion
 			this.originNode = reachedNode;
 			
 			this.targetNode = potentialTarget;
-			this.moving = true;
 		}
 		
 		// Heuristically decides the next node to visit
@@ -159,8 +160,7 @@ package EgyptianInvasion
 			// Set most recently visited node to the one we arrived at
 			this.originNode = this.targetNode;
 			
-			// Set target and start moving again
-			this.moving = true;
+			// Set target
 			// First try unvisited, then not last, then best overall
 			if(bestUnvisitedNode != null) {
 				this.targetNode = bestUnvisitedNode
@@ -190,6 +190,10 @@ package EgyptianInvasion
 					makeHeuristicDecision();
 				}
 			}
+			
+			// Start moving after we made the decision
+			this.moving = true;
+			figure.walk();
 		}
 		
 		// Moves a small amount
@@ -210,16 +214,17 @@ package EgyptianInvasion
 				if(distTraveled >= distTotal) {	// reached the destination node
 					this.x = targetNode.x;
 					this.y = targetNode.y;
+					figure.stand();	// Standing animation
 					this.moving = false;
 					
 					// If we've reached the destination, set target to null
 					if(targetNode == goalNode) {
-						figure.stand();
 						originNode = targetNode;	// We are now at the target
 						targetNode = null;
 					}
 				}
 				else {
+					
 					var deltaTime:Number = getTimer() - this.lastIntervalTime;
 					var multiplier:Number = deltaTime / (1000.0/12);	// 12fps is "target"
 					
@@ -234,8 +239,14 @@ package EgyptianInvasion
 			
 			// Deal poison damage
 			if(poisoned) {
-				this.health -= .17; //-= poisonRate;
-				healthBar.update(health/maxHealth);
+				var poisonedElapsed:Number = getTimer() - this.poisonTime;
+				if(poisonedElapsed < this.poisonTimeout * 1000) {
+					this.health -=  this.maxHealth * ((getTimer() - this.lastIntervalTime) / (this.secondsToDieOfPoison * 1000));
+					healthBar.update(health/maxHealth);
+				}
+				else {
+					this.poisoned = false;
+				}
 			}
 			
 			// Pass ourselves to processEnemy on the 2 nodes we are between so we take damage, etc
@@ -292,8 +303,6 @@ package EgyptianInvasion
 				this.goalNode = this.endNode;
 			}
 			
-			// We need to make a new decision if we changed our goal
-			//this.moving = false;
 			goldCarryingBar.update(this.goldAmt/goldCapacity);			
 			return goldLeft;
 		}
@@ -335,8 +344,8 @@ package EgyptianInvasion
 		}
 		
 		public function poison():Boolean {
-			//if(Math.random() > .68)
-				this.poisoned = true;
+			this.poisoned = true;
+			this.poisonTime = getTimer();
 			return true;	// By default enemies can be poisoned
 		}
 		
