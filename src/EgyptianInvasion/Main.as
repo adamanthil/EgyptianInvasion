@@ -44,6 +44,7 @@ package EgyptianInvasion
 			ui = new UI(50,0,stage,this);
 			this.addChild(ui);
 			
+			ui.getPopout().getFireTrapBtn().visible = false;
 			
 			enemyMan = new EnemyManager(this);
 			addChild(enemyMan);

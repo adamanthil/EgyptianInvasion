@@ -29,6 +29,7 @@ package EgyptianInvasion
 		private var fireDesc:fireExp;
 		private var pitDesc:pitExp;
 		private var quickDesc:sandExp;
+		private var snakeDesc:snakeExp;
 		
 		public function PopoutMenu (startX:Number, startY:Number, canvasRef:Stage, mainRef:Main) {
 			
@@ -55,7 +56,7 @@ package EgyptianInvasion
 			fireDesc = new fireExp();
 			fireDesc.scaleX = 0.4;
 			fireDesc.scaleY = 0.4;
-			fireDesc.x = 250;
+			fireDesc.x = 270;
 			fireDesc.y = 120;
 			fireDesc.visible = false;
 			addChild(fireDesc);
@@ -63,7 +64,7 @@ package EgyptianInvasion
 			pitDesc = new pitExp();
 			pitDesc.scaleX = 0.4;
 			pitDesc.scaleY = 0.4;
-			pitDesc.x = 250;
+			pitDesc.x = 270;
 			pitDesc.y = 120;
 			pitDesc.visible = false;
 			addChild(pitDesc);
@@ -76,32 +77,38 @@ package EgyptianInvasion
 			quickDesc.visible = false;
 			addChild(quickDesc);
 			
-			// Add the other buttons
-			pitTrapBtn = new Button(new assets.ToggleButton(), 100,30, "Pit Room (Q)", canvas, main);
-			pitTrapBtn.visible = false;
-			pitTrapBtn.setDescription(pitDesc);
-			addChild(pitTrapBtn);
+			snakeDesc = new snakeExp();
+			snakeDesc.scaleX = 0.4;
+			snakeDesc.scaleY = 0.4;
+			snakeDesc.x = 270;
+			snakeDesc.y = 120;
+			snakeDesc.visible = false;
+			addChild(snakeDesc);
 			
-			snakeTrapBtn = new Button(new assets.ToggleButton(), 100,60, "Snake Room (W)", canvas, main);
+			// Add the other buttons
+			connectNodeBtn = new Button(new assets.ToggleButton(), 100, 30, "Connection Node (A)", canvas, main);
+			connectNodeBtn.visible = false;
+			addChild(connectNodeBtn);
+			
+			snakeTrapBtn = new Button(new assets.ToggleButton(), 100,60, "Snake Room (S)", canvas, main);
 			snakeTrapBtn.visible = false;
-			snakeTrapBtn.setDescription(fireDesc); // TODO WB will change this to snake desc when that's done
+			snakeTrapBtn.setDescription(snakeDesc); 
 			addChild(snakeTrapBtn);
 			
-			quickTrapBtn = new Button(new assets.ToggleButton(), 100,90, "Quicksand Room (E)", canvas, main);
-			quickTrapBtn.visible = false;
-			quickTrapBtn.setDescription(quickDesc);
-			addChild(quickTrapBtn);
-			
-			fireTrapBtn = new Button(new assets.ToggleButton(), 100,120, "Fire Room (R)", canvas, main);
+			fireTrapBtn = new Button(new assets.ToggleButton(), 100,90, "Fire Room (F)", canvas, main);
 			fireTrapBtn.visible = false;
 			fireTrapBtn.setDescription(fireDesc);
 			addChild(fireTrapBtn);
 			
-			connectNodeBtn = new Button(new assets.ToggleButton(), 100, 150, "Connection Node (A)", canvas, main);
-			connectNodeBtn.visible = false;
-			addChild(connectNodeBtn);
+			pitTrapBtn = new Button(new assets.ToggleButton(), 100,120, "Pit Room (P)", canvas, main);
+			pitTrapBtn.visible = false;
+			pitTrapBtn.setDescription(pitDesc);
+			addChild(pitTrapBtn);
 			
-
+			quickTrapBtn = new Button(new assets.ToggleButton(), 100,150, "Quicksand Room (Q)", canvas, main);
+			quickTrapBtn.visible = false;
+			quickTrapBtn.setDescription(quickDesc);
+			addChild(quickTrapBtn);		
 			
 			addEventListener(MouseEvent.MOUSE_OVER, popoutChoicesHandler);
 			addEventListener(MouseEvent.MOUSE_OUT, hideChoicesHandler);
@@ -182,19 +189,19 @@ package EgyptianInvasion
 				{
 					main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
 				}
-				else if(e.charCode == 101) // E is for QuickSand nodes
+				else if(e.charCode == 113) // Q is for QuickSand nodes
 				{
 					main.getNodeManager().addNode(new SandRoom(0, 0, canvas, main.getNodeManager()));
 				}
-				else if(e.charCode == 113) // Q is for Pit nodes
+				else if(e.charCode == 112) // P is for Pit nodes
 				{
 					main.getNodeManager().addNode(new PitRoom(0, 0, canvas, main.getNodeManager()));
 				}
-				else if(e.charCode == 114) // R is for Fire nodes
+				else if(e.charCode == 102) // F is for Fire nodes
 				{
 					main.getNodeManager().addNode(new FireRoom(0, 0, canvas, main.getNodeManager()));
 				}
-				else if(e.charCode == 119) // W is for Snake nodes
+				else if(e.charCode == 115) // S is for Snake nodes
 				{
 					main.getNodeManager().addNode(new SnakeRoom(0, 0, canvas, main.getNodeManager()));
 				}
@@ -207,10 +214,14 @@ package EgyptianInvasion
 		public function setSubMenuVisibility(b:Boolean):void
 		{
 			photo.visible = b;
-			pitTrapBtn.visible = b;
-			snakeTrapBtn.visible = b;
-			quickTrapBtn.visible = b;
-			fireTrapBtn.visible = b;
+			if(main.getLevelManager().isPitRoomAvailable())
+				pitTrapBtn.visible = b;
+			if(main.getLevelManager().isSnakeRoomAvailable())
+				snakeTrapBtn.visible = b;
+			if(main.getLevelManager().isSandRoomAvailable())
+				quickTrapBtn.visible = b;
+			if(main.getLevelManager().isFireRoomAvailable())
+				fireTrapBtn.visible = b;
 			connectNodeBtn.visible = b;
 		}
 	}
