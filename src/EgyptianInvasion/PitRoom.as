@@ -86,7 +86,6 @@
 					otherSide.addSibling(this);
 					inbetween.setPlaced(true);
 					otherSide.setPlaced(true);
-					(parent as NodeManager).setSelected(otherSide);
 				}
 				else
 				{
@@ -105,7 +104,6 @@
 					otherSide.addSibling(this);
 					inbetween.setPlaced(true);
 					otherSide.setPlaced(true);
-					(parent as NodeManager).setSelected(otherSide);
 				}
 				var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"pit button",canvas,sup.parent as Main);
 				activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
@@ -121,6 +119,10 @@
 				deadguyBar.scaleY = .3;
 				deadguyBar.scaleX = .5;
 				deadguyBar.update(0);
+				
+				(parent as NodeManager).getSelected().setSelected(false);
+				otherSide.setSelected(true);
+				(parent as NodeManager).setSelected(otherSide);
 				
 			}
 			public override function processEnemy(guy:Enemy):Boolean

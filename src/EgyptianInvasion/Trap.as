@@ -75,6 +75,10 @@ package EgyptianInvasion
 					otherSide.setPlaced(true);
 				}
 				roomImage.x = -15;
+				
+				(parent as NodeManager).getSelected().setSelected(false);
+				otherSide.setSelected(true);
+				(parent as NodeManager).setSelected(otherSide);
 			}
 			protected override function displayFaded():void
 			{

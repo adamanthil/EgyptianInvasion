@@ -25,7 +25,7 @@ package EgyptianInvasion
 			currentInside = new Array();
 			super(nodex,nodey,canvas, refup);
 			roomImage  = new RoomImage();
-			size = 13;
+			size = 7;
 			roomImage.scaleX = 0.6;
 			roomImage.scaleY = 0.6;
 			roomImage.x = -15;
@@ -56,8 +56,6 @@ package EgyptianInvasion
 				otherSide.addSibling(this);
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
-				
-				(parent as NodeManager).setSelected(otherSide);
 			}
 			else
 			{
@@ -76,10 +74,12 @@ package EgyptianInvasion
 				otherSide.addSibling(this);
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
-				
-				(parent as NodeManager).setSelected(otherSide);
 			}
 			roomImage.x = -15;
+			
+			(parent as NodeManager).getSelected().setSelected(false);
+			otherSide.setSelected(true);
+			(parent as NodeManager).setSelected(otherSide);
 			
 			this.addChild(drowningBar);
 			drowningBar.x = -15;
