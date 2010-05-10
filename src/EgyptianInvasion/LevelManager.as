@@ -178,7 +178,7 @@ package EgyptianInvasion
 		}
 		
 		private function calculateGold(gold:Number):void{
-			currGold = gold*(1+interest);
+			currGold = gold*(1.0+interest);
 		}
 		
 		public function nextLevel(gold:Number):void{
