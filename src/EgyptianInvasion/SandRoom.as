@@ -209,7 +209,7 @@ package EgyptianInvasion
 			graphics.clear();
 			roomImage.alpha  = .5;
 			if(isValid)
-				this.blendMode = BlendMode.SCREEN;
+				this.blendMode = BlendMode.ADD;
 			else
 				this.blendMode = BlendMode.SUBTRACT;
 		}
@@ -271,7 +271,7 @@ package EgyptianInvasion
 						if(currentDrowning[j] == null)
 							full = false;
 					}
-					if(full)
+					if(full || currentInside.length >= totalDrown+1)
 					{
 						currentDrowning[i].freeze(false,this);
 						currentDrowning[i] = null;
