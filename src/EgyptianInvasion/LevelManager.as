@@ -23,6 +23,7 @@ package EgyptianInvasion
 		private var interest:Number;
 		private var loader:URLLoader;
 		private var s_x:String;
+		private var levelText:TextField;
 		private var totalGoldText:TextField;
 		private var enemyOnBoardText:TextField;
 		private var currentGoldCostText:TextField;
@@ -65,17 +66,20 @@ package EgyptianInvasion
 			format.size = 10; 
 			
 			// Instantiate and initialize all our text displays
+			levelText = new TextField();
 			totalGoldText = new TextField();
 			enemyOnBoardText = new TextField();
 			currentGoldCostText = new TextField();
 			enemiesRemainingText = new TextField();
 			
+			displayLevel();
 			displayGold(currGold);
 			displayEnemiesOnBoard(0);
 			displayCurrentPlacementCost(0);
 			displayEnemiesToCome(main.getEnemyManager().getNumEnemiesOnLevel());
 			
 			// Adds the text to the main display
+			main.addChild(levelText);
 			main.addChild(totalGoldText);
 			main.addChild(enemyOnBoardText);
 			main.addChild(currentGoldCostText);
@@ -94,21 +98,7 @@ package EgyptianInvasion
 			// TODO COMMENT BACK IN FOR FINAL BUILD
 			// Play background music
 			Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
-		}
-		
-		public function getNoEnemyAtLevel():Number{
-			if (currLevel == 1){
-				return 30;
-			}
-			else if (currLevel == 2){
-				return 50;
-			}
-			else if (currLevel == 3){
-				return 70;
-			}		
-			return 30;
-		}
-		
+		}		
 		
 		public function canSpawnBigEnemy():Boolean{
 			if (currLevel >= 2)
@@ -182,17 +172,12 @@ package EgyptianInvasion
 			else if (currLevel == 2|| currLevel ==3){
 				noMan.setEndNodePosition(200,300);
 			}
-			else if (currLevel == 4){
+			else { // if (currLevel >= 4) 
 				noMan.setEndNodePosition(250,100);
 			}
 			
 		}
 		
-		private function nodeLoading (e:Event):void {
-			//content_1.text = loader.data.var_1
-			//content_2.text = loader.data.var_2
-			//goldTextField.text = "data?"+loader.data;
-		}
 		private function calculateGold(gold:Number):void{
 			currGold = gold*(1+interest);
 		}
@@ -202,11 +187,10 @@ package EgyptianInvasion
 			calculateGold(gold);
 			reInitialize();//initialize nodemanger and enemymanager
 			setStartEndNode();
-			displayGold(currGold);
 		}
 		
-		private function setNumEnemiesAtLevel(){
-			if (currLevel == 1){
+		private function setNumEnemiesAtLevel():void {
+			f (currLevel == 1){
 				this.enMan.setNumEnemiesOnLevel(30);
 			}
 			else if (currLevel == 2){
@@ -218,11 +202,15 @@ package EgyptianInvasion
 			else if (currLevel == 4){
 				this.enMan.setNumEnemiesOnLevel(100);
 			}
+			else {
+				// Exponentially increase enemies after level 4
+				this.enMan.setNumEnemiesOnLevel(10 + 2 ^ currLevel);
+			}
 		}
 		
 		private function reInitialize():void{
 			this.setNumEnemiesAtLevel();
-			this.enMan.reInitializeTimer();//set the right number and re-initialize everything
+			this.enMan.reInitialize();//set the right number and re-initialize everything
 			
 			this.main.setBuildPhase(true);
 			this.main.removeChild(noMan);
@@ -232,24 +220,26 @@ package EgyptianInvasion
 			var uiIndex:Number = this.main.getChildIndex(ui);
 			this.main.setChildIndex(noMan,uiIndex - 1);//make sure that ui is on top of node manager
 			this.setStartEndNode();//reset start end nodes
-			/*this.main.removeChild(this.ui);
-			this.ui = new UI(50,0,this.main.stage,this.main);
-			this.main.addChild(ui);
-			this.main.setUI(this.ui);
-			
-			this.main.removeChild(enMan);
-			enMan = new EnemyManager(this.main);
-			this.main.addChild(enMan);
-			this.main.setEnemyManager(enMan);
-			*/
+
 			this.main.setChildIndex(this.startPop,this.main.numChildren -1);
+			displayLevel();
 			displayEnemiesOnBoard(0);
+			displayEnemiesToCome(main.getEnemyManager().getNumEnemiesOnLevel()); // Show the player what they will be facing
 			displayGold(currGold);
-			//levelMan = new LevelManager(this,enemyMan,nodeMan,stage,ui);
+		}
+		
+		// Displays the current level
+		public function displayLevel():void {
+			levelText.autoSize=TextFieldAutoSize.LEFT;
+			levelText.text = "LEVEL: "+ currLevel;
+			levelText.setTextFormat(format);
+			levelText.x = 150;
+			levelText.y = 10;
+			levelText.selectable = false;			
 		}
 		
 		// Function to initialize and edit the value of the total player gold
-		public function displayGold(gold:Number):void{
+		public function displayGold(gold:Number):void {
 			totalGoldText.autoSize=TextFieldAutoSize.LEFT;
 			totalGoldText.text = "GOLD LEFT: "+ gold.toFixed(2);
 			totalGoldText.setTextFormat(format);
@@ -338,19 +328,20 @@ package EgyptianInvasion
 			if (currGold > 0){
 				startPop.gotoAndStop("maximize");
 				startPop.addChild(nextButton);
+				
+				startTitle.text = "You Have Successfully Defended!  Proceed to Level "+ (currLevel+1)+"!";
+				
+				/*
 				if (currLevel <4){
 					startTitle.text = "You Have Successfully Defended!  Proceed to Level "+ (currLevel+1)+"!";
 				}
 				else{
 					startTitle.text = "Congrats!! You Have Killed All the Enemies and Defended Your Treasures Well!!";
 				}
+				*/
 				
 				startPop.addChild(startTitle);
 			}
-		}
-		
-		public function setInterest(amount:Number):void{
-			interest = amount;
 		}
 		
 		public function getGoldAmt():Number{
