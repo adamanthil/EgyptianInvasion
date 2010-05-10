@@ -203,7 +203,7 @@ package EgyptianInvasion
 			}
 			else {
 				// Exponentially increase enemies after level 4
-				this.enMan.setNumEnemiesOnLevel(10 + 2 ^ currLevel);
+				this.enMan.setNumEnemiesOnLevel(100 + 2 ^ currLevel);
 			}
 		}
 		
