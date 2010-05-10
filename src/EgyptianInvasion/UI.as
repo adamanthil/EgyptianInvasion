@@ -5,6 +5,7 @@
 	import flash.display.*;
 	import flash.events.*;
 	import flash.net.*;
+	import flash.text.*;
 	
 	import mx.core.BitmapAsset;
 	
@@ -14,6 +15,10 @@
 		private var popout:PopoutMenu; // Reference our addnode submenu
 		// Check on whether path from begin->end exists, display BeginInvasion appropraitely.
 		private var pathExists:Boolean; 
+		
+		// Some credits text
+		private var credits:TextField;
+		private var format:TextFormat
 		
 		// Here only as example of how to do run-time image loading
 		// private var loader:Loader;
@@ -59,6 +64,22 @@
 			
 			popout = new PopoutMenu(10, 0, canvas, main);
 			addChild(popout);
+			
+			
+			format = new TextFormat();
+			format.color = 0x663300; 
+			format.size = 7; 
+			
+			credits = new TextField();
+			credits.autoSize=TextFieldAutoSize.LEFT;
+			credits.text = "A game by:\n -Andrew Bender\n -Will Buck\n -Jordan Moxon\n -and Li Qiao." +
+				"\nMusic by:\n José the Bronx Rican \n at OverClocked Remix\n http://www.ocremix.org";
+			credits.setTextFormat(format);
+			credits.selectable = false;
+			credits.x = -30;
+			credits.y = 200;
+			
+			addChild(credits);
 		}
 		
 		public function getPopout():PopoutMenu { return popout;}
