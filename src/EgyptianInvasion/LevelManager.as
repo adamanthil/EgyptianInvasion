@@ -36,11 +36,6 @@ package EgyptianInvasion
 		private var againButton:Button;
 		private var nextButton:Button;
 		
-		public const fireRoomCost:Number = 100;
-		public const pitRoomCost:Number = 20;
-		public const snakeRoomCost:Number = 50;
-		public const quickSoundCost:Number = 80;
-		
 		// TODO COMMENT BACK IN FOR FINAL BUILD
 		//[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
 		//public static var Track1Sound:Class;

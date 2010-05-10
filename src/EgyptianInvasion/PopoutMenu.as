@@ -189,19 +189,19 @@ package EgyptianInvasion
 				{
 					main.getNodeManager().addNode(new Node(0, 0, canvas, main.getNodeManager()));
 				}
-				else if(e.charCode == 113) // Q is for QuickSand nodes
+				else if(e.charCode == 113 && main.getLevelManager().isSandRoomAvailable()) // Q is for QuickSand nodes
 				{
 					main.getNodeManager().addNode(new SandRoom(0, 0, canvas, main.getNodeManager()));
 				}
-				else if(e.charCode == 112) // P is for Pit nodes
+				else if(e.charCode == 112 && main.getLevelManager().isPitRoomAvailable()) // P is for Pit nodes
 				{
 					main.getNodeManager().addNode(new PitRoom(0, 0, canvas, main.getNodeManager()));
 				}
-				else if(e.charCode == 102) // F is for Fire nodes
+				else if(e.charCode == 102 && main.getLevelManager().isFireRoomAvailable()) // F is for Fire nodes
 				{
 					main.getNodeManager().addNode(new FireRoom(0, 0, canvas, main.getNodeManager()));
 				}
-				else if(e.charCode == 115) // S is for Snake nodes
+				else if(e.charCode == 115 && main.getLevelManager().isSnakeRoomAvailable()) // S is for Snake nodes
 				{
 					main.getNodeManager().addNode(new SnakeRoom(0, 0, canvas, main.getNodeManager()));
 				}
