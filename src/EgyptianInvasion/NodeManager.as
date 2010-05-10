@@ -495,7 +495,7 @@ package EgyptianInvasion
 				var inside:Boolean = Pyram.hitTestPoint(toggledNode.x,toggledNode.y,true);
 				inside = inside && Pyram.hitTestPoint(toggledNode.x + 25,toggledNode.y,true);
 				inside = inside && Pyram.hitTestPoint(toggledNode.x - 25,toggledNode.y,true);
-				var hasTheCash:Boolean = true;
+				var hasTheCash:Boolean = toggledNode.getCostToPlace(selectedNode.x,selectedNode.y) < (this.parent as Main).getLevelManager().getGoldAmt();
 				
 				sup.getLevelManager().displayCurrentPlacementCost(toggledNode.getCostToPlace(selectedNode.x, selectedNode.y));
 				

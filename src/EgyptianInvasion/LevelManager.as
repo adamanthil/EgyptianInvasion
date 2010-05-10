@@ -118,7 +118,7 @@ package EgyptianInvasion
 		}
 		
 		public function isPitRoomAvailable():Boolean{
-			if (currLevel >= 3)
+			if (currLevel >= 2)
 				return true;
 			else
 				return false;
@@ -129,7 +129,7 @@ package EgyptianInvasion
 		}
 		
 		public function isSandRoomAvailable():Boolean{
-			if (currLevel >= 4)
+			if (currLevel >= 3)
 				return true;
 			else
 				return false;
