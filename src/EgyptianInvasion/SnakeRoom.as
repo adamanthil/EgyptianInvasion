@@ -28,7 +28,7 @@ package EgyptianInvasion
 		public function SnakeRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
 			currentLevel = 1;
-			costUp = 80;
+			costUp = 8;
 			poisonamnt = 1;
 			
 			super(nodex,nodey,canvas, refup);
@@ -137,14 +137,14 @@ package EgyptianInvasion
 					if(this.currentLevel == 1)
 					{
 						((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
-						this.costUp = 120;
+						this.costUp = 12;
 						this.currentLevel = 2;
 						this.poisonamnt = 1.5;
 					}
 					else if(this.currentLevel == 2)
 					{
 						((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
-						this.costUp = 160;
+						this.costUp = 16;
 						this.currentLevel = 3;
 						this.poisonamnt = 2.5;
 					}

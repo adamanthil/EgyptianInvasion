@@ -85,7 +85,7 @@ package EgyptianInvasion
 				graphics.clear();
 				roomImage.alpha  = .5;
 				if(isValid)
-					this.blendMode = BlendMode.SCREEN;
+					this.blendMode = BlendMode.DARKEN;
 				else
 					this.blendMode = BlendMode.SUBTRACT;
 			}

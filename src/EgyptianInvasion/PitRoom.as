@@ -45,7 +45,7 @@
 				super(nodex,nodey,canvas, refup);
 				
 				currentLevel = 1;
-				costUp = 50;
+				costUp = 7;
 				depthOfPit = 10;
 				
 				fullImage  = new FullImage();
@@ -190,14 +190,14 @@
 						if(this.currentLevel == 1)
 						{
 							((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
-							this.costUp = 100;
+							this.costUp = 10;
 							this.currentLevel = 2;
 							this.depthOfPit = 18;
 						}
 						else if(this.currentLevel == 2)
 						{
 							((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
-							this.costUp = 150;
+							this.costUp = 14;
 							this.currentLevel = 3;
 							this.depthOfPit = 28;
 						}

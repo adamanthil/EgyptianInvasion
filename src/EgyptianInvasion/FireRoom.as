@@ -41,7 +41,7 @@ package EgyptianInvasion
 		public function FireRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
 			currentLevel = 1;
-			costUp = 90;
+			costUp = 9;
 			uber = false;
 			burnCoolRat = 1;
 			fireCoolBar = new DisplayBar(0xF00F00,0x888888,1);
@@ -185,14 +185,14 @@ package EgyptianInvasion
 					if(this.currentLevel == 1)
 					{
 						((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
-						this.costUp = 130;
+						this.costUp = 13;
 						this.currentLevel = 2;
 						this.burnCoolRat = .6;
 					}
 					else if(this.currentLevel == 2)
 					{
 						((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
-						this.costUp = 200;
+						this.costUp = 20;
 						this.currentLevel = 3;
 						this.burnCoolRat = .3;
 					}

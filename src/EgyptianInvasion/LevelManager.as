@@ -7,8 +7,8 @@ package EgyptianInvasion
 	import flash.net.*;
 	import flash.text.*;
 	
-	import mx.managers.*;
 	import mx.core.SoundAsset;
+	import mx.managers.*;
 	
 	public class LevelManager extends Sprite
 	{
@@ -37,9 +37,9 @@ package EgyptianInvasion
 		private var nextButton:Button;
 		
 		// TODO COMMENT BACK IN FOR FINAL BUILD
-		//[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
-		//public static var Track1Sound:Class;
-		//public static var Track1FX:SoundAsset = new Track1Sound() as SoundAsset;
+		[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
+		public static var Track1Sound:Class;
+		public static var Track1FX:SoundAsset = new Track1Sound() as SoundAsset;
 		
 		
 		public function LevelManager(m:Main, em:EnemyManager, nm:NodeManager, can:Stage,ui:UI)
@@ -50,7 +50,7 @@ package EgyptianInvasion
 			this.noMan = nm;
 			this.ui = ui;
 			this.canvas =can;
-						
+			
 			currLevel = 1;
 			currGold = 1000;
 			prevGold = currGold;
@@ -93,7 +93,7 @@ package EgyptianInvasion
 			
 			// TODO COMMENT BACK IN FOR FINAL BUILD
 			// Play background music
-			//Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
+			Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
 		}
 		
 		public function getNoEnemyAtLevel():Number{
@@ -101,10 +101,10 @@ package EgyptianInvasion
 				return 30;
 			}
 			else if (currLevel == 2){
-				return 100;
+				return 50;
 			}
 			else if (currLevel == 3){
-				return 120;
+				return 70;
 			}		
 			return 30;
 		}
@@ -129,7 +129,7 @@ package EgyptianInvasion
 		}
 		
 		public function isPitRoomAvailable():Boolean{
-			if (currLevel >= 2)
+			if (currLevel >= 3)
 				return true;
 			else
 				return false;
@@ -140,7 +140,7 @@ package EgyptianInvasion
 		}
 		
 		public function isSandRoomAvailable():Boolean{
-			if (currLevel >= 2)
+			if (currLevel >= 4)
 				return true;
 			else
 				return false;
@@ -176,23 +176,16 @@ package EgyptianInvasion
 		}
 		
 		public function setStartEndNode():void{
-			loader = new URLLoader();
+			if (currLevel == 1){
+				noMan.setEndNodePosition(430,250);
+			}
+			else if (currLevel == 2|| currLevel ==3){
+				noMan.setEndNodePosition(200,300);
+			}
+			else if (currLevel == 4){
+				noMan.setEndNodePosition(250,100);
+			}
 			
-			//telling the loader that we are dealing with variables here.
-			//loader.dataFormat = URLLoaderDataFormat.VARIABLES;
-			loader.dataFormat = URLLoaderDataFormat.TEXT;
-			
-			loader.addEventListener(Event.COMPLETE, nodeLoading);
-			
-			//Here we tell our loading which file to extract from.
-			loader.load(new URLRequest("../assets/level1content.txt"));
-			//if (loader.
-			
-			/*var s_y:Number = loader.data.start_y;
-			var e_x:Number = loader.data.final_x;
-			var e_y:Number = loader.data.final_y;
-			*/
-			s_x = "data?"+loader.data;
 		}
 		
 		private function nodeLoading (e:Event):void {
@@ -212,16 +205,34 @@ package EgyptianInvasion
 			displayGold(currGold);
 		}
 		
+		private function setNumEnemiesAtLevel(){
+			if (currLevel == 1){
+				this.enMan.setNumEnemiesOnLevel(30);
+			}
+			else if (currLevel == 2){
+				this.enMan.setNumEnemiesOnLevel(50);
+			}
+			else if (currLevel == 3){
+				this.enMan.setNumEnemiesOnLevel(70);
+			}
+			else if (currLevel == 4){
+				this.enMan.setNumEnemiesOnLevel(100);
+			}
+		}
+		
 		private function reInitialize():void{
-			this.enMan.removeTimer();
+			this.setNumEnemiesAtLevel();
+			this.enMan.reInitializeTimer();//set the right number and re-initialize everything
+			
 			this.main.setBuildPhase(true);
 			this.main.removeChild(noMan);
 			noMan = new NodeManager(this.main,69,365,200,300);
 			this.main.addChild(noMan);
 			this.main.setNodeManager(noMan);
-			//this.main.setChildIndex(noMan,this.main.numChildren - 1);
-			
-			this.main.removeChild(this.ui);
+			var uiIndex:Number = this.main.getChildIndex(ui);
+			this.main.setChildIndex(noMan,uiIndex - 1);//make sure that ui is on top of node manager
+			this.setStartEndNode();//reset start end nodes
+			/*this.main.removeChild(this.ui);
 			this.ui = new UI(50,0,this.main.stage,this.main);
 			this.main.addChild(ui);
 			this.main.setUI(this.ui);
@@ -230,7 +241,7 @@ package EgyptianInvasion
 			enMan = new EnemyManager(this.main);
 			this.main.addChild(enMan);
 			this.main.setEnemyManager(enMan);
-			
+			*/
 			this.main.setChildIndex(this.startPop,this.main.numChildren -1);
 			displayEnemiesOnBoard(0);
 			displayGold(currGold);
@@ -240,7 +251,7 @@ package EgyptianInvasion
 		// Function to initialize and edit the value of the total player gold
 		public function displayGold(gold:Number):void{
 			totalGoldText.autoSize=TextFieldAutoSize.LEFT;
-			totalGoldText.text = "GOLD LEFT: "+ gold;
+			totalGoldText.text = "GOLD LEFT: "+ gold.toFixed(2);
 			totalGoldText.setTextFormat(format);
 			totalGoldText.x = 420;
 			totalGoldText.y = 10;
@@ -318,19 +329,23 @@ package EgyptianInvasion
 			startPop.addChild(againButton);
 			
 			startTitle.text = "Oops, you probably just miss a little bit! Try building again!!";
-
+			
 			startPop.addChild(startTitle);
 		}
 		
 		public function popWinWin():void{
 			//main.removeChild(startPop);// the start pop up is just hiding, remove it after a level
 			if (currGold > 0){
-			startPop.gotoAndStop("maximize");
-			startPop.addChild(nextButton);
-			
-			startTitle.text = "You Have successfully defended!  Proede to next level!";
-			
-			startPop.addChild(startTitle);
+				startPop.gotoAndStop("maximize");
+				startPop.addChild(nextButton);
+				if (currLevel <4){
+					startTitle.text = "You Have Successfully Defended!  Proceed to Level "+ (currLevel+1)+"!";
+				}
+				else{
+					startTitle.text = "Congrats!! You Have Killed All the Enemies and Defended Your Treasures Well!!";
+				}
+				
+				startPop.addChild(startTitle);
 			}
 		}
 		
