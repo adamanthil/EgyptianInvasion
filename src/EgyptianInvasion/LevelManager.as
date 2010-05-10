@@ -37,9 +37,9 @@ package EgyptianInvasion
 		private var nextButton:Button;
 		
 		// TODO COMMENT BACK IN FOR FINAL BUILD
-		//[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
-		//public static var Track1Sound:Class;
-		//public static var Track1FX:SoundAsset = new Track1Sound() as SoundAsset;
+		[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
+		public static var Track1Sound:Class;
+		public static var Track1FX:SoundAsset = new Track1Sound() as SoundAsset;
 		
 		
 		public function LevelManager(m:Main, em:EnemyManager, nm:NodeManager, can:Stage,ui:UI)
@@ -52,7 +52,7 @@ package EgyptianInvasion
 			this.canvas =can;
 						
 			currLevel = 1;
-			currGold = 1000;
+			currGold = 100;
 			prevGold = currGold;
 			interest = 0.3;
 			
@@ -93,7 +93,7 @@ package EgyptianInvasion
 			
 			// TODO COMMENT BACK IN FOR FINAL BUILD
 			// Play background music
-			//Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
+			Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
 		}
 		
 		public function getNoEnemyAtLevel():Number{
