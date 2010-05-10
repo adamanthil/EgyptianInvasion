@@ -1,7 +1,6 @@
 package EgyptianInvasion
 {
 	import assets.flashingNode;
-	
 	import flash.display.*;
 	import flash.events.*;
 	import flash.utils.Timer;
