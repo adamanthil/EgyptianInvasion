@@ -5,7 +5,7 @@ A game by:
 * Will Buck
 * Jordan Moxon
 * Li Qiao
-* Music borrowed from "José The Bronx Rican, OverClockedRemix http://www.ocremix.org/"
+* Music borrowed from "José The Bronx Rican, OverClockedRemix http://www.ocremix.org/ "
 
 
 -----------------------------------------------------------------------
