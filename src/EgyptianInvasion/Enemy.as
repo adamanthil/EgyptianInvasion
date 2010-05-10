@@ -30,7 +30,7 @@ package EgyptianInvasion
 		protected var goldAmt:Number;
 		protected var goldCapacity:Number;
 		protected var speed:Number;	// How fast we move		
-		protected var poisoned:Boolean;
+		protected var poisoned:Number;
 		protected var secondsToDieOfPoison:Number;
 		protected var poisonTimeout:Number;
 		protected var pitSlots:int;	// Number of pit slots this enemy takes up
@@ -237,14 +237,14 @@ package EgyptianInvasion
 		public function nextTimeInterval():void	{
 			
 			// Deal poison damage
-			if(poisoned) {
+			if(poisoned != 0) {
 				var poisonedElapsed:Number = getTimer() - this.poisonTime;
 				if(poisonedElapsed < this.poisonTimeout * 1000) {
-					this.health -=  this.maxHealth * ((getTimer() - this.lastIntervalTime) / (this.secondsToDieOfPoison * 1000));
+					this.health -=  this.maxHealth * poisoned * ((getTimer() - this.lastIntervalTime) / (this.secondsToDieOfPoison * 1000));
 					healthBar.update(health/maxHealth);
 				}
 				else {
-					this.poisoned = false;
+					this.poisoned = 0;
 					this.figure.poison(false);
 				}
 			}
@@ -342,15 +342,20 @@ package EgyptianInvasion
 			healthBar.update(health/maxHealth);
 			return true;
 		}
+		public function totalBurn():Boolean {
+			this.health = 0;
+			healthBar.update(health/maxHealth);
+			return true;
+		}
 		
-		public function poison():Boolean {
-			this.poisoned = true;
+		public function poison(amnt:Number):Boolean {
+			this.poisoned = amnt;
 			this.figure.poison(true);
 			this.poisonTime = getTimer();
 			return true;	// By default enemies can be poisoned
 		}
 		
-		public function isPoisoned():Boolean {
+		public function isPoisoned():Number {
 			return this.poisoned;
 		}
 		

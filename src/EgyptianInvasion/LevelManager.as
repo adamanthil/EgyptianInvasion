@@ -37,9 +37,9 @@ package EgyptianInvasion
 		private var nextButton:Button;
 		
 		// TODO COMMENT BACK IN FOR FINAL BUILD
-		//[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
-		//public static var Track1Sound:Class;
-		//public static var Track1FX:SoundAsset = new Track1Sound() as SoundAsset;
+		[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
+		public static var Track1Sound:Class;
+		public static var Track1FX:SoundAsset = new Track1Sound() as SoundAsset;
 		
 		
 		public function LevelManager(m:Main, em:EnemyManager, nm:NodeManager, can:Stage,ui:UI)
@@ -50,9 +50,9 @@ package EgyptianInvasion
 			this.noMan = nm;
 			this.ui = ui;
 			this.canvas =can;
-						
+			
 			currLevel = 1;
-			currGold = 100;
+			currGold = 1000;
 			prevGold = currGold;
 			interest = 0.3;
 			
@@ -93,7 +93,7 @@ package EgyptianInvasion
 			
 			// TODO COMMENT BACK IN FOR FINAL BUILD
 			// Play background music
-			//Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
+			Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
 		}
 		
 		public function getNoEnemyAtLevel():Number{
@@ -177,7 +177,7 @@ package EgyptianInvasion
 		
 		public function setStartEndNode():void{
 			if (currLevel == 1){
-			noMan.setEndNodePosition(430,250);
+				noMan.setEndNodePosition(430,250);
 			}
 			else if (currLevel == 2|| currLevel ==3){
 				noMan.setEndNodePosition(200,300);
@@ -329,23 +329,23 @@ package EgyptianInvasion
 			startPop.addChild(againButton);
 			
 			startTitle.text = "Oops, you probably just miss a little bit! Try building again!!";
-
+			
 			startPop.addChild(startTitle);
 		}
 		
 		public function popWinWin():void{
 			//main.removeChild(startPop);// the start pop up is just hiding, remove it after a level
 			if (currGold > 0){
-			startPop.gotoAndStop("maximize");
-			startPop.addChild(nextButton);
-			if (currLevel <4){
-			startTitle.text = "You Have Successfully Defended!  Proceed to Level "+ (currLevel+1)+"!";
-			}
-			else{
-				startTitle.text = "Congrats!! You Have Killed All the Enemies and Defended Your Treasures Well!!";
-			}
-			
-			startPop.addChild(startTitle);
+				startPop.gotoAndStop("maximize");
+				startPop.addChild(nextButton);
+				if (currLevel <4){
+					startTitle.text = "You Have Successfully Defended!  Proceed to Level "+ (currLevel+1)+"!";
+				}
+				else{
+					startTitle.text = "Congrats!! You Have Killed All the Enemies and Defended Your Treasures Well!!";
+				}
+				
+				startPop.addChild(startTitle);
 			}
 		}
 		
