@@ -487,7 +487,7 @@ package EgyptianInvasion
 					}
 					if(!toggledNode.getTrigPlace())
 					{
-						connect = !(subintersected || subtooclose || subangleclose || angleclose);
+						connect = !(subintersected || subtooclose || subangleclose || angleclose || tooclose ||intersected);
 					}
 					else
 						connect = true;
