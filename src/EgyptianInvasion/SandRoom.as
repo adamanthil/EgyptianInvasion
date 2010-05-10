@@ -31,7 +31,7 @@ package EgyptianInvasion
 		public function SandRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
 			currentLevel = 1;
-			costUp = 18;
+			costUp = 40;
 			
 			totalDrown = 1;
 			drowningTime = 2.5;
@@ -155,7 +155,7 @@ package EgyptianInvasion
 				if(this.currentLevel == 1)
 				{
 					((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
-					this.costUp = 24;
+					this.costUp = 60;
 					this.currentLevel = 2;
 					currentDrowning.push(null);
 					drowningCool.push(null);
@@ -171,7 +171,7 @@ package EgyptianInvasion
 				else if(this.currentLevel == 2)
 				{
 					((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
-					this.costUp = 32;
+					this.costUp = 90;
 					this.currentLevel = 3;
 					currentDrowning.push(null);
 					drowningCool.push(null);
