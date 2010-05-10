@@ -1,7 +1,6 @@
 package EgyptianInvasion
 {
-	import assets.popUpWin;
-	
+	import 
 	import flash.display.*;
 	import flash.events.*;
 	import flash.net.*;
@@ -92,7 +91,7 @@ package EgyptianInvasion
 			againButton = new Button(new assets.ToggleButton(), 0,0, "TRY AGAIN!",canvas, main);
 			againButton.addEventListener(MouseEvent.MOUSE_DOWN, againPressed);
 			
-			nextButton = new Button(new assets.ToggleButton(), 0,0, "NEXT LEVEL",canvas, main);
+			nextButton = new Button(new asset.ToggleButton(), 0,0, "NEXT LEVEL",canvas, main);
 			nextButton.addEventListener(MouseEvent.MOUSE_DOWN, nextPressed);
 			
 			// TODO COMMENT BACK IN FOR FINAL BUILD
