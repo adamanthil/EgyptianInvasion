@@ -250,7 +250,7 @@ package EgyptianInvasion
 				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
 				graphics.moveTo(0,0);
 			}
-			blendMode = BlendMode.NORMAL;
+			blendMode = BlendMode.ADD;
 		}	
 		protected function displaySolid():void {
 			graphics.clear();
