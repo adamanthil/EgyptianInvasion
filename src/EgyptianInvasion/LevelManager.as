@@ -52,7 +52,7 @@ package EgyptianInvasion
 			this.canvas =can;
 			
 			currLevel = 1;
-			currGold = 1000;
+			currGold = 250;
 			prevGold = currGold;
 			interest = 0.3;
 			
