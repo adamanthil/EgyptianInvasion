@@ -26,7 +26,8 @@ package EgyptianInvasion
 			//numEnemiesOnLevel = 1; // TODO WB will need to change this on per-level basis
 			numEnemiesOnLevel = 30; // TODO WB will need to change this on per-level basis
 			numEnemiesRemaining = numEnemiesOnLevel;
-			spawnFrequency = 1500; // One second
+			numEnemiesKilled = 0;
+			spawnFrequency = 1500; // in milliseconds
 			
 			spawnTimer = new Timer(spawnFrequency, numEnemiesRemaining); // This line defines frequency and number of enemies to spawn
 			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
@@ -36,11 +37,12 @@ package EgyptianInvasion
 			timer.start();
 		}
 		
-		public function reInitializeTimer():void {
+		public function reInitialize():void {
 			spawnTimer.removeEventListener(TimerEvent.TIMER, spawnTimeListener);
 			timer.removeEventListener(TimerEvent.TIMER, timeListener);
 			
 			numEnemiesRemaining = numEnemiesOnLevel;
+			numEnemiesKilled = 0;
 			
 			spawnTimer = new Timer(spawnFrequency, numEnemiesRemaining); // This line defines frequency and number of enemies to spawn
 			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
