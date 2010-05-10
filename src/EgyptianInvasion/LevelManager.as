@@ -218,6 +218,7 @@ package EgyptianInvasion
 			this.main.setNodeManager(noMan);
 			var uiIndex:Number = this.main.numChildren;
 			this.main.setChildIndex(noMan,uiIndex - 1);//make sure that ui is NOT on top of node manager
+			this.main.setChildIndex(enMan,uiIndex -1);
 			this.setStartEndNode();//reset start end nodes
 
 			this.main.setChildIndex(this.startPop,this.main.numChildren -1);
