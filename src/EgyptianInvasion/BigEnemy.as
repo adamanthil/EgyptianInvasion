@@ -21,7 +21,7 @@ package EgyptianInvasion
 		}
 		
 		// Big enemies are immmune to poison
-		public override function poison():Boolean {
+		public override function poison(amnt:Number):Boolean {
 			return false;
 		}
 	}

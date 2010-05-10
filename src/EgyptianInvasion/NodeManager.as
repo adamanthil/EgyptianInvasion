@@ -321,6 +321,16 @@ package EgyptianInvasion
 				toggledNode = null;
 				sup.getPlaceNodeButton().setDown(false);
 			}
+			if(e.charCode == 102)
+			{
+				for(var i:Number = 0; i < this.allNodes.length; i++)
+				{
+					if(allNodes[i].toString() == "BURN")
+					{
+						(allNodes[i] as FireRoom).trigger();
+					}
+				}
+			}	
 		}
 		private function mouseDownListener (e:MouseEvent):void {
 			if(toggledNode == null || cantSet)

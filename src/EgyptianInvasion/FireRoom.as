@@ -6,7 +6,10 @@ package EgyptianInvasion
 	import flash.events.*;
 	import flash.utils.Timer;
 	
+	import flash.text.*;
+	
 	import mx.core.BitmapAsset;
+	
 	
 	public class FireRoom extends Trap
 	{
@@ -19,11 +22,28 @@ package EgyptianInvasion
 		private var deactivateImage:BitmapAsset;
 		private var button:Button;
 		
+		private var burnCoolRat:Number;
+		
 		private var fireCoolBar:DisplayBar;
 		private var fireBlastBar:DisplayBar;
 		
+		private var currentLevel;
+		private var costUp;
+		
+		private var format:TextFormat;
+		private var levelText:TextField;
+		private var costText:TextField;
+		
+		private var upgradeButton:Button;		
+		
+		private var uber:Boolean;
+		
 		public function FireRoom(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager)
 		{
+			currentLevel = 1;
+			costUp = 90;
+			uber = false;
+			burnCoolRat = 1;
 			fireCoolBar = new DisplayBar(0xF00F00,0x888888,1);
 			fireBlastBar = new DisplayBar(0xAAAAAA,0xFF6600,1);
 			fireTimeLeft = 0;
@@ -47,6 +67,37 @@ package EgyptianInvasion
 			graphics.beginFill(0x00FF00,.5);
 			graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);
 			//this.cacheAsBitmap = true;
+			
+			format = new TextFormat();
+			format.color = 0x221167; 
+			format.size = 6; 
+			
+			// Instantiate and initialize all our text displays
+			levelText = new TextField();
+			levelText.x = -20;
+			levelText.y = -25;
+			setLevelText();
+			
+			costText = new TextField();
+			costText.x = -5;
+			costText.y = -25;
+			setCostText();
+			this.addChild(levelText);
+			this.addChild(costText);
+		}
+		private function setLevelText():void
+		{
+			levelText.autoSize=TextFieldAutoSize.LEFT;
+			levelText.text = "lvl: "+ this.currentLevel;
+			levelText.setTextFormat(format);
+			levelText.selectable = false;	
+		}
+		private function setCostText()
+		{
+			costText.autoSize=TextFieldAutoSize.LEFT;
+			costText.text = "++: "+ this.costUp;
+			costText.setTextFormat(format);
+			costText.selectable = false;	
 		}
 		public override function onPlaced(sup:NodeManager):void
 		{
@@ -86,7 +137,7 @@ package EgyptianInvasion
 				inbetween.setPlaced(true);
 				otherSide.setPlaced(true);
 			}
-			var activeButton:Button = new Button(new assets.ToggleButton(),0,-20,"fire button",canvas,sup.parent as Main);
+			var activeButton:Button = new Button(new assets.ToggleButton(),0,20,"fire button",canvas,sup.parent as Main);
 			activeButton.addEventListener(MouseEvent.CLICK, activeTrigger);
 			activeButton.scaleX = .3;
 			activeButton.scaleY = .3;
@@ -105,6 +156,14 @@ package EgyptianInvasion
 			fireBlastBar.scaleY = .3;
 			fireBlastBar.scaleX = .5;
 			
+			var activeButton:Button = new Button(new assets.ToggleButton(),15,-11,"++",canvas,sup.parent as Main);
+			activeButton.addEventListener(MouseEvent.CLICK, upgrade);
+			activeButton.scaleX = .12;
+			activeButton.scaleY = .25;
+			this.addChild(activeButton);
+			upgradeButton = activeButton;
+			
+			
 			(parent as NodeManager).getSelected().setSelected(false);
 			otherSide.setSelected(true);
 			(parent as NodeManager).setSelected(otherSide);
@@ -112,9 +171,42 @@ package EgyptianInvasion
 		public function activeTrigger(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
 			
-			if (!button.isDown() && fireTimeLeft < -25){
+			if (!button.isDown() && fireTimeLeft < -1 * this.burnCoolRat * 25){
 				this.trigger();				
 			}
+		}
+		private function upgrade(e:MouseEvent):void
+		{
+			var button:Button = Button(e.currentTarget);
+			
+			if (!button.isDown()){
+				if(((parent as NodeManager).parent as Main).getLevelManager().getGoldAmt() >= this.costUp)
+				{
+					if(this.currentLevel == 1)
+					{
+						((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
+						this.costUp = 130;
+						this.currentLevel = 2;
+						this.burnCoolRat = .6;
+					}
+					else if(this.currentLevel == 2)
+					{
+						((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
+						this.costUp = 200;
+						this.currentLevel = 3;
+						this.burnCoolRat = .3;
+					}
+					else if(this.currentLevel == 3)
+					{
+						((parent as NodeManager).parent as Main).getLevelManager().deductGold(costUp);
+						this.costUp = 0;
+						this.currentLevel = 4;
+						this.burnCoolRat = .5;
+						this.uber = true;
+					}
+					this.setLevelText();
+					this.setCostText();
+				}}
 		}
 		public override function processEnemy(guy:Enemy):Boolean
 		{
@@ -124,7 +216,14 @@ package EgyptianInvasion
 				{
 					if(currentInside.indexOf(guy) == -1)
 					{
-						guy.damageFire();
+						if(this.uber)
+						{
+							guy.totalBurn();
+						}
+						else
+						{
+							guy.damageFire();
+						}
 						this.addGuy(guy);
 						if( this.goldWithin > 0 )
 							goldWithin = guy.giveGold(goldWithin);
@@ -153,21 +252,24 @@ package EgyptianInvasion
 				displayFaded();
 
 			fireTimeLeft--;
-			if(fireTimeLeft >= -25)
+			if(fireTimeLeft >= -1 * this.burnCoolRat * 25)
 			{
-				this.fireCoolBar.update((fireTimeLeft+25)/50);
+				this.fireCoolBar.update((fireTimeLeft+this.burnCoolRat *25)/(25 + this.burnCoolRat *25));
 			}
 			if(fireTimeLeft >= 0)
 			{
-				this.fireBlastBar.update((fireTimeLeft)/25);
+				this.fireBlastBar.update((fireTimeLeft)/(25));
 			}
 			if(fireTimeLeft <0)
 				active = false;
 		}
 		public override function trigger():void
 		{
-			active = true;
-			fireTimeLeft = 25;
+			if ( fireTimeLeft < -1 * this.burnCoolRat * 25)
+			{	
+				active = true;
+				fireTimeLeft = 25;
+			}
 		}
 		public override function getImpassible():Boolean
 		{
@@ -206,6 +308,10 @@ package EgyptianInvasion
 				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
 				graphics.moveTo(0,0);
 			}
+		}
+		public override function toString():String
+		{
+			return "BURN";
 		}
 	}
 }
