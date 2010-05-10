@@ -36,7 +36,7 @@ package EgyptianInvasion
 			beginInvasionButton.setMouseDown(beginInvasionHandler);
 			this.addChild(beginInvasionButton);*/
 			
-			nodeMan = new NodeManager(this,69,365,200,300);
+			nodeMan = new NodeManager(this,69,365,190,300);
 			this.addChild(nodeMan);
 			
 			this.setChildIndex(nodeMan,this.numChildren - 1);

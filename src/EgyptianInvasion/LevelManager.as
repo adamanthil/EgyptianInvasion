@@ -177,7 +177,7 @@ package EgyptianInvasion
 		
 		public function setStartEndNode():void{
 			if (currLevel == 1){
-				noMan.setEndNodePosition(430,250);
+				noMan.setEndNodePosition(420,250);
 			}
 			else if (currLevel == 2|| currLevel ==3){
 				noMan.setEndNodePosition(200,300);
