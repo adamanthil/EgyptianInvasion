@@ -68,7 +68,7 @@ package EgyptianInvasion
 			this.figure = figure;
 			figure.scaleX = 0.012;
 			figure.scaleY = 0.012;
-			figure.walk();
+			this.walk();
 			addChild(figure);
 			figure.x = 3;
 			figure.y = 0;
@@ -192,7 +192,17 @@ package EgyptianInvasion
 			
 			// Start moving after we made the decision
 			this.moving = true;
-			figure.walk();
+			this.walk();
+		}
+		
+		// makes the figure walk the correct direction
+		private function walk():void {
+			if(targetNode.x < this.x) {
+				figure.walkLeft();
+			}
+			else {
+				figure.walkRight();
+			}
 		}
 		
 		// Moves a small amount

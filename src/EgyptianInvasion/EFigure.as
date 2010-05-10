@@ -22,7 +22,7 @@ package EgyptianInvasion
 			poisoned = poison;
 		}
 		
-		public function walk():void {
+		public function walkRight():void {
 			if(poisoned) {
 				figure.gotoAndStop("poisonedRight");
 			}
