@@ -54,7 +54,7 @@ package EgyptianInvasion
 			currLevel = 1;
 			currGold = 250;
 			prevGold = currGold;
-			interest = 0.3;
+			interest = 0.2;
 			
 			// Sets up start and end nodes for the level, with a position
 			setStartEndNode();
