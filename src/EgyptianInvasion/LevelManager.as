@@ -52,7 +52,7 @@ package EgyptianInvasion
 			this.canvas =can;
 			
 			currLevel = 1;
-			currGold = 1000;
+			currGold = 250;
 			prevGold = currGold;
 			interest = 0.3;
 			
@@ -203,7 +203,7 @@ package EgyptianInvasion
 			}
 			else {
 				// Exponentially increase enemies after level 4
-				this.enMan.setNumEnemiesOnLevel(10 + 2 ^ currLevel);
+				this.enMan.setNumEnemiesOnLevel(100 + 2 ^ currLevel);
 			}
 		}
 		
