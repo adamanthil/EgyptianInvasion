@@ -232,8 +232,8 @@ package EgyptianInvasion
 			levelText.autoSize=TextFieldAutoSize.LEFT;
 			levelText.text = "LEVEL: "+ currLevel;
 			levelText.setTextFormat(format);
-			levelText.x = 150;
-			levelText.y = 10;
+			levelText.x = 370;
+			levelText.y = 70;
 			levelText.selectable = false;			
 		}
 		
