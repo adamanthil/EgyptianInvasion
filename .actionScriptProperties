@@ -32,7 +32,11 @@
     <application path="EgyptianInvasion/Main.as"/>
     <application path="playground/SimpleScribble.as"/>
     <application path="playground/EI.as"/>
+<<<<<<< HEAD
+    <application path="EgyptianInvasion/Main.as"/>
+=======
     <application path="EgyptianInvasion/Node.as"/>
+>>>>>>> ccda7bcf1520c61409b0b785ff3466f454a8c5e3
   </applications>
   <modules/>
   <buildCSSFiles/>
