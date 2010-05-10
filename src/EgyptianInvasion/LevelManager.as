@@ -208,6 +208,11 @@ package EgyptianInvasion
 		}
 		
 		private function reInitialize():void{
+			enMan.removeTimer();
+			this.main.removeChild(enMan);
+			enMan = new EnemyManager(this.main);
+			this.main.addChild(enMan);
+			this.main.setEnemyManager(enMan);
 			this.setNumEnemiesAtLevel();
 			this.enMan.reInitialize();//set the right number and re-initialize everything
 			

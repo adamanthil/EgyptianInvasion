@@ -21,28 +21,33 @@ package EgyptianInvasion
 		{
 			this.canvas = main.stage;
 			this.main = main;
-			this.enemies = new Array();
+			//this.enemies = new Array();
 			
 			//numEnemiesOnLevel = 1; // TODO WB will need to change this on per-level basis
-			numEnemiesOnLevel = 30; // TODO WB will need to change this on per-level basis
+			/*numEnemiesOnLevel = 30; // TODO WB will need to change this on per-level basis
 			numEnemiesRemaining = numEnemiesOnLevel;
-			numEnemiesKilled = 0;
+			numEnemiesKilled = 0;*/
 			spawnFrequency = 1500; // in milliseconds
 			
-			spawnTimer = new Timer(spawnFrequency, numEnemiesRemaining); // This line defines frequency and number of enemies to spawn
+			/*spawnTimer = new Timer(spawnFrequency, numEnemiesRemaining); // This line defines frequency and number of enemies to spawn
 			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
 			
 			timer = new Timer(10);
 			timer.addEventListener(TimerEvent.TIMER,timeListener);
-			timer.start();
+			timer.start();*/
+			reInitialize();
 		}
 		
-		public function reInitialize():void {
+		public function removeTimer():void{
 			spawnTimer.removeEventListener(TimerEvent.TIMER, spawnTimeListener);
 			timer.removeEventListener(TimerEvent.TIMER, timeListener);
+		}
+		public function reInitialize():void {
+			
 			
 			numEnemiesRemaining = numEnemiesOnLevel;
 			numEnemiesKilled = 0;
+			this.enemies = new Array();
 			
 			spawnTimer = new Timer(spawnFrequency, numEnemiesRemaining); // This line defines frequency and number of enemies to spawn
 			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
