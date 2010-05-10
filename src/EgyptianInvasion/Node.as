@@ -59,24 +59,27 @@ package EgyptianInvasion
 			time.start();
 			nodes = new Array();
 		}
+		//returns the cost of placing paths, per unit length
 		public function getPathCost():Number{
 			return pathVal;
 		}
+		//returns the cost of this node to place
 		public function getNodeCost():Number{
 			return value;
 		}
+		//returns the total cost to place, both path and node cost
 		public function getCostToPlace(fromX:Number, fromY:Number):Number{
 			return ((pathVal*(Math.sqrt(Math.pow(x - fromX, 2) + Math.pow(y - fromY,2)))) + value);
 		}
-		
+		//returns whether or not this node is allowed to be connected to
 		public function connectable():Boolean {
 			return isConnectable;
 		}
-		
+		// returns where the path should hook to, in x
 		public function drawToPointX():Number {
 			return x;
 		}
-		
+		// returns where the path should hook to, in y
 		public function drawToPointY():Number {
 			return y;	
 		}
@@ -100,7 +103,7 @@ package EgyptianInvasion
 				return false;
 			}
 		}
-
+		
 		public function setSelected( select:Boolean):void {
 			selected = select;
 			if(nodeImage != null)
@@ -111,7 +114,7 @@ package EgyptianInvasion
 					nodeImage.gotoAndStop("normal");
 			}
 		}
-		
+		//places the node, and performs appropriate graphics operations
 		public function setPlaced ( place:Boolean):void	{
 			placed = place;
 			if(nodeImage != null)
@@ -130,6 +133,7 @@ package EgyptianInvasion
 			}
 			
 		}
+		
 		public function isPlaced () :Boolean
 		{
 			return placed;
@@ -138,6 +142,7 @@ package EgyptianInvasion
 		{
 			return false;
 		}
+		//triggers the node, if there is anything to d
 		public function trigger():void
 		{
 			
@@ -211,7 +216,7 @@ package EgyptianInvasion
 				return false;*/
 			return false;
 		}
-		
+		// displays the faded version of the node
 		protected function displayFaded():void {
 			graphics.clear();
 			if(radiusInc)
@@ -251,6 +256,7 @@ package EgyptianInvasion
 			}
 			blendMode = BlendMode.ADD;
 		}	
+		//displays the solid version of the node
 		protected function displaySolid():void {
 			graphics.clear();
 			
@@ -279,11 +285,12 @@ package EgyptianInvasion
 				graphics.lineTo(triggerNode.drawToPointX(),triggerNode.drawToPointY());
 				graphics.moveTo(0,0);
 			}
-		}		
+		}
+		//set whether or not this node is to be a trigger
 		public function setPlaceTrig(trig:Boolean):void {
 			this.isTrigPlace = trig;
 		}
-		
+		// sets this node's trigger node
 		public function setTrigger(trig:Node):void {
 			this.triggerNode = trig;
 		}
@@ -317,7 +324,7 @@ package EgyptianInvasion
 		public function pathExists(n:Node):Boolean {
 			return pathExistsRecursive(n,new Array());
 		}
-		
+		//discovers whether a path exists between the start and the end
 		public function pathExistsRecursive(n:Node, visited:Array):Boolean {
 			if(n == this) {
 				return true;
