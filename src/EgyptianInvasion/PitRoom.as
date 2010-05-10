@@ -69,7 +69,7 @@
 				roomImage.y = -15;
 				addChild(roomImage);
 				
-				value = 5;
+				value = 8;
 				
 				deadguyBar = new DisplayBar(0x000000,0xEEEEEE,1);
 				graphics.beginFill(0x00FF00,.5);

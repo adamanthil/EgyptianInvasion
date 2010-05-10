@@ -62,7 +62,7 @@ package EgyptianInvasion
 			roomImage.x = -15;
 			roomImage.y = -15;
 			addChild(roomImage);
-			value = 5;
+			value = 4;
 			
 			graphics.beginFill(0x00FF00,.5);
 			graphics.drawRect(roomImage.x,roomImage.y,roomImage.width,roomImage.height);

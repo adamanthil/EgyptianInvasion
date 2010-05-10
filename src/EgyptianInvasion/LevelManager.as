@@ -8,6 +8,7 @@ package EgyptianInvasion
 	import flash.text.*;
 	
 	import mx.managers.*;
+	import mx.core.SoundAsset;
 	
 	public class LevelManager extends Sprite
 	{
@@ -35,10 +36,11 @@ package EgyptianInvasion
 		private var againButton:Button;
 		private var nextButton:Button;
 		
-		public const fireRoomCost:Number = 100;
-		public const pitRoomCost:Number = 20;
-		public const snakeRoomCost:Number = 50;
-		public const quickSoundCost:Number = 80;
+		// TODO COMMENT BACK IN FOR FINAL BUILD
+		//[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
+		//public static var Track1Sound:Class;
+		//public static var Track1FX:SoundAsset = new Track1Sound() as SoundAsset;
+		
 		
 		public function LevelManager(m:Main, em:EnemyManager, nm:NodeManager, can:Stage,ui:UI)
 		{	
@@ -88,6 +90,10 @@ package EgyptianInvasion
 			
 			nextButton = new Button(new assets.ToggleButton(), 0,0, "NEXT LEVEL",canvas, main);
 			nextButton.addEventListener(MouseEvent.MOUSE_DOWN, nextPressed);
+			
+			// TODO COMMENT BACK IN FOR FINAL BUILD
+			// Play background music
+			//Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
 		}
 		
 		public function getNoEnemyAtLevel():Number{
@@ -318,15 +324,14 @@ package EgyptianInvasion
 		
 		public function popWinWin():void{
 			//main.removeChild(startPop);// the start pop up is just hiding, remove it after a level
-			
+			if (currGold > 0){
 			startPop.gotoAndStop("maximize");
-			
-			
 			startPop.addChild(nextButton);
 			
 			startTitle.text = "You Have successfully defended!  Proede to next level!";
 			
 			startPop.addChild(startTitle);
+			}
 		}
 		
 		public function setInterest(amount:Number):void{

@@ -41,7 +41,7 @@ package EgyptianInvasion
 			addChild(nodeImage);
 			nodeImage.gotoAndStop("normal");
 			value = 0;
-			pathVal = .05;
+			pathVal = .02;
 			this.isConnectable = true;
 			isTrigPlace = false;
 			sup = refup;

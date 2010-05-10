@@ -32,7 +32,6 @@
     <application path="playground/SimpleScribble.as"/>
     <application path="EgyptianInvasion/Node.as"/>
     <application path="playground/EI.as"/>
-    <application path="EgyptianInvasion/Main.as"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
