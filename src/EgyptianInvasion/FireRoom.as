@@ -170,8 +170,9 @@ package EgyptianInvasion
 		}
 		public function activeTrigger(e:MouseEvent):void {
 			var button:Button = Button(e.currentTarget);
-			
+			trace("this is...");
 			if (!button.isDown() && fireTimeLeft < -1 * this.burnCoolRat * 25){
+				trace("...sparta");
 				this.trigger();				
 			}
 		}
