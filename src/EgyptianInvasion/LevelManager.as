@@ -282,7 +282,7 @@ package EgyptianInvasion
 			currentGoldCostText.autoSize=TextFieldAutoSize.LEFT;
 			currentGoldCostText.text = "CURRENT PLACEMENT COST: "+ amount.toFixed(2);
 			currentGoldCostText.setTextFormat(format);
-			currentGoldCostText.x = 350;
+			currentGoldCostText.x = 320;
 			currentGoldCostText.y = 30;
 			currentGoldCostText.selectable = false;
 		}
