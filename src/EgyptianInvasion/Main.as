@@ -18,6 +18,7 @@ package EgyptianInvasion
 		private var levelMan:LevelManager;
 		
 		public function Main () {
+			
 			// Start in building phase
 			this.buildingPhase = true;
 			this.blendMode = BlendMode.LAYER;
@@ -50,7 +51,7 @@ package EgyptianInvasion
 			addChild(enemyMan);
 			levelMan = new LevelManager(this,enemyMan,nodeMan,stage,ui);
 			
-			stage.frameRate = 100;			
+			stage.frameRate = 24;
 			
 		}
 		public function getPlaceNodeButton():Button
