@@ -24,10 +24,13 @@ package EgyptianInvasion
 		private var poisonTime:Number;	// The time when an enemy was last poisoned
 		
 		// -- Reinforcement Learning --------------
-		protected static var explorationRate:Number; // The percent of the time to make a random move
-		protected static var discountRate:Number; // gamma in the Q learning equations
-		protected static var isSARSALearning:Boolean;	// True if we are doing SARSA learning, otherwise MaxQ
-		protected var currentReward:Number;	// cumulative reward the agent has received since the last decision step
+		private static var explorationRate:Number = 0.1; // The percent of the time to make a random move
+		private static var discountRate:Number = 0.8; // gamma in the Q learning equations
+		private static var isSARSALearning:Boolean = true;	// True if we are doing SARSA learning, otherwise MaxQ
+		private static var lastId:int = 0;	// The last ID given to an enemy
+		private var Id;	// A unique identifier (for testing and graphing RL things)
+		private var currentReward:Number;	// cumulative reward the agent has received since the last decision step
+		private var totalReward:Number;		// The total reward this enemy has received over its life
 		private var visitedNodes:Array; // The set of nodes already visited
 		private var actionIndices:Array; // The set of decisions made at each node
 		private var hadGoldMemory:Array;	// Memory of whether the enemy had gold at a particular state
@@ -96,10 +99,10 @@ package EgyptianInvasion
 			addChild(goldCarryingBar);
 			
 			// -- Reinforcement Learning --------------
-			Enemy.explorationRate = 0.1;
-			Enemy.discountRate = 0.9;
-			Enemy.isSARSALearning = true;
+			lastId++;
+			this.Id = lastId;	// Increment static counter and give a unique Id to this enemy
 			this.currentReward = 0;
+			this.totalReward = 0;
 			this.visitedNodes = new Array();	// Initialize visited node array
 			this.actionIndices = new Array();
 			this.hadGoldMemory = new Array();
@@ -204,8 +207,9 @@ package EgyptianInvasion
 		private function updateQ(nextQ:Number):void {
 			var newQ:Number = this.currentReward + Enemy.discountRate * nextQ;	// Calculate the Q value to update at the previous decision
 			var lastNode:Node = visitedNodes[visitedNodes.length - 1];
-			var lastDecision:int = actionIndices[actionIndices.length - 1];
-			lastNode.updateQValue(EnemyManager.getEnemyType(this),hadGoldMemory[hadGoldMemory.length - 1],lastDecision,newQ);	// Update Q value of last state/action pair
+			lastNode.updateQValue(EnemyManager.getEnemyType(this),visitedNodes,hadGoldMemory,actionIndices,newQ);	// Update Q value of last state/action pair	
+			
+			this.totalReward += currentReward; // Add to total reward
 			this.currentReward = 0;	// Reset current reward after Q is updated
 		}
 		
@@ -361,24 +365,24 @@ package EgyptianInvasion
 		}
 		
 		public function killSpikes():Boolean {
-			this.health = 0;
+			this.setHealth(0);
 			healthBar.update(health/maxHealth);
 			return true;
 		}
 		
 		public function quicksand():Boolean {
-			this.health = 0;
+			this.setHealth(0);
 			healthBar.update(health/maxHealth);
 			return true;
 		}
 
 		public function damageFire():Boolean {
-			this.health -= 75;
+			this.updateHealth(-75);
 			healthBar.update(health/maxHealth);
 			return true;
 		}
 		public function totalBurn():Boolean {
-			this.health = 0;
+			this.setHealth(0);
 			healthBar.update(health/maxHealth);
 			return true;
 		}

@@ -36,6 +36,8 @@ package EgyptianInvasion
 		protected var qValuesNoGold:Array;	// Q values associated with taking a particular path.  must be same length as nodes array
 		protected var qValuesWithGold:Array; // Q values associated with taking a particular path when the enemy has gold
 		protected static var initialQ:Number = 3.0;	// The initial Q values
+		protected static var lambda:Number = 0.8;	// Temporal Difference learning discount rate i.e. TD(λ)
+		protected static var backupSteps:int = 10;	// Backup steps for TD(λ) learning
 		protected var learningRate:Number = 0.7;		// alpha in the Q-learning equations
 		// ----------------------------------------
 		
@@ -71,12 +73,32 @@ package EgyptianInvasion
 		}
 		
 		// 	-- RL -- Updates the Q value of a path decision combining it with the previous acording to learning rate (alpha)
-		public function updateQValue(enemyType:int, hasGold:Boolean, actionIndex:int, value:Number):void {
-			if(hasGold) {
-				qValuesWithGold[actionIndex][enemyType] = qValuesWithGold[actionIndex][enemyType]	* (1.0 - learningRate) + value * (learningRate);
+		public function updateQValue(enemyType:int, visitedNodes:Array, hasGold:Array, actionIndices:Array, value:Number):void {
+			var newQ:Number;
+			if(hasGold[hasGold.length-1]) {
+				newQ = qValuesWithGold[actionIndices[actionIndices.length-1]][enemyType] * (1.0 - learningRate) + value * (learningRate);
 			}
 			else {
-				qValuesNoGold[actionIndex][enemyType] = qValuesNoGold[actionIndex][enemyType]	* (1.0 - learningRate) + value * (learningRate);
+				newQ = qValuesNoGold[actionIndices[actionIndices.length-1]][enemyType] * (1.0 - learningRate) + value * (learningRate);
+			}
+			
+			// Backup this update according to TD(lambda) starting with this Node (visitedNodes.length - 1 is current node)
+			var numBackups:int = Math.min(Node.backupSteps,actionIndices.length);	// Determine number of TD(λ) backups to perform
+			for(var i:int = 0; i < numBackups; i++) {
+				var currentNode:Node = (visitedNodes[visitedNodes.length -1 -i] as Node);
+				var prevQ:Number;
+				var updateQ:Number;
+				var iNum:Number = (i as Number);	// Cast to a Number so Math.pow doesn't return NaN
+				if(hasGold[hasGold.length -1 -i]) {	// Has Gold Update
+					prevQ = currentNode.qValuesWithGold[actionIndices[actionIndices.length -1 -i]][enemyType];
+					updateQ = Math.pow(lambda,iNum) * newQ + (1.0 - Math.pow(lambda,iNum)) * prevQ;
+					currentNode.qValuesWithGold[actionIndices[actionIndices.length -1 -i]][enemyType] = updateQ;
+				}
+				else {	// No gold update
+					prevQ = currentNode.qValuesNoGold[actionIndices[actionIndices.length -1 -i]][enemyType];
+					updateQ = Math.pow(lambda,iNum) * newQ + (1.0 - Math.pow(lambda,iNum)) * prevQ;
+					currentNode.qValuesNoGold[actionIndices[actionIndices.length -1 -i]][enemyType] = updateQ;
+				}
 			}
 		}
 		
