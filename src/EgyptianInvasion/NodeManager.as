@@ -147,9 +147,9 @@ package EgyptianInvasion
 			if(sup.getBuildPhase() && selectedNode !=enterNode && selectedNode != tombNode)
 			{
 				var temp:Node = selectedNode;
-				for(var i:Number = 0; i < temp.getSiblings().length; i++)
+				for(var i:Number = 0; i < temp.getNumSiblings(); i++)
 				{
-					sup.getLevelManager().deductGold(-1*temp.getPathCost()*(Math.sqrt(Math.pow(temp.x - (temp.getSiblings()[i] as Node).x,2) + Math.pow(temp.y - (temp.getSiblings()[i] as Node).y,2))));
+					sup.getLevelManager().deductGold(-1*temp.getPathCost()*(Math.sqrt(Math.pow(temp.x - (temp.getSibling(i) as Node).x,2) + Math.pow(temp.y - (temp.getSibling(i) as Node).y,2))));
 				}
 				for(var i:Number = 0; i < allNodes.length; i++)
 				{
@@ -405,21 +405,21 @@ package EgyptianInvasion
 				for(var i:Number = 0; i < allNodes.length;i++)
 				{
 					var intersect:Array;
-					for(var j:Number = 0; j < (allNodes[i] as Node).getSiblings().length; j++)
+					for(var j:Number = 0; j < (allNodes[i] as Node).getNumSiblings(); j++)
 					{
 						intersect = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
-							((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y, 
+							(allNodes[i] as Node).getSibling(j).x,(allNodes[i] as Node).getSibling(j).y, 
 							selectedNode.x,selectedNode.y,toggledNode.x,toggledNode.y);
 						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != selectedNode &&(allNodes[i] as Node) != toggledNode
-							&&((allNodes[i] as Node).getSiblings()[j] as Node) != selectedNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != toggledNode) 
+							&&(allNodes[i] as Node).getSibling(j) != selectedNode &&(allNodes[i] as Node).getSibling(j) != toggledNode) 
 						{
 							intersected = true;
 						}
 						intersect = findIntersectperp((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
-							((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y,
+							(allNodes[i] as Node).getSibling(j).x,(allNodes[i] as Node).getSibling(j).y,
 							toggledNode.x,toggledNode.y, toggledNode.getSize());
 						if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != selectedNode &&(allNodes[i] as Node) != toggledNode
-							&&((allNodes[i] as Node).getSiblings()[j] as Node) != selectedNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != toggledNode)
+							&&(allNodes[i] as Node).getSibling(j) != selectedNode && (allNodes[i] as Node).getSibling(j) != toggledNode)
 						{
 							tooclose = true;
 						}
@@ -455,23 +455,23 @@ package EgyptianInvasion
 					for(i = 0; i < allNodes.length;i++)
 					{
 						var intersect:Array;
-						for(j = 0; j < (allNodes[i] as Node).getSiblings().length; j++)
+						for(j = 0; j < (allNodes[i] as Node).getNumSiblings(); j++)
 						{
 							intersect = findIntersect((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
 
-								((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y, 
+								(allNodes[i] as Node).getSibling(j).x,(allNodes[i] as Node).getSibling(j).y, 
 								potentialNode.x,potentialNode.y,potentialNode.x,potentialNode.y);
 							
 							if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != potentialNode &&(allNodes[i] as Node) != potentialNode
-								&&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode) 
+								&&((allNodes[i] as Node).getSibling(j) as Node) != potentialNode &&((allNodes[i] as Node).getSibling(j) as Node) != potentialNode) 
 							{
 								subintersected = true;
 							}
 							intersect = findIntersectperp((allNodes[i] as Node).x,(allNodes[i] as Node).y, 
-								((allNodes[i] as Node).getSiblings()[j] as Node).x,((allNodes[i] as Node).getSiblings()[j] as Node).y,
+								(allNodes[i] as Node).getSibling(j).x,(allNodes[i] as Node).getSibling(j).y,
 								potentialNode.x,potentialNode.y, potentialNode.getSize());
 							if(intersect[0] != null && intersect[1] != null && (allNodes[i] as Node) != potentialNode &&(allNodes[i] as Node) != potentialNode
-								&&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode &&((allNodes[i] as Node).getSiblings()[j] as Node) != potentialNode)
+								&&(allNodes[i] as Node).getSibling(j) != potentialNode &&(allNodes[i] as Node).getSibling(j) != potentialNode)
 							{
 								subtooclose = true;
 							}

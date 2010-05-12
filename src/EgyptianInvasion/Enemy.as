@@ -11,12 +11,11 @@ package EgyptianInvasion
 	public class Enemy extends Sprite
 	{
 		private var canvas:Stage;
-		private var startNode:Node;	// The fist node we start at
-		private var endNode:Node;	// The end/tomb node where the gold exists
+		private var startNode:Node;	// The fist node we start at (immutable after instantiation)
+		private var endNode:Node;	// The end/tomb node where the gold exists (immutable after instantiation)
 		private var goalNode:Node;	// Our eventual goal
 		private var originNode:Node;	// The most recently visited Node
 		private var targetNode:Node;	// Node we are moving toward
-		private var visitedNodes:Array; // The set of nodes already visited
 		
 		private var moving:Boolean;	// Indicates whether the enemy is currently moving or deciding
 		private var lastIntervalTime:Number;	// Stores the global time the last time nextInterval was called
@@ -24,8 +23,18 @@ package EgyptianInvasion
 		private var delayTime:Number;	// Time in milliseconds that movement should stop
 		private var poisonTime:Number;	// The time when an enemy was last poisoned
 		
+		// -- Reinforcement Learning --------------
+		protected static var explorationRate:Number; // The percent of the time to make a random move
+		protected static var discountRate:Number; // gamma in the Q learning equations
+		protected static var isSARSALearning:Boolean;	// True if we are doing SARSA learning, otherwise MaxQ
+		protected var currentReward:Number;	// cumulative reward the agent has received since the last decision step
+		private var visitedNodes:Array; // The set of nodes already visited
+		private var actionIndices:Array; // The set of decisions made at each node
+		private var hadGoldMemory:Array;	// Memory of whether the enemy had gold at a particular state
+		// ----------------------------------------
+		
 		// Enemy type/instance variables
-		protected var health:Number;
+		private var health:Number;	// Accessors should ALWAYS be used so that rewards are updated appropriately
 		protected var maxHealth:Number;
 		protected var goldAmt:Number;
 		protected var goldCapacity:Number;
@@ -40,7 +49,7 @@ package EgyptianInvasion
 		protected var healthBar:DisplayBar;
 		protected var goldCarryingBar:DisplayBar;
 		
-		public function Enemy(figure:EFigure, startNode:Node, endNode:Node, canvas:Stage) {
+		public function Enemy(figure:EFigure, startNode:Node, endNode:Node, canvas:Stage, maxHealth:Number = 100) {
 			this.x = startNode.x;
 			this.y = startNode.y;
 			this.canvas = canvas;
@@ -51,8 +60,8 @@ package EgyptianInvasion
 			this.endNode = endNode;
 			
 			this.pitSlots = 1;
-			this.maxHealth = 100;
-			this.health = 100;
+			this.maxHealth = maxHealth;
+			this.health = maxHealth;
 			this.goldAmt = 0;
 			this.goldCapacity = 10;
 			this.speed = 5;
@@ -63,7 +72,6 @@ package EgyptianInvasion
 			this.lastIntervalTime = getTimer();
 			this.moving = false;	// We need to make a decision first
 			this.freezeMovement = false;
-			this.visitedNodes = new Array();	// Initialize visited node array
 			
 			this.figure = figure;
 			figure.scaleX = 0.012;
@@ -86,113 +94,124 @@ package EgyptianInvasion
 			goldCarryingBar.x = -10;
 			goldCarryingBar.y = -15;
 			addChild(goldCarryingBar);
+			
+			// -- Reinforcement Learning --------------
+			Enemy.explorationRate = 0.1;
+			Enemy.discountRate = 0.9;
+			Enemy.isSARSALearning = true;
+			this.currentReward = 0;
+			this.visitedNodes = new Array();	// Initialize visited node array
+			this.actionIndices = new Array();
+			this.hadGoldMemory = new Array();
+			// ----------------------------------------
 		}
 		
 		// "Explores" to a semi-random new node
-		private function makeExploreDecision(reachedGoal:Boolean = false):void {
+		private function getExploreDecision(currentNode:Node):int {	// Returns Q value of decision
 			
-			// If we have reached our goal, use the goal node as the target
-			var reachedNode:Node;
-			if(reachedGoal) {
-				reachedNode = goalNode;
-			}
-			else {
-				reachedNode = targetNode;
-			}
+			var index:int = Math.floor(Math.random() * currentNode.getNumSiblings());
+			var potentialTarget:Node = currentNode.getSibling(index);
 			
-			// Add node to visited nodes
-			this.visitedNodes.push(reachedNode);
-			
-			var siblings:Array = reachedNode.getSiblings();
-			var index:int = Math.floor(Math.random() * siblings.length);
-			var potentialTarget:Node = Node(siblings[index]);
+			/* -- Commenting out attempts to make exploring less random
 			var attempts:int = 0;
 			while((potentialTarget == originNode || potentialTarget == startNode) && attempts < 5) {	// Try 5 times to not go back exactly where we came from
-				index = Math.floor(Math.random() * siblings.length);
-				potentialTarget = siblings[index];
+				index = Math.floor(Math.random() * reachedNode.getNumSiblings());
+				potentialTarget = reachedNode.getSibling(index);
 				attempts++;
-			}
+			} */
 			
-			// Set most recently visited node to the one we arrived at
-			this.originNode = reachedNode;
-			
-			this.targetNode = potentialTarget;
+			// Return index of decision
+			return index;
 		}
 		
-		// Heuristically decides the next node to visit
-		private function makeHeuristicDecision():void {
-			this.visitedNodes.push(targetNode);
+		// Decides the next node to visit based on the max Q value
+		private function getMaxQDecision(currentNode:Node):int {	// Returns index of chosen node 
 			
 			// Loop through open set to find the best candidate to explore next
 			var bestNode:Node = null;
-			var bestUnvisitedNode:Node = null;
-			var bestNotLastNode:Node = null;	// Best node that isn't the one we just came from
-			var bestNotLastHeuristic:Number = Number.MAX_VALUE;
-			var bestUnvisitedHeuristic:Number = Number.MAX_VALUE;
-			var bestHeuristic:Number = Number.MAX_VALUE;	// Estimated distance to the goal for visiting the node
-			for(var i:int = 0; i < targetNode.getSiblings().length; i++) {
-				var node:Node = targetNode.getSiblings()[i];
-				var dist:Number = Math.sqrt(Math.pow(x - node.x,2) + Math.pow(y - node.y,2));
+			var bestIndex:int = 0;
+			var bestQ:Number = Number.MIN_VALUE;	// Best Q value we have found
+			
+			// Half the time look backwards, so we don't get stuck picking the same Q each time if they are all the same
+			var backwards:Boolean = (Math.random() > 0.5);
+			var i:int = (backwards ? currentNode.getNumSiblings() - 1: 0);
+			while(i < currentNode.getNumSiblings() && !backwards || i >= 0 && backwards) {
+				var node:Node = currentNode.getSibling(i);
+				var q:Number = currentNode.getQValue(EnemyManager.getEnemyType(this),this.goldAmt > 0,i);
 				
-				var remainingEstimate:Number = Math.sqrt(Math.pow(node.x - goalNode.x,2) + Math.pow(node.y - goalNode.y,2));
-				var distEstimate:Number = dist + remainingEstimate;
-				
-				// Save if best node (and not where we are)
-				if(distEstimate < bestHeuristic && node != targetNode) {
-					bestHeuristic = distEstimate;
+				if(q > bestQ) {
+					bestQ = q;
 					bestNode = node;
+					bestIndex = i;
 				}
 				
-				// Save best node that is not the last node
-				if(distEstimate < bestNotLastHeuristic && node != originNode) {
-					bestNotLastHeuristic = distEstimate;
-					bestNotLastNode = node;
+				if(backwards) {
+					i--;
 				}
-				
-				// Save if unvisited and best
-				if(visitedNodes.indexOf(node) < 0 && distEstimate < bestUnvisitedHeuristic) {
-					bestUnvisitedHeuristic = bestHeuristic;
-					bestUnvisitedNode = node;
+				else {
+					i++;
 				}
 			}
+			
+			// Return index of decision
+			return bestIndex;
+		}
+		
+		// Decide what node to move to next (Uses Reinforcement Learning techniques)
+		private function makeDecision():void {
+			
+			// Decide our next move
+			var chosenIndex:int;
+			var maxQIndex:int = getMaxQDecision(targetNode);
+			if(Math.random() < Enemy.explorationRate) {	// Move randomly according to exploration rate
+				chosenIndex = getExploreDecision(targetNode);
+			}
+			else { // Move according to MaxQ
+				chosenIndex = maxQIndex;
+			}
+			
+			// Update Q if we have a Q to update (have made at least 1 decision)
+			if(visitedNodes.length > 0) {
+				var nextQIndex:int = (Enemy.isSARSALearning ? chosenIndex : maxQIndex);
+				var nextQ:Number = targetNode.getQValue(EnemyManager.getEnemyType(this),hadGoldMemory[hadGoldMemory.length - 1],nextQIndex);
+				updateQ(nextQ);	
+			}
+			
+			// Add node and decision to visited
+			this.visitedNodes.push(targetNode);
+			this.hadGoldMemory.push(this.goldAmt > 0);
+			this.actionIndices.push(chosenIndex);
+			
+			/*
+			// Give a negative reward if we're going back where we came from
+			if(this.targetNode.getSibling(chosenIndex) == this.originNode) {
+				this.currentReward -= 5;
+			}*/
 			
 			// Set most recently visited node to the one we arrived at
 			this.originNode = this.targetNode;
 			
 			// Set target
-			// First try unvisited, then not last, then best overall
-			if(bestUnvisitedNode != null) {
-				this.targetNode = bestUnvisitedNode
-			}
-			else if(bestNotLastNode != null) {
-				this.targetNode = bestNotLastNode;
-			}
-			else {
-				this.targetNode = bestNode;
-			}
-		}
-		
-		// Decide what node to move to next
-		private function makeDecision():void {
-			// ---- Vaguely inspired by A* but modified to mimic an actual exploring agent -----------
-			
-			// If no target node (because we reached it). Wait 10 cycles (in case we are given gold by the node) and then start exploring
-			if(targetNode == null) {
-				makeExploreDecision(true);	// Explore without a goal 
-			}
-			else {	// There is a target mode
-				// Make a random move 20% of the time if branching factor > 2
-				if(Math.random() > 0.20 && targetNode.getSiblings().length > 2) {
-					makeExploreDecision();
-				}
-				else {
-					makeHeuristicDecision();
-				}
-			}
+			this.targetNode = this.targetNode.getSibling(chosenIndex);
 			
 			// Start moving after we made the decision
 			this.moving = true;
 			this.walk();
+		}
+		
+		// Called to update the Q value of the previously chosen action
+		// Called when an enemy makes a decision or dies
+		private function updateQ(nextQ:Number):void {
+			var newQ:Number = this.currentReward + Enemy.discountRate * nextQ;	// Calculate the Q value to update at the previous decision
+			var lastNode:Node = visitedNodes[visitedNodes.length - 1];
+			var lastDecision:int = actionIndices[actionIndices.length - 1];
+			lastNode.updateQValue(EnemyManager.getEnemyType(this),hadGoldMemory[hadGoldMemory.length - 1],lastDecision,newQ);	// Update Q value of last state/action pair
+			this.currentReward = 0;	// Reset current reward after Q is updated
+		}
+		
+		// Called before an enemy is removed.  Updates final Q
+		public function cleanUp():void {
+			updateQ(0);	// Update final decision Q value.  nextQ is 0 because this is the terminal step
 		}
 		
 		// makes the figure walk the correct direction
@@ -229,7 +248,6 @@ package EgyptianInvasion
 					if(targetNode == goalNode) {
 						originNode = targetNode;	// We are now at the target
 						figure.stand();	// Standing animation
-						targetNode = null;
 					}
 				}
 				else {
@@ -243,6 +261,19 @@ package EgyptianInvasion
 			}
 		}
 		
+		// Updates the health value, modifying the current reward appropriately
+		protected function updateHealth(delta:Number):void {
+			this.health += delta;
+			this.currentReward += delta;	// Update reward according to health lost/gained
+		}
+		
+		// Sets the health value, modifying the current reward appropriately
+		protected function setHealth(healthValue:Number):void {
+			var newHealth:Number = Math.max(Math.min(healthValue,this.maxHealth),0);
+			var delta:Number = newHealth - this.health;
+			updateHealth(delta);
+		}
+		
 		// At every time interval, determines whether to move or decide next movement.  Called by EnemyManager
 		public function nextTimeInterval():void	{
 			
@@ -250,7 +281,7 @@ package EgyptianInvasion
 			if(poisoned != 0) {
 				var poisonedElapsed:Number = getTimer() - this.poisonTime;
 				if(poisonedElapsed < this.poisonTimeout * 1000) {
-					this.health -=  this.maxHealth * poisoned * ((getTimer() - this.lastIntervalTime) / (this.secondsToDieOfPoison * 1000));
+					this.updateHealth(-1 * this.maxHealth * poisoned * ((getTimer() - this.lastIntervalTime) / (this.secondsToDieOfPoison * 1000)));
 					healthBar.update(health/maxHealth);
 				}
 				else {
@@ -296,7 +327,7 @@ package EgyptianInvasion
 		}
 		
 		// Gives gold to the enemy.  Number returned is amt of gold left after enemy takes as much as he can carry
-		public function giveGold(goldAm:Number):Number {
+		public function giveGold(goldAm:Number, alwaysPositive:Boolean = false):Number {
 			
 			// Amount of gold that can still be carried
 			var goldAdded:Number = Math.max(Math.min(this.goldCapacity - this.goldAmt,goldAm),this.goldAmt * -1 /* dont take away more gold than we have */);
@@ -304,14 +335,8 @@ package EgyptianInvasion
 			
 			var goldLeft:Number = goldAm - goldAdded;
 			
-			// If we have gold, move toward the exit
-			if(goldAdded > 0) {
-				this.goalNode = this.startNode;
-				this.visitedNodes = new Array();
-			}
-			else {
-				this.goalNode = this.endNode;
-			}
+			// Add reward for getting gold (don't give a negative reward for taking it away unless "alwaysPositive" i.e. we're at the start room)
+			this.currentReward += (alwaysPositive ? Math.abs(10 * goldAdded) : Math.max(10 * goldAdded,0));
 			
 			goldCarryingBar.update(this.goldAmt/goldCapacity);			
 			return goldLeft;

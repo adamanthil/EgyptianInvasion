@@ -38,6 +38,21 @@ package EgyptianInvasion
 			reInitialize();
 		}
 		
+		// Gets the type of an enemy (used by RL to determine which Q values to use)
+		public static function getEnemyType(en:Enemy):int {
+			if(en is BigEnemy) {
+				return 1;
+			}
+			else {	// Default (VanillaEnemy)
+				return 0;
+			}
+		}
+		
+		// Returns the number of enemy types current supported
+		public static function getNumEnemyTypes():int {
+			return 2;
+		}
+		
 		public function removeTimer():void{
 			spawnTimer.removeEventListener(TimerEvent.TIMER, spawnTimeListener);
 			timer.removeEventListener(TimerEvent.TIMER, timeListener);
@@ -110,6 +125,9 @@ package EgyptianInvasion
 				if(numEnemiesKilled == numEnemiesOnLevel) {
 					main.getLevelManager().popWinWin();
 				}
+				
+				// Perform final cleanup tasks before pointer is deleted by garbage collector
+				enemy.cleanUp();
 				
 				return true;
 			}

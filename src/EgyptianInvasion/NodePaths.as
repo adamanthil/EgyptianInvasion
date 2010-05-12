@@ -23,15 +23,15 @@ package EgyptianInvasion
 				var int:Number;
 				int = 0;
 				var node:Node = sup.getNodes()[i] as Node;
-				var nodes:Array =(sup.getNodes()[i] as Node).getSiblings(); 
-				while(int < nodes.length)
+				//var nodes:Array =(sup.getNodes()[i] as Node).getSiblings();
+				while(int < node.getNumSiblings())
 				{
 					graphics.moveTo(node.drawToPointX(),node.drawToPointY());
 					graphics.lineStyle(10, 0xFF0000);
-					if(!(nodes[int] as Node).isPlaced())
+					if(!node.getSibling(int).isPlaced()) {
 						graphics.lineStyle(10, 0xFF0000,1);
-					
-					graphics.lineTo((nodes[int] as Node).drawToPointX(),(nodes[int] as Node).drawToPointY());
+					}
+					graphics.lineTo(node.getSibling(int).drawToPointX(),node.getSibling(int).drawToPointY());
 					graphics.moveTo(0,0);
 					int++;
 				}

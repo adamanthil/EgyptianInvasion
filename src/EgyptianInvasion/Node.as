@@ -1,6 +1,7 @@
 package EgyptianInvasion
 {
 	import assets.flashingNode;
+	
 	import flash.display.*;
 	import flash.events.*;
 	import flash.utils.Timer;
@@ -31,6 +32,13 @@ package EgyptianInvasion
 		private var nodeImage:flashingNode; // normal, selected, placable, unplacable
 		private var drawing:Boolean;
 		
+		// -- Reinforcement Learning --------------
+		protected var qValuesNoGold:Array;	// Q values associated with taking a particular path.  must be same length as nodes array
+		protected var qValuesWithGold:Array; // Q values associated with taking a particular path when the enemy has gold
+		protected static var initialQ:Number = 3.0;	// The initial Q values
+		protected var learningRate:Number = 0.7;		// alpha in the Q-learning equations
+		// ----------------------------------------
+		
 		public function Node(nodex:Number, nodey:Number, canvas:Stage, refup:NodeManager) {
 			//this.cacheAsBitmap = true;
 			drawing = true;
@@ -58,7 +66,31 @@ package EgyptianInvasion
 			time.addEventListener(TimerEvent.TIMER,TimeListener);
 			time.start();
 			nodes = new Array();
+			qValuesNoGold = new Array();
+			qValuesWithGold = new Array();
 		}
+		
+		// 	-- RL -- Updates the Q value of a path decision combining it with the previous acording to learning rate (alpha)
+		public function updateQValue(enemyType:int, hasGold:Boolean, actionIndex:int, value:Number):void {
+			if(hasGold) {
+				qValuesWithGold[actionIndex][enemyType] = qValuesWithGold[actionIndex][enemyType]	* (1.0 - learningRate) + value * (learningRate);
+			}
+			else {
+				qValuesNoGold[actionIndex][enemyType] = qValuesNoGold[actionIndex][enemyType]	* (1.0 - learningRate) + value * (learningRate);
+			}
+		}
+		
+		public function getQValue(enemyType:int, hasGold:Boolean, actionIndex:int):Number {
+			if(hasGold) {
+				return qValuesWithGold[actionIndex][enemyType];
+			}
+			else {
+				return qValuesNoGold[actionIndex][enemyType];
+			}
+		}
+		// -------------------
+		
+		
 		//returns the cost of placing paths, per unit length
 		public function getPathCost():Number{
 			return pathVal;
@@ -302,7 +334,7 @@ package EgyptianInvasion
 		protected function TimeListener(e:TimerEvent):void	{
 		//	if(placed)
 			//	displaySolid();
-	//		else
+		//		else
 			//	displayFaded();
 		}
 		
@@ -313,18 +345,32 @@ package EgyptianInvasion
 			{
 				nodes[int] = nodes[nodes.length -1];
 				nodes.pop();
+				
+				qValuesNoGold[int] = qValuesNoGold[qValuesNoGold.length -1];	// Remove corresponding Q value
+				qValuesNoGold.pop();
 			}
 		}
 		
 		public function addSibling(nod:Node):void {
 			nodes.push(nod);
+			
+			// Add a corresponding initial Q value for new path and enemy type
+			var qValues:Array = new Array();
+			var qValuesGold:Array = new Array();
+			for(var i:int = 0; i < EnemyManager.getNumEnemyTypes(); i++) {	// Add an initial Q for each enemy type
+				qValues.push(Node.initialQ);
+				qValuesGold.push(Node.initialQ);
+			}
+			
+			qValuesNoGold.push(qValues);
+			qValuesWithGold.push(qValuesGold);
 		}
 		
 		// Determines whether a path exists between nodes
 		public function pathExists(n:Node):Boolean {
 			return pathExistsRecursive(n,new Array());
 		}
-		//discovers whether a path exists between the start and the end
+		// Discovers whether a path exists between this node and node n
 		public function pathExistsRecursive(n:Node, visited:Array):Boolean {
 			if(n == this) {
 				return true;
@@ -335,8 +381,8 @@ package EgyptianInvasion
 			else { // Not yet visited
 				visited.push(n);
 				var pathExists:Boolean = false;
-				for(var i:int = 0; i < n.getSiblings().length; i++) {
-					var exists:Boolean = pathExistsRecursive(n.getSiblings()[i],visited);
+				for(var i:int = 0; i < n.getNumSiblings(); i++) {
+					var exists:Boolean = pathExistsRecursive(n.getSibling(i),visited);
 					if(exists) {
 						pathExists = true;
 						break;
@@ -347,8 +393,12 @@ package EgyptianInvasion
 			
 		}
 		
-		public function getSiblings():Array {
-			return nodes;
+		public function getNumSiblings():int {
+			return nodes.length;
+		}
+		
+		public function getSibling(index:int):Node {
+			return (nodes[index] as Node);
 		}
 		
 		protected function mouseMoveListener(e:MouseEvent):void {
