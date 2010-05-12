@@ -24,9 +24,9 @@ package EgyptianInvasion
 		private var poisonTime:Number;	// The time when an enemy was last poisoned
 		
 		// -- Reinforcement Learning --------------
-		private static var explorationRate:Number = 0.05; // The percent of the time to make a random move
-		private static var discountRate:Number = 0.8; // gamma in the Q learning equations
-		private static var isSARSALearning:Boolean = true;	// True if we are doing SARSA learning, otherwise MaxQ
+		private var explorationRate:Number; // The percent of the time to make a random move
+		private static var discountRate:Number = 0.9; // gamma in the Q learning equations
+		private static var isSARSALearning:Boolean = false;	// True if we are doing SARSA learning, otherwise MaxQ
 		private static var lastId:int = 0;	// The last ID given to an enemy
 		private var Id:int;	// A unique identifier (for testing and graphing RL things)
 		private var currentReward:Number;	// cumulative reward the agent has received since the last decision step
@@ -52,7 +52,7 @@ package EgyptianInvasion
 		protected var healthBar:DisplayBar;
 		protected var goldCarryingBar:DisplayBar;
 		
-		public function Enemy(figure:EFigure, startNode:Node, endNode:Node, canvas:Stage, maxHealth:Number = 100) {
+		public function Enemy(figure:EFigure, startNode:Node, endNode:Node, canvas:Stage, explorationRate:Number, maxHealth:Number) {
 			this.x = startNode.x;
 			this.y = startNode.y;
 			this.canvas = canvas;
@@ -101,6 +101,7 @@ package EgyptianInvasion
 			// -- Reinforcement Learning --------------
 			lastId++;
 			this.Id = lastId;	// Increment static counter and give a unique Id to this enemy
+			this.explorationRate = explorationRate;
 			this.currentReward = 0;
 			this.totalReward = 0;
 			this.visitedNodes = new Array();	// Initialize visited node array
@@ -168,12 +169,12 @@ package EgyptianInvasion
 		private function makeDecision():void {
 			
 			// We want to get out quickly, so it costs reward to make more decisions
-			this.currentReward -= 2;
+			this.currentReward -= 10;
 			
 			// Decide our next move
 			var chosenIndex:int;
 			var maxQIndex:int = getMaxQDecision(targetNode);
-			if(Math.random() < Enemy.explorationRate) {	// Move randomly according to exploration rate
+			if(Math.random() < explorationRate) {	// Move randomly according to exploration rate
 				chosenIndex = getExploreDecision(targetNode);
 			}
 			else { // Move according to MaxQ

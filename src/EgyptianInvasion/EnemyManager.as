@@ -17,24 +17,24 @@ package EgyptianInvasion
 		private var numEnemiesKilled:int;
 		private var spawnFrequency:Number;
 		
+		// -- Reinforcement Learning -------
+		private var explorationRate:Number = 0.5;	// Start exploring a lot to make sure we don't get stuck, decrease quickly
+		private var minExplorationRate:Number = 0.05;	// Exploration rate will never fall below this value
+		private var explorationRateDecay:Number = 0.75;	// Geometric decay
+		// ---------------------------------
+		
 		public function EnemyManager(main:Main)
 		{
 			this.canvas = main.stage;
 			this.main = main;
-			//this.enemies = new Array();
 			
-			//numEnemiesOnLevel = 1; // TODO WB will need to change this on per-level basis
-			numEnemiesOnLevel = 30; // TODO WB will need to change this on per-level basis
-			/*numEnemiesRemaining = numEnemiesOnLevel;
-			numEnemiesKilled = 0;*/
-			spawnFrequency = 1500; // in milliseconds
+			// Initialize to level 1
+			this.numEnemiesRemaining = LevelManager.getNumEnemiesAtLevel(1);
+			this.numEnemiesOnLevel = LevelManager.getNumEnemiesAtLevel(1);
 			
-			/*spawnTimer = new Timer(spawnFrequency, numEnemiesRemaining); // This line defines frequency and number of enemies to spawn
-			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
+			//spawnFrequency = 1500; // in milliseconds
+			spawnFrequency = 10000;	// for RL tests
 			
-			timer = new Timer(10);
-			timer.addEventListener(TimerEvent.TIMER,timeListener);
-			timer.start();*/
 			reInitialize();
 		}
 		
@@ -67,7 +67,8 @@ package EgyptianInvasion
 			spawnTimer = new Timer(spawnFrequency, numEnemiesRemaining); // This line defines frequency and number of enemies to spawn
 			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
 			
-			timer = new Timer(10);
+			//timer = new Timer(10);
+			timer = new Timer(1);	// For RL tests
 			timer.addEventListener(TimerEvent.TIMER,timeListener);
 			timer.start();
 			
@@ -88,11 +89,16 @@ package EgyptianInvasion
 		}
 		public function spawnTimeListener(e:TimerEvent):void {
 			var enemy:Enemy;
+			
+			// Set exploration rate for this enemy and decay it
+			var alpha:Number = this.explorationRate;
+			this.explorationRate = Math.max(explorationRate * explorationRateDecay,minExplorationRate);
+			
 			if(Math.random() < 0.2) {	// Spaw BigEnemy 20% of the time
-				enemy = new BigEnemy(main.getNodeManager().getStartNode(), main.getNodeManager().getEndNode() ,canvas);
+				enemy = new BigEnemy(main.getNodeManager().getStartNode(), main.getNodeManager().getEndNode() ,canvas, alpha);
 			}
 			else {
-				enemy = new VanillaEnemy(main.getNodeManager().getStartNode(), main.getNodeManager().getEndNode() ,canvas);
+				enemy = new VanillaEnemy(main.getNodeManager().getStartNode(), main.getNodeManager().getEndNode() ,canvas, alpha);
 			}
 			enemies.push(enemy);
 			numEnemiesRemaining--;
@@ -140,7 +146,7 @@ package EgyptianInvasion
 			return numEnemiesOnLevel;
 		}
 		
-		public function setNumEnemiesOnLevel(n:Number):void{
+		public function setNumEnemiesOnLevel(n:Number):void {
 			numEnemiesOnLevel = n;
 		}
 		

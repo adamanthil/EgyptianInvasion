@@ -1,6 +1,7 @@
 package EgyptianInvasion
 {
 	import assets.*;
+	
 	import flash.display.*;
 	import flash.events.*;
 	import flash.net.*;
@@ -52,8 +53,8 @@ package EgyptianInvasion
 			this.canvas =can;
 			
 			currLevel = 1;
-			currGold = 250;
-			//currGold = 10000;
+			//currGold = 250;
+			currGold = 1000;
 			prevGold = currGold;
 			interest = 0.2;
 			
@@ -76,7 +77,7 @@ package EgyptianInvasion
 			displayGold(currGold);
 			displayEnemiesOnBoard(0);
 			displayCurrentPlacementCost(0);
-			displayEnemiesToCome(main.getEnemyManager().getNumEnemiesOnLevel());
+			displayEnemiesToCome(getNumEnemiesAtLevel(currLevel as int));
 			
 			// Adds the text to the main display
 			main.addChild(levelText);
@@ -189,23 +190,25 @@ package EgyptianInvasion
 			setStartEndNode();
 		}
 		
-		private function setNumEnemiesAtLevel():void {
+		public static function getNumEnemiesAtLevel(level:int):Number {
+			/*
 			if (currLevel == 1){
-				this.enMan.setNumEnemiesOnLevel(30);
+				return 30;
 			}
 			else if (currLevel == 2){
-				this.enMan.setNumEnemiesOnLevel(50);
+				return 50;
 			}
 			else if (currLevel == 3){
-				this.enMan.setNumEnemiesOnLevel(70);
+				return 70;
 			}
 			else if (currLevel == 4){
-				this.enMan.setNumEnemiesOnLevel(100);
+				return 100;
 			}
 			else {
 				// Exponentially increase enemies after level 4
-				this.enMan.setNumEnemiesOnLevel(100 + 2 ^ currLevel);
-			}
+				return 100 + 2 ^ currLevel;
+			}*/
+			return 100;
 		}
 		
 		private function reInitialize():void{
@@ -214,7 +217,7 @@ package EgyptianInvasion
 			enMan = new EnemyManager(this.main);
 			this.main.addChild(enMan);
 			this.main.setEnemyManager(enMan);
-			this.setNumEnemiesAtLevel();
+			this.enMan.setNumEnemiesOnLevel(getNumEnemiesAtLevel(currLevel as int));
 			this.enMan.reInitialize();//set the right number and re-initialize everything
 			
 			this.main.setBuildPhase(true);
