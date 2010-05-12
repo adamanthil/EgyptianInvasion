@@ -286,7 +286,6 @@ package EgyptianInvasion
 			else
 			{
 				removeGuy(guy);
-				trace(currentInside.length);
 				return false
 			}
 			for(var i:Number = 0; i < currentInside.length; i++)

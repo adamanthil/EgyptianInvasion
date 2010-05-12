@@ -129,6 +129,9 @@ package EgyptianInvasion
 				// Perform final cleanup tasks before pointer is deleted by garbage collector
 				enemy.cleanUp();
 				
+				// Trace final reward for graphing/analysis
+				trace(enemy.getId() + "\t" + getEnemyType(enemy) + "\t" + enemy.getTotalReward());
+				
 				return true;
 			}
 		}

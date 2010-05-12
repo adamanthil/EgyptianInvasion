@@ -24,11 +24,11 @@ package EgyptianInvasion
 		private var poisonTime:Number;	// The time when an enemy was last poisoned
 		
 		// -- Reinforcement Learning --------------
-		private static var explorationRate:Number = 0.1; // The percent of the time to make a random move
+		private static var explorationRate:Number = 0.05; // The percent of the time to make a random move
 		private static var discountRate:Number = 0.8; // gamma in the Q learning equations
 		private static var isSARSALearning:Boolean = true;	// True if we are doing SARSA learning, otherwise MaxQ
 		private static var lastId:int = 0;	// The last ID given to an enemy
-		private var Id;	// A unique identifier (for testing and graphing RL things)
+		private var Id:int;	// A unique identifier (for testing and graphing RL things)
 		private var currentReward:Number;	// cumulative reward the agent has received since the last decision step
 		private var totalReward:Number;		// The total reward this enemy has received over its life
 		private var visitedNodes:Array; // The set of nodes already visited
@@ -109,6 +109,10 @@ package EgyptianInvasion
 			// ----------------------------------------
 		}
 		
+		public function getId():int {
+			return this.Id;
+		}
+		
 		// "Explores" to a semi-random new node
 		private function getExploreDecision(currentNode:Node):int {	// Returns Q value of decision
 			
@@ -163,6 +167,9 @@ package EgyptianInvasion
 		// Decide what node to move to next (Uses Reinforcement Learning techniques)
 		private function makeDecision():void {
 			
+			// We want to get out quickly, so it costs reward to make more decisions
+			this.currentReward -= 2;
+			
 			// Decide our next move
 			var chosenIndex:int;
 			var maxQIndex:int = getMaxQDecision(targetNode);
@@ -184,12 +191,6 @@ package EgyptianInvasion
 			this.visitedNodes.push(targetNode);
 			this.hadGoldMemory.push(this.goldAmt > 0);
 			this.actionIndices.push(chosenIndex);
-			
-			/*
-			// Give a negative reward if we're going back where we came from
-			if(this.targetNode.getSibling(chosenIndex) == this.originNode) {
-				this.currentReward -= 5;
-			}*/
 			
 			// Set most recently visited node to the one we arrived at
 			this.originNode = this.targetNode;
@@ -216,6 +217,11 @@ package EgyptianInvasion
 		// Called before an enemy is removed.  Updates final Q
 		public function cleanUp():void {
 			updateQ(0);	// Update final decision Q value.  nextQ is 0 because this is the terminal step
+		}
+		
+		// Gets the value of the total reward this enemy has received over its life
+		public function getTotalReward():Number {
+			return this.totalReward;
 		}
 		
 		// makes the figure walk the correct direction
@@ -268,7 +274,7 @@ package EgyptianInvasion
 		// Updates the health value, modifying the current reward appropriately
 		protected function updateHealth(delta:Number):void {
 			this.health += delta;
-			this.currentReward += delta;	// Update reward according to health lost/gained
+			//this.currentReward += delta;	// Update reward according to health lost/gained (harder to learn due to poison)
 		}
 		
 		// Sets the health value, modifying the current reward appropriately
@@ -388,6 +394,7 @@ package EgyptianInvasion
 		}
 		
 		public function poison(amnt:Number):Boolean {
+			this.currentReward -= 20;
 			this.poisoned = amnt;
 			this.figure.poison(true);
 			this.poisonTime = getTimer();

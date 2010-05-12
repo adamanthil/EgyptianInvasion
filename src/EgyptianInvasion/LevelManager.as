@@ -53,6 +53,7 @@ package EgyptianInvasion
 			
 			currLevel = 1;
 			currGold = 250;
+			//currGold = 10000;
 			prevGold = currGold;
 			interest = 0.2;
 			
