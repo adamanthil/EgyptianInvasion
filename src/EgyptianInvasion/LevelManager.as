@@ -37,7 +37,6 @@ package EgyptianInvasion
 		private var againButton:Button;
 		private var nextButton:Button;
 		
-		// TODO COMMENT BACK IN FOR FINAL BUILD
 		[Embed(source="../assets/sound/Sonic_&_Knuckles_Sand_in_My_Shoe_OC_ReMix.mp3")]
 		public static var Track1Sound:Class;
 		public static var Track1FX:SoundAsset = new Track1Sound() as SoundAsset;
@@ -53,8 +52,7 @@ package EgyptianInvasion
 			this.canvas =can;
 			
 			currLevel = 1;
-			//currGold = 250;
-			currGold = 1000;
+			currGold = 250;
 			prevGold = currGold;
 			interest = 0.2;
 			
@@ -96,7 +94,6 @@ package EgyptianInvasion
 			nextButton = new Button(new assets.ToggleButton(), 0,0, "NEXT LEVEL",canvas, main);
 			nextButton.addEventListener(MouseEvent.MOUSE_DOWN, nextPressed);
 			
-			// TODO COMMENT BACK IN FOR FINAL BUILD
 			// Play background music
 			Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
 		}		
@@ -120,10 +117,12 @@ package EgyptianInvasion
 		}
 		
 		public function isPitRoomAvailable():Boolean{
+			return true;
+			/*
 			if (currLevel >= 2)
 				return true;
 			else
-				return false;
+				return false; */
 		}
 		
 		public function isSnakeRoomAvailable():Boolean{
@@ -131,10 +130,12 @@ package EgyptianInvasion
 		}
 		
 		public function isSandRoomAvailable():Boolean{
+			return true;
+			/*
 			if (currLevel >= 3)
 				return true;
 			else
-				return false;
+				return false;*/
 		}
 		//start pop up window
 		private function getStartPop():void{
@@ -191,24 +192,22 @@ package EgyptianInvasion
 		}
 		
 		public static function getNumEnemiesAtLevel(level:int):Number {
-			/*
-			if (currLevel == 1){
+			if (level == 1){
 				return 30;
 			}
-			else if (currLevel == 2){
+			else if (level == 2){
 				return 50;
 			}
-			else if (currLevel == 3){
+			else if (level == 3){
 				return 70;
 			}
-			else if (currLevel == 4){
+			else if (level == 4){
 				return 100;
 			}
 			else {
 				// Exponentially increase enemies after level 4
-				return 100 + 2 ^ currLevel;
-			}*/
-			return 100;
+				return 100 + 2 ^ level;
+			}
 		}
 		
 		private function reInitialize():void{

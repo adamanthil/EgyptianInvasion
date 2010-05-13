@@ -18,7 +18,7 @@ package EgyptianInvasion
 		private var spawnFrequency:Number;
 		
 		// -- Reinforcement Learning -------
-		private var explorationRate:Number = 0.5;	// Start exploring a lot to make sure we don't get stuck, decrease quickly
+		private var explorationRate:Number = 0.4;	// Start exploring a lot to make sure we don't get stuck, decrease quickly
 		private var minExplorationRate:Number = 0.05;	// Exploration rate will never fall below this value
 		private var explorationRateDecay:Number = 0.75;	// Geometric decay
 		// ---------------------------------
@@ -32,8 +32,7 @@ package EgyptianInvasion
 			this.numEnemiesRemaining = LevelManager.getNumEnemiesAtLevel(1);
 			this.numEnemiesOnLevel = LevelManager.getNumEnemiesAtLevel(1);
 			
-			//spawnFrequency = 1500; // in milliseconds
-			spawnFrequency = 10000;	// for RL tests
+			spawnFrequency = 1500; // in milliseconds
 			
 			reInitialize();
 		}
@@ -67,8 +66,7 @@ package EgyptianInvasion
 			spawnTimer = new Timer(spawnFrequency, numEnemiesRemaining); // This line defines frequency and number of enemies to spawn
 			spawnTimer.addEventListener(TimerEvent.TIMER,spawnTimeListener);
 			
-			//timer = new Timer(10);
-			timer = new Timer(1);	// For RL tests
+			timer = new Timer(10);
 			timer.addEventListener(TimerEvent.TIMER,timeListener);
 			timer.start();
 			

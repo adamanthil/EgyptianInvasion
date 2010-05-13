@@ -26,17 +26,6 @@ package EgyptianInvasion
 			this.addChild(new FarBackground());			
 			this.addChild(new NearBackground(stage));			
 			
-			/*placeNodeButton = new Button(new assets.ToggleButton(), 50,100, "Add Node",stage);
-			placeNodeButton.setMouseDown(addNodeHandler);
-			this.addChild(placeNodeButton);
-			
-			var changeNodeButton:Button = new Button(new assets.ToggleButton(), 50,50, "Change Node",stage);
-			this.addChild(changeNodeButton);
-			
-			beginInvasionButton = new Button(new assets.ToggleButton(), 50, 150, "Begin Invasion", stage);
-			beginInvasionButton.setMouseDown(beginInvasionHandler);
-			this.addChild(beginInvasionButton);*/
-			
 			nodeMan = new NodeManager(this,69,365,190,300);
 			this.addChild(nodeMan);
 			
@@ -91,12 +80,13 @@ package EgyptianInvasion
 			this.ui = ui;
 		}
 		
-		public function getBuildPhase():Boolean {return buildingPhase;}
-		public function setBuildPhase(b:Boolean):void {buildingPhase = b;
-		if(!b)
-		{
-			nodeMan.stopDraw();
-		}}
+		public function getBuildPhase():Boolean { return buildingPhase; }
+		public function setBuildPhase(b:Boolean):void {
+			buildingPhase = b;
+			if(!b) {
+				nodeMan.stopDraw();
+			}
+		}
 		
 		// -- Button Event Handlers -------------------------
 		

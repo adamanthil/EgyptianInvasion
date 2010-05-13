@@ -26,7 +26,7 @@ package EgyptianInvasion
 		// -- Reinforcement Learning --------------
 		private var explorationRate:Number; // The percent of the time to make a random move
 		private static var discountRate:Number = 0.9; // gamma in the Q learning equations
-		private static var isSARSALearning:Boolean = false;	// True if we are doing SARSA learning, otherwise MaxQ
+		private static var isSARSALearning:Boolean = true;	// True if we are doing SARSA learning, otherwise MaxQ
 		private static var lastId:int = 0;	// The last ID given to an enemy
 		private var Id:int;	// A unique identifier (for testing and graphing RL things)
 		private var currentReward:Number;	// cumulative reward the agent has received since the last decision step
@@ -115,30 +115,32 @@ package EgyptianInvasion
 		}
 		
 		// "Explores" to a semi-random new node
-		private function getExploreDecision(currentNode:Node):int {	// Returns Q value of decision
+		private function getExploreDecision(currentNode:Node, prevNode:Node):int {	// Returns Q value of decision
 			
 			var index:int = Math.floor(Math.random() * currentNode.getNumSiblings());
 			var potentialTarget:Node = currentNode.getSibling(index);
 			
-			/* -- Commenting out attempts to make exploring less random
+			// -- Makes exploring less random (won't traverse where we just were generally)
 			var attempts:int = 0;
-			while((potentialTarget == originNode || potentialTarget == startNode) && attempts < 5) {	// Try 5 times to not go back exactly where we came from
-				index = Math.floor(Math.random() * reachedNode.getNumSiblings());
-				potentialTarget = reachedNode.getSibling(index);
+			while(potentialTarget == prevNode && attempts < 2) {	// Try 2 times to not go back exactly where we came from
+				index = Math.floor(Math.random() * currentNode.getNumSiblings());
+				potentialTarget = currentNode.getSibling(index);
 				attempts++;
-			} */
+			}
 			
 			// Return index of decision
 			return index;
 		}
 		
 		// Decides the next node to visit based on the max Q value
-		private function getMaxQDecision(currentNode:Node):int {	// Returns index of chosen node 
+		private function getMaxQDecision(currentNode:Node, prevNode:Node):int {	// Returns index of chosen node 
 			
 			// Loop through open set to find the best candidate to explore next
 			var bestNode:Node = null;
 			var bestIndex:int = 0;
 			var bestQ:Number = Number.MIN_VALUE;	// Best Q value we have found
+			var bestNotLastIndex:int = -1;
+			var bestNotLastQ:Number = Number.MIN_VALUE;
 			
 			// Half the time look backwards, so we don't get stuck picking the same Q each time if they are all the same
 			var backwards:Boolean = (Math.random() > 0.5);
@@ -153,6 +155,11 @@ package EgyptianInvasion
 					bestIndex = i;
 				}
 				
+				if(q > bestNotLastQ && node != prevNode) {
+					bestNotLastQ = q;
+					bestNotLastIndex = i;
+				}
+				
 				if(backwards) {
 					i--;
 				}
@@ -162,7 +169,12 @@ package EgyptianInvasion
 			}
 			
 			// Return index of decision
-			return bestIndex;
+			if(bestNotLastIndex >= 0) {
+				return bestNotLastIndex;
+			}
+			else {
+				return bestIndex;
+			}
 		}
 		
 		// Decide what node to move to next (Uses Reinforcement Learning techniques)
@@ -173,9 +185,9 @@ package EgyptianInvasion
 			
 			// Decide our next move
 			var chosenIndex:int;
-			var maxQIndex:int = getMaxQDecision(targetNode);
+			var maxQIndex:int = getMaxQDecision(targetNode,originNode);
 			if(Math.random() < explorationRate) {	// Move randomly according to exploration rate
-				chosenIndex = getExploreDecision(targetNode);
+				chosenIndex = getExploreDecision(targetNode,originNode);
 			}
 			else { // Move according to MaxQ
 				chosenIndex = maxQIndex;
