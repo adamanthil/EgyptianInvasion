@@ -95,7 +95,7 @@ package EgyptianInvasion
 			nextButton.addEventListener(MouseEvent.MOUSE_DOWN, nextPressed);
 			
 			// Play background music
-			Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
+			//Track1FX.play(0,500); // Music loops for ~30 to 40 hours, if someone has it on that long they should probably stop anyway.
 		}		
 		
 		public function canSpawnBigEnemy():Boolean{

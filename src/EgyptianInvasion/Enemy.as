@@ -138,9 +138,9 @@ package EgyptianInvasion
 			// Loop through open set to find the best candidate to explore next
 			var bestNode:Node = null;
 			var bestIndex:int = 0;
-			var bestQ:Number = Number.MIN_VALUE;	// Best Q value we have found
+			var bestQ:Number = Number.NEGATIVE_INFINITY;	// Best Q value we have found
 			var bestNotLastIndex:int = -1;
-			var bestNotLastQ:Number = Number.MIN_VALUE;
+			var bestNotLastQ:Number = Number.NEGATIVE_INFINITY;
 			
 			// Half the time look backwards, so we don't get stuck picking the same Q each time if they are all the same
 			var backwards:Boolean = (Math.random() > 0.5);
@@ -155,9 +155,11 @@ package EgyptianInvasion
 					bestIndex = i;
 				}
 				
-				if(q > bestNotLastQ && node != prevNode) {
-					bestNotLastQ = q;
-					bestNotLastIndex = i;
+				if(q > bestNotLastQ) {
+					if(node != prevNode) {
+						bestNotLastQ = q;
+						bestNotLastIndex = i;	
+					}
 				}
 				
 				if(backwards) {
