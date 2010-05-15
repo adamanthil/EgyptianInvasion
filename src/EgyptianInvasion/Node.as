@@ -36,7 +36,7 @@ package EgyptianInvasion
 		protected var qValuesNoGold:Array;	// Q values associated with taking a particular path.  must be same length as nodes array
 		protected var qValuesWithGold:Array; // Q values associated with taking a particular path when the enemy has gold
 		protected static var initialQ:Number = 5.0;	// The initial Q values
-		protected static var lambda:Number = 0.7;	// Temporal Difference learning discount rate i.e. TD(λ)
+		protected static var lambda:Number = 0.9;	// Temporal Difference learning discount rate i.e. TD(λ)
 		protected static var backupSteps:int = 20;	// Backup steps for TD(λ) learning
 		protected var learningRate:Number = 0.8;		// alpha in the Q-learning equations
 		// ----------------------------------------

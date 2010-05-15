@@ -289,7 +289,7 @@ package EgyptianInvasion
 		// Updates the health value, modifying the current reward appropriately
 		protected function updateHealth(delta:Number):void {
 			this.health += delta;
-			//this.currentReward += delta;	// Update reward according to health lost/gained (harder to learn due to poison)
+			this.currentReward += delta;	// Update reward according to health lost/gained (harder to learn due to poison)
 		}
 		
 		// Sets the health value, modifying the current reward appropriately
@@ -409,7 +409,7 @@ package EgyptianInvasion
 		}
 		
 		public function poison(amnt:Number):Boolean {
-			this.currentReward -= 20;
+			this.currentReward -= 20 * amnt;
 			this.poisoned = amnt;
 			this.figure.poison(true);
 			this.poisonTime = getTimer();
